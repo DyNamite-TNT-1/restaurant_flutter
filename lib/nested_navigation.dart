@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
+import 'package:restaurant_flutter/configs/configs.dart';
 
 class ScaffoldWithNestedNavigation extends StatelessWidget {
   const ScaffoldWithNestedNavigation({
@@ -112,26 +114,43 @@ class ScaffoldWithNavigationRail extends StatelessWidget {
                   selectedIndex: selectedIndex,
                   onDestinationSelected: onDestinationSelected,
                   labelType: NavigationRailLabelType.all,
-                  destinations: const <NavigationRailDestination>[
+                  destinations: <NavigationRailDestination>[
                     NavigationRailDestination(
                       label: Text('Trang chủ'),
                       icon: Icon(Icons.home),
                     ),
                     NavigationRailDestination(
                       label: Text('Thực đơn'),
-                      icon: Icon(Icons.food_bank),
+                      icon: SvgPicture.asset(
+                        Images.icForkKnife,
+                        height: 20,
+                        colorFilter: ColorFilter.mode(
+                          selectedIndex == 1 ? blueColor : textColor,
+                          BlendMode.srcIn,
+                        ),
+                      ),
                     ),
                     NavigationRailDestination(
                       label: Text('Thức uống'),
-                      icon: Icon(Icons.food_bank),
+                      icon: SvgPicture.asset(
+                        Images.icDrink,
+                        height: 20,
+                        colorFilter: ColorFilter.mode(
+                          selectedIndex == 2 ? blueColor : textColor,
+                          BlendMode.srcIn,
+                        ),
+                      ),
                     ),
                     NavigationRailDestination(
                       label: Text('Chỗ trống'),
-                      icon: Icon(Icons.table_bar_outlined),
-                    ),
-                    NavigationRailDestination(
-                      label: Text('Hồ sơ'),
-                      icon: Icon(Icons.person),
+                      icon: SvgPicture.asset(
+                        Images.icAvailableCalendar,
+                        height: 20,
+                        colorFilter: ColorFilter.mode(
+                          selectedIndex == 3 ? blueColor : textColor,
+                          BlendMode.srcIn,
+                        ),
+                      ),
                     ),
                   ],
                 ),

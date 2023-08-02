@@ -1,13 +1,13 @@
 //corner
-const double cornerLarge = 30;
-const double cornerMedium = 15;
-const double cornerNormal = 10;
-const double cornerSmall = 5.0;
+const double kCornerLarge = 30;
+const double kCornerMedium = 15;
+const double kCornerNormal = 10;
+const double kCornerSmall = 5.0;
 
 //padding
-const double defaultPadding = 20;
-const double padding15 = 15;
-const double padding10 = 10;
+const double kDefaultPadding = 20;
+const double kPadding15 = 15;
+const double kPadding10 = 10;
 
 //size
 const double kfontSizeHeadlineLarge = 40.0;

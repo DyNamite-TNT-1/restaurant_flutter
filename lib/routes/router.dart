@@ -8,6 +8,7 @@ import 'package:restaurant_flutter/screens/dish/dish.dart';
 import 'package:restaurant_flutter/screens/drink/detail_drink.dart';
 import 'package:restaurant_flutter/screens/drink/drink.dart';
 import 'package:restaurant_flutter/screens/profile/profile.dart';
+import 'package:restaurant_flutter/screens/vacant/vacant.dart';
 
 final _rootNavigatorKey = GlobalKey<NavigatorState>();
 final _shellNavigatorDashboardKey =
@@ -16,7 +17,7 @@ final _shellNavigatorDishKey =
     GlobalKey<NavigatorState>(debugLabel: "shellDish");
 final _shellNavigatorDrinkKey =
     GlobalKey<NavigatorState>(debugLabel: "shellDrink");
-final _shellNavigatorServiceKey =
+final _shellNavigatorVacantKey =
     GlobalKey<NavigatorState>(debugLabel: "shellService");
 
 class AppRouter {
@@ -99,13 +100,14 @@ class AppRouter {
             ],
           ),
           StatefulShellBranch(
-            navigatorKey: _shellNavigatorServiceKey,
+            navigatorKey: _shellNavigatorVacantKey,
             routes: [
               GoRoute(
-                path: "/profile",
+                name: RouteConstants.vacant,
+                path: "/vacant",
                 pageBuilder: (context, state) {
                   return NoTransitionPage(
-                    child: Profile(),
+                    child: VacantScreen(),
                   );
                 },
                 routes: [],

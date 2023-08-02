@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
-import 'package:restaurant_flutter/routes/route_constants.dart';
+import 'package:restaurant_flutter/configs/configs.dart';
+import 'package:restaurant_flutter/enum/enum.dart';
+import 'package:restaurant_flutter/screens/dish/widget/dish_item.dart';
+import 'package:restaurant_flutter/widgets/app_header_sliver.dart';
 
 class DishScreen extends StatefulWidget {
   const DishScreen({super.key});
@@ -10,38 +12,94 @@ class DishScreen extends StatefulWidget {
 }
 
 class _DishScreenState extends State<DishScreen> {
+  DishFilter _selectedFilter = DishFilter.all;
+
+  Widget _buildTopFilter(BuildContext context) {
+    return Row(children: [
+      Text(
+        "Lọc theo",
+        style: Theme.of(context).textTheme.bodyLarge,
+      ),
+      ...DishFilter.allDishFilter()
+          .map(
+            (e) => Container(
+              margin: EdgeInsets.symmetric(horizontal: kPadding10),
+              decoration: BoxDecoration(
+                color:
+                    _selectedFilter == e ? Color(0XFFEE4D2D) : backgroundColor,
+                borderRadius: BorderRadius.circular(5),
+                border: Border.all(
+                  color: _selectedFilter == e ? Colors.transparent : subColor,
+                ),
+              ),
+              child: Material(
+                color: Colors.transparent,
+                child: InkWell(
+                  borderRadius: BorderRadius.circular(5),
+                  onTap: () {
+                    if (_selectedFilter != e) {
+                      setState(() {
+                        _selectedFilter = e;
+                      });
+                    }
+                  },
+                  child: Container(
+                    padding: EdgeInsets.symmetric(vertical: 5, horizontal: 10),
+                    child: Text(
+                      e.name,
+                      style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                            fontSize: 14,
+                            color:
+                                _selectedFilter == e ? Colors.white : textColor,
+                          ),
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          )
+          .toList(),
+    ]);
+  }
+
+  SliverPersistentHeader _makeHeaderFilter(BuildContext context) {
+    return SliverPersistentHeader(
+      pinned: true,
+      delegate: PinSliverAppBarDelegate(
+        minHeight: 50.0,
+        maxHeight: 50.0,
+        child: Container(
+          padding: EdgeInsets.symmetric(
+            horizontal: kPadding15,
+            vertical: kPadding10,
+          ),
+          color: backgroundColor,
+          child: _buildTopFilter(context),
+        ),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Center(
-        child: Column(
-          children: [
-            Text("DishScreen"),
-            Expanded(
-              child: ListView.builder(
-                itemCount: 5,
-                itemBuilder: (context, index) {
-                  return ElevatedButton(
-                    onPressed: () {
-                      context.goNamed(
-                        RouteConstants.dishDetail,
-                        pathParameters: {
-                          "id": index.toString(),
-                        },
-                      );
-                    },
-                    child: Container(
-                      padding:
-                          EdgeInsets.symmetric(horizontal: 15, vertical: 5),
-                      margin: EdgeInsets.all(20),
-                      child: Text("dish $index"),
-                    ),
-                  );
-                },
-              ),
+      backgroundColor: backgroundColor,
+      body: CustomScrollView(
+        slivers: [
+          _makeHeaderFilter(context),
+          SliverGrid.builder(
+            gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
+              maxCrossAxisExtent: 300.0,
+              mainAxisSpacing: 20.0,
+              crossAxisSpacing: 20.0,
+              childAspectRatio: 0.7,
             ),
-          ],
-        ),
+            itemBuilder: (BuildContext context, int index) {
+              return DishItem(id: index.toString());
+            },
+            itemCount: 20,
+          ),
+        ],
       ),
     );
   }
