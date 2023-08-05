@@ -1,4 +1,10 @@
 class Images {
+  static const String logoApp = "assets/images/logo_website.png";
+  static const String logoAppNoBg = "assets/images/logo_website_nobg.png";
+  static const String miniLogoApp = "assets/images/mini_logo_website_nobg.png";
+  static const String miniLogoAppNoBg =
+      "assets/images/mini_logo_website_nobg.png";
+
   static const String icAvailableCalendar =
       "assets/images/ic_available_calendar.svg";
   static const String icForkKnife = "assets/images/ic_fork_knife.svg";

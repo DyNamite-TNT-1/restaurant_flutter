@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
+import 'package:restaurant_flutter/app_ceiling.dart';
 import 'package:restaurant_flutter/configs/configs.dart';
 
 class ScaffoldWithNestedNavigation extends StatelessWidget {
@@ -85,28 +86,7 @@ class ScaffoldWithNavigationRail extends StatelessWidget {
       ),
       body: Column(
         children: [
-          Row(
-            children: [
-              Expanded(
-                child: Container(
-                  height: 50,
-                  color: Colors.amber,
-                ),
-              ),
-              Expanded(
-                child: Container(
-                  height: 50,
-                  color: Colors.blue,
-                ),
-              ),
-              Expanded(
-                child: Container(
-                  height: 50,
-                  color: Colors.orangeAccent,
-                ),
-              ),
-            ],
-          ),
+          AppCeiling(),
           Expanded(
             child: Row(
               children: [

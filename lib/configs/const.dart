@@ -24,8 +24,8 @@ const double kfontSizebodySmall = 10.0;
 const double kSizeIconLarge = 20.0;
 const double kSizeIconNormal = 14.0;
 
-const double kDialogMaxWidthNormal = 270;
-const double kDialogMaxWidthSmall = 190;
+const double kDialogMaxWidthNormal = 1000;
+const double kDialogMaxWidthSmall = 800;
 
 //limit
 const int kLimit = 10;
