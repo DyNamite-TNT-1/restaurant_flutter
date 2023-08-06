@@ -4,11 +4,11 @@ import 'package:restaurant_flutter/routes/route_constants.dart';
 import 'package:restaurant_flutter/screens/dashboard/dashboard.dart';
 import 'package:restaurant_flutter/screens/dish/detail_dish.dart';
 import 'package:restaurant_flutter/nested_navigation.dart';
-import 'package:restaurant_flutter/screens/dish/dish.dart';
+import 'package:restaurant_flutter/screens/dish/dish_screen.dart';
 import 'package:restaurant_flutter/screens/drink/detail_drink.dart';
 import 'package:restaurant_flutter/screens/drink/drink.dart';
-import 'package:restaurant_flutter/screens/profile/profile.dart';
-import 'package:restaurant_flutter/screens/vacant/vacant.dart';
+import 'package:restaurant_flutter/screens/reservation/reservation_screen.dart';
+import 'package:restaurant_flutter/screens/table/table_screen.dart';
 
 final _rootNavigatorKey = GlobalKey<NavigatorState>();
 final _shellNavigatorDashboardKey =
@@ -17,7 +17,7 @@ final _shellNavigatorDishKey =
     GlobalKey<NavigatorState>(debugLabel: "shellDish");
 final _shellNavigatorDrinkKey =
     GlobalKey<NavigatorState>(debugLabel: "shellDrink");
-final _shellNavigatorVacantKey =
+final _shellNavigatorTableKey =
     GlobalKey<NavigatorState>(debugLabel: "shellService");
 
 class AppRouter {
@@ -41,7 +41,7 @@ class AppRouter {
                     child: Dashboard(),
                   );
                 },
-                routes: [],
+                routes: const [],
               ),
             ],
           ),
@@ -100,22 +100,31 @@ class AppRouter {
             ],
           ),
           StatefulShellBranch(
-            navigatorKey: _shellNavigatorVacantKey,
+            navigatorKey: _shellNavigatorTableKey,
             routes: [
               GoRoute(
-                name: RouteConstants.vacant,
-                path: "/vacant",
+                name: RouteConstants.table,
+                path: "/table",
                 pageBuilder: (context, state) {
                   return NoTransitionPage(
-                    child: VacantScreen(),
+                    child: TableScreen(),
                   );
                 },
-                routes: [],
+                routes: const [],
               )
             ],
           ),
         ],
       ),
+      GoRoute(
+        name: RouteConstants.reservation,
+        path: "/reservation",
+        pageBuilder: (context, state) {
+          return NoTransitionPage(
+            child: ReservationScreen(),
+          );
+        },
+      )
     ],
     redirect: (context, state) {
       bool isAuthenticated = true;

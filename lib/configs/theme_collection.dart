@@ -150,6 +150,7 @@ class CollectionTheme {
           AppBarTheme(color: Colors.white, foregroundColor: primaryTextColor),
       // canvasColor: colorScheme.background,
       // scaffoldBackgroundColor: colorScheme.background,
+      scaffoldBackgroundColor: backgroundColor,
       // cardColor: colorScheme.surface,
       // dividerColor: colorScheme.onSurface.withOpacity(0.12),
       // dialogBackgroundColor: colorScheme.background,

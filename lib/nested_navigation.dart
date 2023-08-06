@@ -94,13 +94,14 @@ class ScaffoldWithNavigationRail extends StatelessWidget {
                   selectedIndex: selectedIndex,
                   onDestinationSelected: onDestinationSelected,
                   labelType: NavigationRailLabelType.all,
+                  backgroundColor: backgroundColor,
                   destinations: <NavigationRailDestination>[
                     NavigationRailDestination(
                       label: Text('Trang chủ'),
                       icon: Icon(Icons.home),
                     ),
                     NavigationRailDestination(
-                      label: Text('Thực đơn'),
+                      label: Text('Món ăn'),
                       icon: SvgPicture.asset(
                         Images.icForkKnife,
                         height: 20,

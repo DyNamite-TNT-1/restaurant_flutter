@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:restaurant_flutter/configs/configs.dart';
 
 class HoverComponent extends StatefulWidget {
   const HoverComponent({

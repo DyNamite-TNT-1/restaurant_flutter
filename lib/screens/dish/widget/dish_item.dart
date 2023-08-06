@@ -1,13 +1,12 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
-import 'package:go_router/go_router.dart';
 import 'package:restaurant_flutter/configs/configs.dart';
-import 'package:restaurant_flutter/routes/route_constants.dart';
+import 'package:restaurant_flutter/models/service/dish.dart';
 
 class DishItem extends StatefulWidget {
-  const DishItem({super.key, required this.id});
-  final String id;
+  const DishItem({super.key, required this.dish});
+  final DishDetailModel dish;
 
   @override
   State<DishItem> createState() => _DishItemState();
@@ -30,9 +29,9 @@ class _DishItemState extends State<DishItem> {
         color: Colors.transparent,
         child: InkWell(
           onTap: () {
-            context.goNamed(RouteConstants.dishDetail, pathParameters: {
-              "id": widget.id,
-            });
+            // context.goNamed(RouteConstants.dishDetail, pathParameters: {
+            //   "id": widget.id,
+            // });
           },
           onHover: (value) {
             setState(() {
@@ -47,8 +46,7 @@ class _DishItemState extends State<DishItem> {
                   topRight: Radius.circular(5),
                 ),
                 child: CachedNetworkImage(
-                  imageUrl:
-                      "https://chefjob.vn/wp-content/uploads/2020/02/dinh-nghia-bbq-la-gi.jpg",
+                  imageUrl: widget.dish.image,
                   height: 200,
                   width: double.infinity,
                   fit: BoxFit.fill,
@@ -61,7 +59,7 @@ class _DishItemState extends State<DishItem> {
                 height: kPadding10,
               ),
               Text(
-                "Dolor Comon BBQ ${widget.id}",
+                widget.dish.name,
                 maxLines: 2,
                 style: Theme.of(context).textTheme.bodyLarge,
               ),
@@ -71,7 +69,7 @@ class _DishItemState extends State<DishItem> {
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: kPadding15),
                 child: Text(
-                  "Làm từ thịt cừu non, là một món BBQ ngon thượng hạng. Hứa hẹn sẽ cho bạn trải nghiệm thịt nướng tuyệt vời.",
+                  widget.dish.description,
                   textAlign: TextAlign.center,
                   style: Theme.of(context).textTheme.bodyMedium,
                 ),
@@ -79,29 +77,21 @@ class _DishItemState extends State<DishItem> {
               SizedBox(
                 height: kDefaultPadding,
               ),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: kPadding15),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    RatingBarIndicator(
-                      rating: 4.35,
-                      itemBuilder: (context, index) => Icon(
-                        Icons.star,
-                        color: Colors.amber,
-                      ),
-                      itemCount: 5,
-                      itemSize: 20.0,
-                      direction: Axis.horizontal,
+              Text(
+                "${widget.dish.priceStr} VNĐ/ ${widget.dish.unit}",
+                style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                      color: primaryColor,
                     ),
-                    Text(
-                      "599.000 VNĐ",
-                      style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                            color: primaryColor,
-                          ),
-                    ),
-                  ],
+              ),
+              RatingBarIndicator(
+                rating: 4.35,
+                itemBuilder: (context, index) => Icon(
+                  Icons.star,
+                  color: Colors.amber,
                 ),
+                itemCount: 5,
+                itemSize: 20.0,
+                direction: Axis.horizontal,
               ),
               Spacer(),
               if (isHover)

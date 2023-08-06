@@ -1,13 +1,12 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
-import 'package:go_router/go_router.dart';
 import 'package:restaurant_flutter/configs/configs.dart';
-import 'package:restaurant_flutter/routes/route_constants.dart';
+import 'package:restaurant_flutter/models/service/dish.dart';
 
 class DrinkItem extends StatefulWidget {
-  const DrinkItem({super.key, required this.id});
-  final String id;
+  const DrinkItem({super.key, required this.drink});
+  final DishDetailModel drink;
 
   @override
   State<DrinkItem> createState() => _DrinkItemState();
@@ -30,9 +29,9 @@ class _DrinkItemState extends State<DrinkItem> {
         color: Colors.transparent,
         child: InkWell(
           onTap: () {
-            context.goNamed(RouteConstants.drinkDetail, pathParameters: {
-              "id": widget.id,
-            });
+            // context.goNamed(RouteConstants.dishDetail, pathParameters: {
+            //   "id": widget.id,
+            // });
           },
           onHover: (value) {
             setState(() {
@@ -47,8 +46,7 @@ class _DrinkItemState extends State<DrinkItem> {
                   topRight: Radius.circular(5),
                 ),
                 child: CachedNetworkImage(
-                  imageUrl:
-                      "https://cdn.tgdd.vn/2020/08/CookProduct/5-1200x676-1.jpg",
+                  imageUrl: widget.drink.image,
                   height: 200,
                   width: double.infinity,
                   fit: BoxFit.fill,
@@ -61,7 +59,7 @@ class _DrinkItemState extends State<DrinkItem> {
                 height: kPadding10,
               ),
               Text(
-                "Rượu vang ${widget.id}",
+                widget.drink.name,
                 maxLines: 2,
                 style: Theme.of(context).textTheme.bodyLarge,
               ),
@@ -71,7 +69,7 @@ class _DrinkItemState extends State<DrinkItem> {
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: kPadding15),
                 child: Text(
-                  "Rượu vang từ Đan Mạch",
+                  widget.drink.description,
                   textAlign: TextAlign.center,
                   style: Theme.of(context).textTheme.bodyMedium,
                 ),
@@ -79,29 +77,21 @@ class _DrinkItemState extends State<DrinkItem> {
               SizedBox(
                 height: kDefaultPadding,
               ),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: kPadding15),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    RatingBarIndicator(
-                      rating: 4.35,
-                      itemBuilder: (context, index) => Icon(
-                        Icons.star,
-                        color: Colors.amber,
-                      ),
-                      itemCount: 5,
-                      itemSize: 20.0,
-                      direction: Axis.horizontal,
+              Text(
+                "${widget.drink.priceStr} VNĐ/ ${widget.drink.unit}",
+                style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                      color: primaryColor,
                     ),
-                    Text(
-                      "599.000 VNĐ",
-                      style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                            color: primaryColor,
-                          ),
-                    ),
-                  ],
+              ),
+              RatingBarIndicator(
+                rating: 4.35,
+                itemBuilder: (context, index) => Icon(
+                  Icons.star,
+                  color: Colors.amber,
                 ),
+                itemCount: 5,
+                itemSize: 20.0,
+                direction: Axis.horizontal,
               ),
               Spacer(),
               if (isHover)

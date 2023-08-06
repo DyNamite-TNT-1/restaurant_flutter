@@ -1,18 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:restaurant_flutter/configs/configs.dart';
-import 'package:restaurant_flutter/enum/enum.dart';
-import 'package:restaurant_flutter/screens/dish/widget/dish_item.dart';
-import 'package:restaurant_flutter/widgets/app_header_sliver.dart';
+import 'package:restaurant_flutter/widgets/widgets.dart';
 
-class DishScreen extends StatefulWidget {
-  const DishScreen({super.key});
+import 'widget/table_item.dart';
+
+class TableScreen extends StatefulWidget {
+  const TableScreen({super.key});
 
   @override
-  State<DishScreen> createState() => _DishScreenState();
+  State<TableScreen> createState() => _TableScreenState();
 }
 
-class _DishScreenState extends State<DishScreen> {
-  DishFilter _selectedFilter = DishFilter.all;
+class _TableScreenState extends State<TableScreen> {
+  List<String> tableTypes = ["Tất cả", "Vip 1", "Vip 2", "Tầng trệt", "Tầng 2"];
+  String _selectedFilter = "Tất cả";
 
   Widget _buildTopFilter(BuildContext context) {
     return Row(children: [
@@ -20,7 +21,7 @@ class _DishScreenState extends State<DishScreen> {
         "Lọc theo",
         style: Theme.of(context).textTheme.bodyLarge,
       ),
-      ...DishFilter.allDishFilter()
+      ...tableTypes
           .map(
             (e) => Container(
               margin: EdgeInsets.symmetric(horizontal: kPadding10),
@@ -46,7 +47,7 @@ class _DishScreenState extends State<DishScreen> {
                   child: Container(
                     padding: EdgeInsets.symmetric(vertical: 5, horizontal: 10),
                     child: Text(
-                      e.name,
+                      e,
                       style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                             fontSize: 14,
                             color:
@@ -83,21 +84,23 @@ class _DishScreenState extends State<DishScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: backgroundColor,
       body: CustomScrollView(
         slivers: [
           _makeHeaderFilter(context),
-          SliverGrid.builder(
-            gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
-              maxCrossAxisExtent: 300.0,
-              mainAxisSpacing: 20.0,
-              crossAxisSpacing: 20.0,
-              childAspectRatio: 0.7,
+          SliverPadding(
+            padding: EdgeInsets.all(kPadding10),
+            sliver: SliverGrid.builder(
+              gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
+                maxCrossAxisExtent: 100.0,
+                mainAxisSpacing: 10.0,
+                crossAxisSpacing: 10.0,
+                childAspectRatio: 2,
+              ),
+              itemBuilder: (BuildContext context, int index) {
+                return TableItem(id: index.toString());
+              },
+              itemCount: 20,
             ),
-            itemBuilder: (BuildContext context, int index) {
-              return DishItem(id: index.toString());
-            },
-            itemCount: 20,
           ),
         ],
       ),

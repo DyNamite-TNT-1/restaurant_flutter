@@ -184,6 +184,7 @@ class AppButton extends StatelessWidget {
                 text,
                 style: Theme.of(context).textTheme.bodyLarge?.copyWith(
                       letterSpacing: 1.25,
+                      color: Colors.white,
                     ),
               ),
               buildLoading(Colors.white)

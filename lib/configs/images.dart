@@ -4,6 +4,7 @@ class Images {
   static const String miniLogoApp = "assets/images/mini_logo_website_nobg.png";
   static const String miniLogoAppNoBg =
       "assets/images/mini_logo_website_nobg.png";
+  static const String noDataFound = "assets/images/no_data_found.jpg";
 
   static const String icAvailableCalendar =
       "assets/images/ic_available_calendar.svg";

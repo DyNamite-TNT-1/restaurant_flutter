@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:restaurant_flutter/api/api.dart';
-import 'package:restaurant_flutter/bloc/drink/drink_bloc.dart';
+import 'package:restaurant_flutter/bloc/dish/dish_bloc.dart';
 import 'package:restaurant_flutter/configs/configs.dart';
 import 'package:restaurant_flutter/enum/bloc.dart';
 import 'package:restaurant_flutter/enum/order.dart';
@@ -9,66 +9,66 @@ import 'package:restaurant_flutter/models/service/dish.dart';
 import 'package:restaurant_flutter/models/service/dish_type.dart';
 import 'package:restaurant_flutter/widgets/widgets.dart';
 
-import 'widget/drink_item.dart';
+import 'widget/dish_item.dart';
 
-class DrinkScreen extends StatefulWidget {
-  const DrinkScreen({super.key});
+class DishScreen extends StatefulWidget {
+  const DishScreen({super.key});
 
   @override
-  State<DrinkScreen> createState() => _DrinkScreenState();
+  State<DishScreen> createState() => _DishScreenState();
 }
 
-class _DrinkScreenState extends State<DrinkScreen> {
-  DrinkBloc drinkBloc = DrinkBloc(DrinkState());
+class _DishScreenState extends State<DishScreen> {
+  DishBloc dishBloc = DishBloc(DishState());
   DishTypeModel _selectedFilter = DishTypeModel(
     dishTypeId: 0,
     type: "Tất cả",
   );
-  String tagRequestDrinks = "";
-  String tagRequestDrinkTypes = "";
+  String tagRequestDishes = "";
+  String tagRequestDishTypes = "";
   OrderEnum _selectedPriceOrder = OrderEnum.desc;
 
   @override
   void initState() {
     super.initState();
-    _requestDrinkType();
-    _requestDrink(type: 0, priceOrder: OrderEnum.desc);
+    _requestDishType();
+    _requestDish(type: 0, priceOrder: OrderEnum.desc);
   }
 
   @override
   void dispose() {
     super.dispose();
-    Api.cancelRequest(tag: tagRequestDrinks);
-    Api.cancelRequest(tag: tagRequestDrinkTypes);
+    Api.cancelRequest(tag: tagRequestDishes);
+    Api.cancelRequest(tag: tagRequestDishTypes);
   }
 
   bool get isServiceClosed {
-    return !mounted || drinkBloc.isClosed;
+    return !mounted || dishBloc.isClosed;
   }
 
-  Future<void> _requestDrink({
+  Future<void> _requestDish({
     required int type,
     required OrderEnum priceOrder,
   }) async {
     if (!isServiceClosed) {
-      drinkBloc.add(
+      dishBloc.add(
         OnUpdateState(
-          params: const {"drinkState": BlocState.loading},
+          params: const {"dishState": BlocState.loading},
         ),
       );
-      tagRequestDrinks = Api.buildIncreaseTagRequestWithID("drinks");
-      DishModel drinkModel = await Api.requestDish(
+      tagRequestDishes = Api.buildIncreaseTagRequestWithID("dishes");
+      DishModel dishModel = await Api.requestDish(
         type: type,
         order: priceOrder,
         page: 1,
-        isDrink: true,
-        tagRequest: tagRequestDrinks,
+        isDrink: false,
+        tagRequest: tagRequestDishes,
       );
       if (!isServiceClosed) {
-        drinkBloc.add(
-          OnLoadDrink(
+        dishBloc.add(
+          OnLoadDish(
             params: {
-              "drinks": drinkModel.dishes,
+              "dishes": dishModel.dishes,
             },
           ),
         );
@@ -76,23 +76,23 @@ class _DrinkScreenState extends State<DrinkScreen> {
     }
   }
 
-  Future<void> _requestDrinkType() async {
+  Future<void> _requestDishType() async {
     if (!isServiceClosed) {
-      drinkBloc.add(
+      dishBloc.add(
         OnUpdateState(
-          params: const {"drinkTypeState": BlocState.loading},
+          params: const {"dishTypeState": BlocState.loading},
         ),
       );
-      tagRequestDrinkTypes = Api.buildIncreaseTagRequestWithID("drinkTypes");
-      DishTypeFilterModel drinkTypeModel = await Api.requestDishType(
-        isDrinkType: true,
-        tagRequest: tagRequestDrinkTypes,
+      tagRequestDishTypes = Api.buildIncreaseTagRequestWithID("dishTypes");
+      DishTypeFilterModel dishTypeModel = await Api.requestDishType(
+        isDrinkType: false,
+        tagRequest: tagRequestDishTypes,
       );
       if (!isServiceClosed) {
-        drinkBloc.add(
-          OnLoadDrinkType(
+        dishBloc.add(
+          OnLoadDishType(
             params: {
-              "drinkTypes": drinkTypeModel.dishTypes,
+              "dishTypes": dishTypeModel.dishTypes,
             },
           ),
         );
@@ -143,13 +143,13 @@ class _DrinkScreenState extends State<DrinkScreen> {
             setState(() {
               _selectedFilter = value;
             });
-            _requestDrink(
+            _requestDish(
               type: _selectedFilter.dishTypeId,
               priceOrder: _selectedPriceOrder,
             );
           },
           itemBuilder: (context) {
-            return drinkBloc.state.drinkTypes.map(
+            return dishBloc.state.dishTypes.map(
               (e) {
                 return PopupMenuItem<DishTypeModel>(
                   value: e,
@@ -202,7 +202,7 @@ class _DrinkScreenState extends State<DrinkScreen> {
             setState(() {
               _selectedPriceOrder = value;
             });
-            _requestDrink(
+            _requestDish(
               type: _selectedFilter.dishTypeId,
               priceOrder: _selectedPriceOrder,
             );
@@ -243,8 +243,8 @@ class _DrinkScreenState extends State<DrinkScreen> {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (context) => drinkBloc,
-      child: BlocBuilder<DrinkBloc, DrinkState>(
+      create: (context) => dishBloc,
+      child: BlocBuilder<DishBloc, DishState>(
         builder: (context, state) {
           return Scaffold(
             backgroundColor: backgroundColor,
@@ -254,7 +254,7 @@ class _DrinkScreenState extends State<DrinkScreen> {
                 SliverPadding(
                   padding: EdgeInsets.all(kPadding10),
                   sliver: SliverGrid.builder(
-                    itemCount: state.drinks.length,
+                    itemCount: state.dishes.length,
                     gridDelegate:
                         const SliverGridDelegateWithMaxCrossAxisExtent(
                       maxCrossAxisExtent: 300.0,
@@ -263,15 +263,15 @@ class _DrinkScreenState extends State<DrinkScreen> {
                       childAspectRatio: 0.7,
                     ),
                     itemBuilder: (BuildContext context, int index) {
-                      return DrinkItem(
-                        drink: state.drinks[index],
+                      return DishItem(
+                        dish: state.dishes[index],
                       );
                     },
                   ),
                 ),
                 SliverToBoxAdapter(
                   child: Visibility(
-                    visible: state.drinkState == BlocState.noData,
+                    visible: state.dishState == BlocState.noData,
                     child: NoDataFoundView(),
                   ),
                 )

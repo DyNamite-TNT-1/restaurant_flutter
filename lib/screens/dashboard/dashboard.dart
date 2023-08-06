@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
-import 'package:restaurant_flutter/routes/route_constants.dart';
+import 'package:restaurant_flutter/configs/configs.dart';
+import 'package:restaurant_flutter/widgets/widgets.dart';
+
+import 'widget/table_item.dart';
 
 class Dashboard extends StatefulWidget {
   const Dashboard({super.key});
@@ -10,38 +12,106 @@ class Dashboard extends StatefulWidget {
 }
 
 class _DashboardState extends State<Dashboard> {
+  List<String> tableTypes = ["Tất cả", "Vip 1", "Vip 2", "Tầng trệt", "Tầng 2"];
+  String _selectedFilter = "Tất cả";
+
+  Widget _buildTopFilter(BuildContext context) {
+    return Row(children: [
+      ...tableTypes
+          .map(
+            (e) => Container(
+              margin: EdgeInsets.symmetric(horizontal: kPadding10),
+              decoration: BoxDecoration(
+                color:
+                    _selectedFilter == e ? Color(0XFFEE4D2D) : backgroundColor,
+                borderRadius: BorderRadius.circular(5),
+                border: Border.all(
+                  color: _selectedFilter == e ? Colors.transparent : subColor,
+                ),
+              ),
+              child: Material(
+                color: Colors.transparent,
+                child: InkWell(
+                  borderRadius: BorderRadius.circular(5),
+                  onTap: () {
+                    if (_selectedFilter != e) {
+                      setState(() {
+                        _selectedFilter = e;
+                      });
+                    }
+                  },
+                  child: Container(
+                    padding: EdgeInsets.symmetric(vertical: 5, horizontal: 10),
+                    child: Text(
+                      e,
+                      style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                            fontSize: 14,
+                            color:
+                                _selectedFilter == e ? Colors.white : textColor,
+                          ),
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          )
+          .toList(),
+    ]);
+  }
+
+  SliverPersistentHeader _makeHeaderFilter(BuildContext context) {
+    return SliverPersistentHeader(
+      pinned: true,
+      delegate: PinSliverAppBarDelegate(
+        minHeight: 50.0,
+        maxHeight: 50.0,
+        child: Container(
+          padding: EdgeInsets.symmetric(
+            horizontal: kPadding15,
+            vertical: kPadding10,
+          ),
+          color: backgroundColor,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                "Danh sách bàn:",
+                style: Theme.of(context).textTheme.bodyLarge,
+              ),
+              _buildTopFilter(context),
+              Text(
+                "4 người/bàn",
+                style: Theme.of(context).textTheme.bodyLarge,
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Center(
-        child: Column(
-          children: [
-            Text("Dashboard"),
-            Expanded(
-              child: ListView.builder(
-                itemCount: 5,
-                itemBuilder: (context, index) {
-                  return ElevatedButton(
-                    onPressed: () {
-                      context.goNamed(
-                        RouteConstants.dishDetail,
-                        pathParameters: {
-                          "id": index.toString(),
-                        },
-                      );
-                    },
-                    child: Container(
-                      padding:
-                          EdgeInsets.symmetric(horizontal: 15, vertical: 5),
-                      margin: EdgeInsets.all(20),
-                      child: Text("item $index"),
-                    ),
-                  );
-                },
+      body: CustomScrollView(
+        slivers: [
+          _makeHeaderFilter(context),
+          SliverPadding(
+            padding: EdgeInsets.all(kPadding10),
+            sliver: SliverGrid.builder(
+              gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
+                maxCrossAxisExtent: 100.0,
+                mainAxisSpacing: 10.0,
+                crossAxisSpacing: 10.0,
+                childAspectRatio: 2,
               ),
+              itemBuilder: (BuildContext context, int index) {
+                return TableItem(id: index.toString());
+              },
+              itemCount: 20,
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }
