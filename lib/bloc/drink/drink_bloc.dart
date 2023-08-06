@@ -19,6 +19,12 @@ class DrinkBloc extends Bloc<DrinkEvent, DrinkState> {
     BlocState loading = event.params.containsKey("state")
         ? event.params["state"]
         : BlocState.init;
+    int currentPage = event.params.containsKey("currentPage")
+        ? event.params["currentPage"]
+        : state.currentPage;
+    int maxPage = event.params.containsKey("maxPage")
+        ? event.params["maxPage"]
+        : state.maxPage;
     BlocState status;
     if (loading == BlocState.loading) {
       status = BlocState.loading;
@@ -29,6 +35,8 @@ class DrinkBloc extends Bloc<DrinkEvent, DrinkState> {
       state.copyWith(
         drinks: drinks,
         drinkState: status,
+        currentPage: currentPage,
+        maxPage: maxPage,
       ),
     );
   }

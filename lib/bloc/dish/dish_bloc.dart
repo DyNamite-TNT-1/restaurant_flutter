@@ -19,6 +19,12 @@ class DishBloc extends Bloc<DishEvent, DishState> {
     BlocState loading = event.params.containsKey("state")
         ? event.params["state"]
         : BlocState.init;
+    int currentPage = event.params.containsKey("currentPage")
+        ? event.params["currentPage"]
+        : state.currentPage;
+    int maxPage = event.params.containsKey("maxPage")
+        ? event.params["maxPage"]
+        : state.maxPage;
     BlocState status;
     if (loading == BlocState.loading) {
       status = BlocState.loading;
@@ -29,6 +35,8 @@ class DishBloc extends Bloc<DishEvent, DishState> {
       state.copyWith(
         dishes: dishes,
         dishState: status,
+        currentPage: currentPage,
+        maxPage: maxPage,
       ),
     );
   }

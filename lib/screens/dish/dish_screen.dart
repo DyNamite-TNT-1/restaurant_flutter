@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:number_pagination/number_pagination.dart';
 import 'package:restaurant_flutter/api/api.dart';
 import 'package:restaurant_flutter/bloc/dish/dish_bloc.dart';
 import 'package:restaurant_flutter/configs/configs.dart';
@@ -27,6 +28,7 @@ class _DishScreenState extends State<DishScreen> {
   String tagRequestDishes = "";
   String tagRequestDishTypes = "";
   OrderEnum _selectedPriceOrder = OrderEnum.desc;
+  int currentPage = 1;
 
   @override
   void initState() {
@@ -60,15 +62,17 @@ class _DishScreenState extends State<DishScreen> {
       DishModel dishModel = await Api.requestDish(
         type: type,
         order: priceOrder,
-        page: 1,
+        page: currentPage,
         isDrink: false,
         tagRequest: tagRequestDishes,
       );
-      if (!isServiceClosed) {
+      if (!isServiceClosed && dishModel.isSuccess) {
         dishBloc.add(
           OnLoadDish(
             params: {
               "dishes": dishModel.dishes,
+              "currentPage": dishModel.currentPage,
+              "maxPage": dishModel.maxPage,
             },
           ),
         );
@@ -142,6 +146,7 @@ class _DishScreenState extends State<DishScreen> {
           onSelected: (value) {
             setState(() {
               _selectedFilter = value;
+      currentPage = 1;
             });
             _requestDish(
               type: _selectedFilter.dishTypeId,
@@ -222,6 +227,13 @@ class _DishScreenState extends State<DishScreen> {
     );
   }
 
+  Future<void> _onRefresh() async {
+    await _requestDish(
+      type: _selectedFilter.dishTypeId,
+      priceOrder: _selectedPriceOrder,
+    );
+  }
+
   SliverPersistentHeader _makeHeaderFilter(BuildContext context) {
     return SliverPersistentHeader(
       pinned: true,
@@ -234,7 +246,34 @@ class _DishScreenState extends State<DishScreen> {
             vertical: kPadding10,
           ),
           color: backgroundColor,
-          child: _buildTopFilter(context),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              _buildTopFilter(context),
+              Material(
+                color: Colors.transparent,
+                child: InkWell(
+                  borderRadius: BorderRadius.circular(kCornerSmall),
+                  onTap: () {
+                    _onRefresh();
+                  },
+                  child: Container(
+                    padding: EdgeInsets.symmetric(horizontal: 5),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(kCornerSmall),
+                      border: Border.all(),
+                    ),
+                    child: Row(
+                      children: const [
+                        Icon(Icons.refresh),
+                        Text("Làm mới"),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );
@@ -246,35 +285,80 @@ class _DishScreenState extends State<DishScreen> {
       create: (context) => dishBloc,
       child: BlocBuilder<DishBloc, DishState>(
         builder: (context, state) {
+          bool isLoading = state.dishState == BlocState.loading ||
+              state.dishTypeState == BlocState.loading;
+          currentPage = state.currentPage;
           return Scaffold(
             backgroundColor: backgroundColor,
-            body: CustomScrollView(
-              slivers: [
-                _makeHeaderFilter(context),
-                SliverPadding(
-                  padding: EdgeInsets.all(kPadding10),
-                  sliver: SliverGrid.builder(
-                    itemCount: state.dishes.length,
-                    gridDelegate:
-                        const SliverGridDelegateWithMaxCrossAxisExtent(
-                      maxCrossAxisExtent: 300.0,
-                      mainAxisSpacing: 20.0,
-                      crossAxisSpacing: 20.0,
-                      childAspectRatio: 0.7,
+            body: Stack(
+              children: [
+                CustomScrollView(
+                  slivers: [
+                    _makeHeaderFilter(context),
+                    if (state.dishState == BlocState.loadCompleted ||
+                        state.dishState == BlocState.loading)
+                      SliverPadding(
+                        padding: EdgeInsets.all(kPadding10),
+                        sliver: SliverGrid.builder(
+                          itemCount: state.dishes.length,
+                          gridDelegate:
+                              const SliverGridDelegateWithMaxCrossAxisExtent(
+                            maxCrossAxisExtent: 300.0,
+                            mainAxisSpacing: 20.0,
+                            crossAxisSpacing: 20.0,
+                            childAspectRatio: 0.7,
+                          ),
+                          itemBuilder: (BuildContext context, int index) {
+                            return DishItem(
+                              dish: state.dishes[index],
+                            );
+                          },
+                        ),
+                      ),
+                    SliverToBoxAdapter(
+                      child: Visibility(
+                        visible: state.dishState == BlocState.noData,
+                        child: NoDataFoundView(),
+                      ),
                     ),
-                    itemBuilder: (BuildContext context, int index) {
-                      return DishItem(
-                        dish: state.dishes[index],
-                      );
-                    },
+                    SliverToBoxAdapter(
+                      child: SizedBox(
+                        height: 50,
+                      ),
+                    ),
+                  ],
+                ),
+                Visibility(
+                  visible: isLoading,
+                  child: Container(
+                    height: double.infinity,
+                    width: double.infinity,
+                    color: Colors.grey.withOpacity(0.2),
+                    child: Center(
+                      child: CircularProgressIndicator(),
+                    ),
                   ),
                 ),
-                SliverToBoxAdapter(
-                  child: Visibility(
-                    visible: state.dishState == BlocState.noData,
-                    child: NoDataFoundView(),
+                Positioned(
+                  bottom: 0,
+                  left: 0,
+                  right: 0,
+                  child: NumberPagination(
+                    onPageChanged: (int pageNumber) {
+                      setState(() {
+                        currentPage = pageNumber;
+                      });
+                      _requestDish(
+                        type: _selectedFilter.dishTypeId,
+                        priceOrder: _selectedPriceOrder,
+                      );
+                    },
+                    pageTotal: state.maxPage,
+                    pageInit: currentPage, // picked number when init page
+                    colorPrimary: primaryColor,
+                    // colorSub: Colors.grey,
                   ),
-                )
+                ),
               ],
             ),
           );

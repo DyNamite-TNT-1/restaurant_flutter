@@ -4,6 +4,12 @@ class Images {
   static const String miniLogoApp = "assets/images/mini_logo_website_nobg.png";
   static const String miniLogoAppNoBg =
       "assets/images/mini_logo_website_nobg.png";
+  static const String logoAppDarkMode =
+      "assets/images/logo_website_darkmode.png";
+  //slider on dashboard
+  static const String slider1 = "assets/images/slider1.png";
+  static const String slider2 = "assets/images/slider2.png";
+
   static const String noDataFound = "assets/images/no_data_found.jpg";
 
   static const String icAvailableCalendar =

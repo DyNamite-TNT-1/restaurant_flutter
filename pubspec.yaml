@@ -45,6 +45,8 @@ dependencies:
   flutter_bloc: ^8.1.2
   equatable: ^2.0.5
   shimmer: ^3.0.0
+  number_pagination: ^0.0.3+2
+  carousel_slider: ^4.2.1
 
 dev_dependencies:
   flutter_test:

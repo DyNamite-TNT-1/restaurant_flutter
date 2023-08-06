@@ -6,7 +6,7 @@ import 'package:restaurant_flutter/screens/dish/detail_dish.dart';
 import 'package:restaurant_flutter/nested_navigation.dart';
 import 'package:restaurant_flutter/screens/dish/dish_screen.dart';
 import 'package:restaurant_flutter/screens/drink/detail_drink.dart';
-import 'package:restaurant_flutter/screens/drink/drink.dart';
+import 'package:restaurant_flutter/screens/drink/drink_screen.dart';
 import 'package:restaurant_flutter/screens/reservation/reservation_screen.dart';
 import 'package:restaurant_flutter/screens/table/table_screen.dart';
 

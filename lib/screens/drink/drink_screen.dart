@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:number_pagination/number_pagination.dart';
 import 'package:restaurant_flutter/api/api.dart';
 import 'package:restaurant_flutter/bloc/drink/drink_bloc.dart';
 import 'package:restaurant_flutter/configs/configs.dart';
@@ -27,6 +28,7 @@ class _DrinkScreenState extends State<DrinkScreen> {
   String tagRequestDrinks = "";
   String tagRequestDrinkTypes = "";
   OrderEnum _selectedPriceOrder = OrderEnum.desc;
+  int currentPage = 1;
 
   @override
   void initState() {
@@ -60,15 +62,17 @@ class _DrinkScreenState extends State<DrinkScreen> {
       DishModel drinkModel = await Api.requestDish(
         type: type,
         order: priceOrder,
-        page: 1,
+        page: currentPage,
         isDrink: true,
         tagRequest: tagRequestDrinks,
       );
-      if (!isServiceClosed) {
+      if (!isServiceClosed && drinkModel.isSuccess) {
         drinkBloc.add(
           OnLoadDrink(
             params: {
               "drinks": drinkModel.dishes,
+              "currentPage": drinkModel.currentPage,
+              "maxPage": drinkModel.maxPage,
             },
           ),
         );
@@ -142,6 +146,7 @@ class _DrinkScreenState extends State<DrinkScreen> {
           onSelected: (value) {
             setState(() {
               _selectedFilter = value;
+              currentPage = 1;
             });
             _requestDrink(
               type: _selectedFilter.dishTypeId,
@@ -222,6 +227,13 @@ class _DrinkScreenState extends State<DrinkScreen> {
     );
   }
 
+  Future<void> _onRefresh() async {
+    await _requestDrink(
+      type: _selectedFilter.dishTypeId,
+      priceOrder: _selectedPriceOrder,
+    );
+  }
+
   SliverPersistentHeader _makeHeaderFilter(BuildContext context) {
     return SliverPersistentHeader(
       pinned: true,
@@ -234,7 +246,34 @@ class _DrinkScreenState extends State<DrinkScreen> {
             vertical: kPadding10,
           ),
           color: backgroundColor,
-          child: _buildTopFilter(context),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              _buildTopFilter(context),
+              Material(
+                color: Colors.transparent,
+                child: InkWell(
+                  borderRadius: BorderRadius.circular(kCornerSmall),
+                  onTap: () {
+                    _onRefresh();
+                  },
+                  child: Container(
+                    padding: EdgeInsets.symmetric(horizontal: 5),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(kCornerSmall),
+                      border: Border.all(),
+                    ),
+                    child: Row(
+                      children: const [
+                        Icon(Icons.refresh),
+                        Text("Làm mới"),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );
@@ -246,35 +285,79 @@ class _DrinkScreenState extends State<DrinkScreen> {
       create: (context) => drinkBloc,
       child: BlocBuilder<DrinkBloc, DrinkState>(
         builder: (context, state) {
+          bool isLoading = state.drinkState == BlocState.loading ||
+              state.drinkTypeState == BlocState.loading;
           return Scaffold(
             backgroundColor: backgroundColor,
-            body: CustomScrollView(
-              slivers: [
-                _makeHeaderFilter(context),
-                SliverPadding(
-                  padding: EdgeInsets.all(kPadding10),
-                  sliver: SliverGrid.builder(
-                    itemCount: state.drinks.length,
-                    gridDelegate:
-                        const SliverGridDelegateWithMaxCrossAxisExtent(
-                      maxCrossAxisExtent: 300.0,
-                      mainAxisSpacing: 20.0,
-                      crossAxisSpacing: 20.0,
-                      childAspectRatio: 0.7,
+            body: Stack(
+              children: [
+                CustomScrollView(
+                  slivers: [
+                    _makeHeaderFilter(context),
+                    if (state.drinkState == BlocState.loadCompleted ||
+                        state.drinkState == BlocState.loading)
+                      SliverPadding(
+                        padding: EdgeInsets.all(kPadding10),
+                        sliver: SliverGrid.builder(
+                          itemCount: state.drinks.length,
+                          gridDelegate:
+                              const SliverGridDelegateWithMaxCrossAxisExtent(
+                            maxCrossAxisExtent: 300.0,
+                            mainAxisSpacing: 20.0,
+                            crossAxisSpacing: 20.0,
+                            childAspectRatio: 0.7,
+                          ),
+                          itemBuilder: (BuildContext context, int index) {
+                            return DrinkItem(
+                              drink: state.drinks[index],
+                            );
+                          },
+                        ),
+                      ),
+                    SliverToBoxAdapter(
+                      child: Visibility(
+                        visible: state.drinkState == BlocState.noData,
+                        child: NoDataFoundView(),
+                      ),
                     ),
-                    itemBuilder: (BuildContext context, int index) {
-                      return DrinkItem(
-                        drink: state.drinks[index],
-                      );
-                    },
+                    SliverToBoxAdapter(
+                      child: SizedBox(
+                        height: 50,
+                      ),
+                    ),
+                  ],
+                ),
+                Visibility(
+                  visible: isLoading,
+                  child: Container(
+                    height: double.infinity,
+                    width: double.infinity,
+                    color: Colors.grey.withOpacity(0.2),
+                    child: Center(
+                      child: CircularProgressIndicator(),
+                    ),
                   ),
                 ),
-                SliverToBoxAdapter(
-                  child: Visibility(
-                    visible: state.drinkState == BlocState.noData,
-                    child: NoDataFoundView(),
+                Positioned(
+                  bottom: 0,
+                  left: 0,
+                  right: 0,
+                  child: NumberPagination(
+                    onPageChanged: (int pageNumber) {
+                      setState(() {
+                        currentPage = pageNumber;
+                      });
+                      _requestDrink(
+                        type: _selectedFilter.dishTypeId,
+                        priceOrder: _selectedPriceOrder,
+                      );
+                    },
+                    pageTotal: state.maxPage,
+                    pageInit: currentPage, // picked number when init page
+                    colorPrimary: primaryColor,
+                    // colorSub: Colors.grey,
                   ),
-                )
+                ),
               ],
             ),
           );
