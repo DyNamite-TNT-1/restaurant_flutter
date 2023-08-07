@@ -125,7 +125,7 @@ class _ScaffoldWithNavigationRailState
                       ),
                     ),
                     NavigationRailDestination(
-                      label: Text('Thức uống'),
+                      label: Text('Đồ uống'),
                       icon: SvgPicture.asset(
                         Images.icDrink,
                         height: 20,

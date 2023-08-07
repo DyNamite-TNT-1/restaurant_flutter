@@ -6,6 +6,7 @@ import 'package:number_pagination/number_pagination.dart';
 import 'package:restaurant_flutter/api/api.dart';
 import 'package:restaurant_flutter/bloc/dish/dish_bloc.dart';
 import 'package:restaurant_flutter/configs/configs.dart';
+import 'package:restaurant_flutter/configs/user_repository.dart';
 import 'package:restaurant_flutter/enum/bloc.dart';
 import 'package:restaurant_flutter/enum/order.dart';
 import 'package:restaurant_flutter/models/service/common_response.dart';
@@ -35,7 +36,7 @@ class _DishScreenState extends State<DishScreen> {
   String tagRequestDishTypes = "";
   OrderEnum _selectedPriceOrder = OrderEnum.desc;
   int currentPage = 1;
-  bool isAddingNewDish = false;
+
   final TextEditingController _nameController = TextEditingController();
   final FocusNode _nameFocusNode = FocusNode();
   final TextEditingController _priceController = TextEditingController();
@@ -57,6 +58,11 @@ class _DishScreenState extends State<DishScreen> {
   @override
   void dispose() {
     super.dispose();
+    _nameController.clear();
+    _priceController.clear();
+    _descriptionController.clear();
+    _imageController.clear();
+    _unitController.clear();
     Api.cancelRequest(tag: tagRequestDishes);
     Api.cancelRequest(tag: tagRequestDishTypes);
   }
@@ -257,8 +263,6 @@ class _DishScreenState extends State<DishScreen> {
     );
     if (result.isSuccess) {
       if (context.mounted) {
-        context.pop();
-        _onRefresh();
         Fluttertoast.showToast(
           msg: "Thêm món mới thành công!",
           toastLength: Toast.LENGTH_SHORT,
@@ -267,8 +271,15 @@ class _DishScreenState extends State<DishScreen> {
           textColor: Colors.white,
           fontSize: 16.0,
           webShowClose: true,
-          webBgColor: dangerColorToast,
+          webBgColor: successColorToast,
         );
+        context.pop();
+        _onRefresh();
+        _nameController.text = "";
+        _descriptionController.text = "";
+        _priceController.text = "";
+        _imageController.text = "";
+        _unitController.text = "";
       }
     } else {
       Fluttertoast.showToast(
@@ -282,9 +293,6 @@ class _DishScreenState extends State<DishScreen> {
         webBgColor: dangerColorToast,
       );
     }
-    setState(() {
-      isAddingNewDish = false;
-    });
   }
 
   void _openDialogAddNewDish() {

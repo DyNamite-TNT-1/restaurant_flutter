@@ -51,6 +51,14 @@ class UserModel {
     );
   }
 
+  bool get isManager {
+    return roleId == 2 ? true : false;
+  }
+
+  bool get isAdmin {
+    return roleId == 1 ? true : false;
+  }
+
   Map<String, dynamic> toJson() {
     return {
       "userId": userId,

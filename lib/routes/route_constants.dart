@@ -5,7 +5,7 @@ class RouteConstants {
   //thực đơn
   static String dishes = "dishes";
   static String dishDetail = "dishDetail";
-  //thức uống
+  //đồ uống
   static String drinks = "drinks";
   static String drinkDetail = "drinkDetail";
   //chỗ trống

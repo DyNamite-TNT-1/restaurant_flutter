@@ -19,13 +19,11 @@ class _AppCeilingState extends State<AppCeiling> {
   @override
   void initState() {
     super.initState();
-    // checkLogin();
+    checkLogin();
   }
 
   void checkLogin() {
     final token = UserPreferences.getToken();
-    print(
-        "UserRepository.userModel.userName: ${UserRepository.userModel.userName}");
     if (token != null) {
       setState(() {
         isHasToken = true;
