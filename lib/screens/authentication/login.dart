@@ -3,14 +3,16 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:go_router/go_router.dart';
 import 'package:restaurant_flutter/api/api.dart';
 import 'package:restaurant_flutter/configs/configs.dart';
+import 'package:restaurant_flutter/configs/user_repository.dart';
 import 'package:restaurant_flutter/models/service/user.dart';
 import 'package:restaurant_flutter/widgets/widgets.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({
     super.key,
+    required this.onLogin,
   });
-
+  final Function onLogin;
   @override
   State<LoginScreen> createState() => _LoginScreenState();
 }
@@ -41,9 +43,11 @@ class _LoginScreenState extends State<LoginScreen> {
         login: loginController.text, password: passwordController.text);
     if (result.isSuccess) {
       await UserPreferences.setToken(result.accessToken);
+      UserRepository.setUserModel(result.toJson());
 
       if (context.mounted) {
         context.pop();
+        widget.onLogin();
         // Navigator.pushNamed(
         //   context,
         //   Routes.appContainer,
@@ -131,7 +135,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   ),
                   AppInput(
                     name: "password",
-                    keyboardType: TextInputType.visiblePassword,
+                    keyboardType: TextInputType.name,
                     icon: Icons.lock,
                     controller: passwordController,
                     focusNode: passwordFocus,

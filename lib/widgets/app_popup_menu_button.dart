@@ -7,6 +7,7 @@ class AppPopupMenuButton<T> extends StatefulWidget {
     required this.onSelected,
     required this.filterItemBuilder,
     required this.data,
+    required this.initialValue,
     this.offset,
     this.title,
     this.icon,
@@ -19,6 +20,7 @@ class AppPopupMenuButton<T> extends StatefulWidget {
   final PopupMenuItem<T> Function(BuildContext context, T label)
       filterItemBuilder;
   final List<T> data;
+  final T initialValue;
   final String? tooltip;
   final BoxConstraints? menuConstraints;
   final Offset? offset;
@@ -55,6 +57,7 @@ class _TPopupMenuButtonState<T> extends State<AppPopupMenuButton<T>> {
       );
     }
     return PopupMenuButton<T>(
+      initialValue: widget.initialValue,
       constraints: widget.menuConstraints ?? BoxConstraints(maxHeight: 5 * 80),
       offset: widget.offset ?? Offset(0, 10),
       position: widget.position ?? PopupMenuPosition.under,

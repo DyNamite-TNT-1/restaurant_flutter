@@ -94,6 +94,8 @@ class HTTPManager {
     if (external) {
       request = dioExternal;
     }
+
+    request.options = _optionsCookie();
     dioInternal.options.method = 'POST';
     dioInternal.options.headers['Content-Type'] =
         "application/json; charset=UTF-8";
@@ -159,6 +161,8 @@ class HTTPManager {
     if (external) {
       request = dioExternal;
     }
+    
+    request.options = _optionsCookie();
     dioInternal.options.method = 'PUT';
     dioInternal.options.headers['Content-Type'] =
         "application/json; charset=UTF-8";
@@ -342,6 +346,7 @@ class HTTPManager {
         if (data is Map) {
           var serverMsg = ParseTypeData.ensureString(data["msg"]);
           message = serverMsg.isEmpty ? message : serverMsg;
+          print(message);
         }
         if (error.response?.statusCode == 401) {
           // move to login page

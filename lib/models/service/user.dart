@@ -50,4 +50,18 @@ class UserModel {
       expireTime: ParseTypeData.ensureInt(json["expireTime"]),
     );
   }
+
+  Map<String, dynamic> toJson() {
+    return {
+      "userId": userId,
+      "userName": userName,
+      "address": address,
+      "gender": gender,
+      "role": role,
+      "roleId": roleId,
+      "isSuccess": isSuccess,
+      "accessToken": accessToken,
+      "expireTime": expireTime,
+    };
+  }
 }

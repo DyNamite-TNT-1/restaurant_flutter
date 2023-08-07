@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:go_router/go_router.dart';
 import 'package:number_pagination/number_pagination.dart';
 import 'package:restaurant_flutter/api/api.dart';
@@ -7,8 +8,10 @@ import 'package:restaurant_flutter/bloc/dish/dish_bloc.dart';
 import 'package:restaurant_flutter/configs/configs.dart';
 import 'package:restaurant_flutter/enum/bloc.dart';
 import 'package:restaurant_flutter/enum/order.dart';
+import 'package:restaurant_flutter/models/service/common_response.dart';
 import 'package:restaurant_flutter/models/service/dish.dart';
 import 'package:restaurant_flutter/models/service/dish_type.dart';
+import 'package:restaurant_flutter/utils/extension.dart';
 import 'package:restaurant_flutter/widgets/app_dialog_input.dart';
 import 'package:restaurant_flutter/widgets/app_popup_menu_button.dart';
 import 'package:restaurant_flutter/widgets/widgets.dart';
@@ -32,6 +35,17 @@ class _DishScreenState extends State<DishScreen> {
   String tagRequestDishTypes = "";
   OrderEnum _selectedPriceOrder = OrderEnum.desc;
   int currentPage = 1;
+  bool isAddingNewDish = false;
+  final TextEditingController _nameController = TextEditingController();
+  final FocusNode _nameFocusNode = FocusNode();
+  final TextEditingController _priceController = TextEditingController();
+  final FocusNode _priceFocusNode = FocusNode();
+  final TextEditingController _descriptionController = TextEditingController();
+  final FocusNode _descriptionFocusNode = FocusNode();
+  final TextEditingController _imageController = TextEditingController();
+  final FocusNode _imageFocusNode = FocusNode();
+  final TextEditingController _unitController = TextEditingController();
+  final FocusNode _unitFocusNode = FocusNode();
 
   @override
   void initState() {
@@ -115,6 +129,7 @@ class _DishScreenState extends State<DishScreen> {
           style: Theme.of(context).textTheme.bodyLarge,
         ),
         AppPopupMenuButton<DishTypeModel>(
+          initialValue: _selectedFilter,
           tooltip: "Chọn loại",
           onSelected: (value) {
             setState(() {
@@ -171,6 +186,7 @@ class _DishScreenState extends State<DishScreen> {
           style: Theme.of(context).textTheme.bodyLarge,
         ),
         AppPopupMenuButton<OrderEnum>(
+          initialValue: _selectedPriceOrder,
           tooltip: "Sắp xếp giá",
           onSelected: (value) {
             setState(() {
@@ -229,144 +245,233 @@ class _DishScreenState extends State<DishScreen> {
     );
   }
 
-  final TextEditingController _nameController = TextEditingController();
-  final FocusNode _nameFocusNode = FocusNode();
-  final TextEditingController _priceController = TextEditingController();
-  final FocusNode _priceFocusNode = FocusNode();
-  final TextEditingController _descriptionController = TextEditingController();
-  final FocusNode _descriptionFocusNode = FocusNode();
-  final TextEditingController _imageController = TextEditingController();
-  final FocusNode _imageFocusNode = FocusNode();
-  final TextEditingController _unitController = TextEditingController();
-  final FocusNode _unitFocusNode = FocusNode();
+  Future<void> _addNewDish(DishTypeModel dishType) async {
+    CommonResponse result = await Api.addDish(
+      name: _nameController.text,
+      description: _descriptionController.text,
+      image: _imageController.text,
+      isDrink: false,
+      unit: _unitController.text.capitalize(),
+      price: _priceController.text,
+      dishTypeId: dishType.dishTypeId,
+    );
+    if (result.isSuccess) {
+      if (context.mounted) {
+        context.pop();
+        _onRefresh();
+        Fluttertoast.showToast(
+          msg: "Thêm món mới thành công!",
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.CENTER,
+          timeInSecForIosWeb: 3,
+          textColor: Colors.white,
+          fontSize: 16.0,
+          webShowClose: true,
+          webBgColor: dangerColorToast,
+        );
+      }
+    } else {
+      Fluttertoast.showToast(
+        msg: "Thêm món mới thất bại!",
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.CENTER,
+        timeInSecForIosWeb: 3,
+        textColor: Colors.white,
+        fontSize: 16.0,
+        webShowClose: true,
+        webBgColor: dangerColorToast,
+      );
+    }
+    setState(() {
+      isAddingNewDish = false;
+    });
+  }
 
   void _openDialogAddNewDish() {
+    DishTypeModel selectedFilter2 = dishBloc.state.dishTypes.sublist(1)[0];
     showDialog(
       context: context,
       barrierDismissible: false,
       builder: (BuildContext ct) {
-        return AppDialogInput(
-          title: "Thêm món mới",
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Padding(
-                padding: const EdgeInsets.only(bottom: 5),
-                child: Text(
-                  "Tên món",
-                  style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                        fontSize: 16,
-                      ),
-                ),
-              ),
-              AppInput2(
-                name: "name",
-                keyboardType: TextInputType.name,
-                controller: _nameController,
-                placeHolder: "Điền tên món",
-                focusNode: _nameFocusNode,
-              ),
-              Row(
-                children: [
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Padding(
-                          padding: const EdgeInsets.only(top: 10, bottom: 5),
-                          child: Text(
-                            "Giá món(VNĐ)",
-                            style: Theme.of(context)
-                                .textTheme
-                                .bodyMedium
-                                ?.copyWith(
-                                  fontSize: 16,
-                                ),
-                          ),
+        return StatefulBuilder(builder: (context, newState) {
+          return AppDialogInput(
+            title: "Thêm món mới",
+            buttonDoneTitle: "Tạo",
+            buttonCancelTitle: "Thoát",
+            onDone: () {
+              _addNewDish(selectedFilter2);
+            },
+            onCancel: () {
+              context.pop();
+            },
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Padding(
+                  padding: const EdgeInsets.only(bottom: 5),
+                  child: Text(
+                    "Tên món",
+                    style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                          fontSize: 16,
                         ),
-                        AppInput2(
-                          name: "price",
-                          keyboardType: TextInputType.number,
-                          controller: _priceController,
-                          placeHolder: "Nhập giá món(VNĐ)",
-                          focusNode: _priceFocusNode,
+                  ),
+                ),
+                AppInput2(
+                  name: "name",
+                  keyboardType: TextInputType.name,
+                  controller: _nameController,
+                  placeHolder: "Điền tên món",
+                  focusNode: _nameFocusNode,
+                ),
+                Row(
+                  children: [
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.only(top: 10, bottom: 5),
+                            child: Text(
+                              "Giá món(VNĐ)",
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .bodyMedium
+                                  ?.copyWith(
+                                    fontSize: 16,
+                                  ),
+                            ),
+                          ),
+                          AppInput2(
+                            name: "price",
+                            keyboardType: TextInputType.number,
+                            controller: _priceController,
+                            placeHolder: "Nhập giá món(VNĐ)",
+                            focusNode: _priceFocusNode,
+                          ),
+                        ],
+                      ),
+                    ),
+                    SizedBox(
+                      width: kPadding15,
+                    ),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.only(top: 10, bottom: 5),
+                            child: Text(
+                              "Đơn vị tính",
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .bodyMedium
+                                  ?.copyWith(
+                                    fontSize: 16,
+                                  ),
+                            ),
+                          ),
+                          AppInput2(
+                            name: "price",
+                            keyboardType: TextInputType.name,
+                            controller: _unitController,
+                            placeHolder: "Ex: phần, dĩa, ly...",
+                            focusNode: _unitFocusNode,
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(top: 10, bottom: 5),
+                  child: Text(
+                    "Mô tả",
+                    style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                          fontSize: 16,
+                        ),
+                  ),
+                ),
+                AppInput2(
+                  name: "description",
+                  keyboardType: TextInputType.name,
+                  controller: _descriptionController,
+                  placeHolder: "Thêm mô tả(tùy chọn)",
+                  focusNode: _descriptionFocusNode,
+                  maxLines: 2,
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(top: 10, bottom: 5),
+                  child: Text(
+                    "Link ảnh",
+                    style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                          fontSize: 16,
+                        ),
+                  ),
+                ),
+                AppInput2(
+                  name: "image",
+                  keyboardType: TextInputType.name,
+                  controller: _imageController,
+                  placeHolder: "Url ảnh(tùy chọn)",
+                  focusNode: _imageFocusNode,
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(top: 10, bottom: 5),
+                  child: Text(
+                    "Loại",
+                    style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                          fontSize: 16,
+                        ),
+                  ),
+                ),
+                AppPopupMenuButton<DishTypeModel>(
+                  initialValue: selectedFilter2,
+                  tooltip: "Chọn loại",
+                  onSelected: (value) {
+                    newState(() {
+                      selectedFilter2 = value;
+                    });
+                  },
+                  data: dishBloc.state.dishTypes.sublist(1),
+                  filterItemBuilder: (context, label) {
+                    return PopupMenuItem<DishTypeModel>(
+                      value: label,
+                      child: Text(label.type),
+                    );
+                  },
+                  child: Container(
+                    padding: EdgeInsets.symmetric(
+                      horizontal: 10,
+                      vertical: 5,
+                    ),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(kCornerSmall),
+                      color: Color(0XFFA0A0A0),
+                    ),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          selectedFilter2.type,
+                          style:
+                              Theme.of(context).textTheme.bodyMedium?.copyWith(
+                                    fontSize: 14,
+                                    color: Colors.white,
+                                  ),
+                        ),
+                        Icon(
+                          Icons.keyboard_arrow_down,
+                          size: 16,
+                          color: Colors.white,
                         ),
                       ],
                     ),
                   ),
-                  SizedBox(
-                    width: kPadding15,
-                  ),
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Padding(
-                          padding: const EdgeInsets.only(top: 10, bottom: 5),
-                          child: Text(
-                            "Đơn vị tính",
-                            style: Theme.of(context)
-                                .textTheme
-                                .bodyMedium
-                                ?.copyWith(
-                                  fontSize: 16,
-                                ),
-                          ),
-                        ),
-                        AppInput2(
-                          name: "price",
-                          keyboardType: TextInputType.number,
-                          controller: _unitController,
-                          placeHolder: "Ex: phần, dĩa, ly...",
-                          focusNode: _unitFocusNode,
-                        ),
-                      ],
-                    ),
-                  )
-                ],
-              ),
-              Padding(
-                padding: const EdgeInsets.only(top: 10, bottom: 5),
-                child: Text(
-                  "Mô tả",
-                  style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                        fontSize: 16,
-                      ),
                 ),
-              ),
-              AppInput2(
-                name: "description",
-                keyboardType: TextInputType.name,
-                controller: _descriptionController,
-                placeHolder: "Thêm mô tả(tùy chọn)",
-                focusNode: _descriptionFocusNode,
-                maxLines: 2,
-              ),
-              Padding(
-                padding: const EdgeInsets.only(top: 10, bottom: 5),
-                child: Text(
-                  "Link ảnh",
-                  style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                        fontSize: 16,
-                      ),
-                ),
-              ),
-              AppInput2(
-                name: "image",
-                keyboardType: TextInputType.name,
-                controller: _imageController,
-                placeHolder: "Url ảnh(tùy chọn)",
-                focusNode: _imageFocusNode,
-              ),
-            ],
-          ),
-          onDone: () {
-            context.pop();
-          },
-          onCancel: () {
-            context.pop();
-          },
-        );
+              ],
+            ),
+          );
+        });
       },
     );
   }

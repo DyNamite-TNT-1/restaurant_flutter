@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:restaurant_flutter/configs/configs.dart';
+import 'package:restaurant_flutter/configs/user_repository.dart';
 import 'package:restaurant_flutter/routes/route_constants.dart';
 import 'package:restaurant_flutter/screens/authentication/login.dart';
 import 'package:restaurant_flutter/widgets/app_button.dart';
@@ -13,12 +14,35 @@ class AppCeiling extends StatefulWidget {
 }
 
 class _AppCeilingState extends State<AppCeiling> {
-  _openDoneDialog() {
+  bool isHasToken = false;
+
+  @override
+  void initState() {
+    super.initState();
+    // checkLogin();
+  }
+
+  void checkLogin() {
+    final token = UserPreferences.getToken();
+    print(
+        "UserRepository.userModel.userName: ${UserRepository.userModel.userName}");
+    if (token != null) {
+      setState(() {
+        isHasToken = true;
+      });
+    }
+  }
+
+  _openLoginDialog() {
     showDialog(
       context: context,
       barrierDismissible: false,
       builder: (BuildContext ct) {
-        return LoginScreen();
+        return LoginScreen(
+          onLogin: () {
+            checkLogin();
+          },
+        );
       },
     );
   }
@@ -61,13 +85,25 @@ class _AppCeilingState extends State<AppCeiling> {
                 endIndent: 3,
                 color: Colors.grey,
               ),
-              AppButton(
-                "Đăng nhập",
-                type: ButtonType.outline,
-                onPressed: () {
-                  _openDoneDialog();
-                },
-              ),
+              !isHasToken
+                  ? AppButton(
+                      "Đăng nhập",
+                      type: ButtonType.outline,
+                      onPressed: () {
+                        _openLoginDialog();
+                      },
+                    )
+                  : InkWell(
+                      onTap: () {},
+                      child: Row(
+                        children: [
+                          Icon(
+                            Icons.person,
+                          ),
+                          Text(UserRepository.userModel.userName),
+                        ],
+                      ),
+                    ),
             ],
           ),
         ),

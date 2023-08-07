@@ -81,19 +81,19 @@ class _AppInputState extends State<AppInput> {
           hintStyle: const TextStyle(
             color: Color(0xffB3B3B3),
           ),
-          suffixIcon: widget.isPassword
-              ? IconButton(
-                  icon: Icon(
-                    isInvisible ? Icons.visibility_off : Icons.visibility,
-                  ),
-                  color: Colors.grey.withOpacity(0.5),
-                  onPressed: () => {
-                    setState(() {
-                      isInvisible = !isInvisible;
-                    })
-                  },
-                )
-              : null,
+          // suffixIcon: widget.isPassword
+          //     ? IconButton(
+          //         icon: Icon(
+          //           isInvisible ? Icons.visibility_off : Icons.visibility,
+          //         ),
+          //         color: Colors.grey.withOpacity(0.5),
+          //         onPressed: () => {
+          //           setState(() {
+          //             isInvisible = !isInvisible;
+          //           })
+          //         },
+          //       )
+          //     : null,
         ),
         validator: (String? value) {
           // if (value!.isEmpty) {

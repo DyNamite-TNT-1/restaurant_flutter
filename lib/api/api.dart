@@ -1,6 +1,7 @@
 import 'package:restaurant_flutter/api/http_manager.dart';
 import 'package:restaurant_flutter/configs/configs.dart';
 import 'package:restaurant_flutter/enum/order.dart';
+import 'package:restaurant_flutter/models/service/common_response.dart';
 import 'package:restaurant_flutter/models/service/dish.dart';
 import 'package:restaurant_flutter/models/service/dish_type.dart';
 import 'package:restaurant_flutter/models/service/user.dart';
@@ -42,9 +43,10 @@ class Api {
   }
 
   static String loginUrl = "/account/login";
-  //dish screen
+  //dish & drink screen
   static String requestDishUrl = "/dish/get";
   static String requestDishTypeUrl = "/dish/get/type";
+  static String addDishUrl = "/manager/dish/create";
 
   static Future<UserModel> requestLogin({
     String login = "",
@@ -102,5 +104,33 @@ class Api {
       cancelTag: tagRequest,
     );
     return DishTypeFilterModel.fromJson(result);
+  }
+
+  static Future<CommonResponse> addDish({
+    required String name,
+    required String description,
+    required String price,
+    required String image,
+    bool isDrink = false,
+    required int dishTypeId,
+    required String unit,
+    String tagRequest = HTTPManager.DEFAULT_CANCEL_TAG,
+  }) async {
+    String url = addDishUrl;
+    var data = {
+      "name": name,
+      "description": description,
+      "price": price,
+      "image": image,
+      "isDrink": isDrink ? 1 : 0,
+      "dishTypeId": dishTypeId,
+      "unit": unit,
+    };
+    final result = await httpManager.post(
+      url: appendBranch(url),
+      data: data,
+      cancelTag: tagRequest,
+    );
+    return CommonResponse.fromJson(result);
   }
 }
