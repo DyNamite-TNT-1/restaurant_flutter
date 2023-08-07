@@ -66,7 +66,7 @@ class ScaffoldWithNavigationBar extends StatelessWidget {
   }
 }
 
-class ScaffoldWithNavigationRail extends StatelessWidget {
+class ScaffoldWithNavigationRail extends StatefulWidget {
   const ScaffoldWithNavigationRail({
     super.key,
     required this.body,
@@ -76,6 +76,19 @@ class ScaffoldWithNavigationRail extends StatelessWidget {
   final Widget body;
   final int selectedIndex;
   final ValueChanged<int> onDestinationSelected;
+
+  @override
+  State<ScaffoldWithNavigationRail> createState() =>
+      _ScaffoldWithNavigationRailState();
+}
+
+class _ScaffoldWithNavigationRailState
+    extends State<ScaffoldWithNavigationRail> {
+  @override
+  void initState() {
+    Preferences.setPreferences();
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -91,8 +104,8 @@ class ScaffoldWithNavigationRail extends StatelessWidget {
             child: Row(
               children: [
                 NavigationRail(
-                  selectedIndex: selectedIndex,
-                  onDestinationSelected: onDestinationSelected,
+                  selectedIndex: widget.selectedIndex,
+                  onDestinationSelected: widget.onDestinationSelected,
                   labelType: NavigationRailLabelType.all,
                   backgroundColor: backgroundColor,
                   destinations: <NavigationRailDestination>[
@@ -106,7 +119,7 @@ class ScaffoldWithNavigationRail extends StatelessWidget {
                         Images.icForkKnife,
                         height: 20,
                         colorFilter: ColorFilter.mode(
-                          selectedIndex == 1 ? blueColor : textColor,
+                          widget.selectedIndex == 1 ? blueColor : textColor,
                           BlendMode.srcIn,
                         ),
                       ),
@@ -117,7 +130,7 @@ class ScaffoldWithNavigationRail extends StatelessWidget {
                         Images.icDrink,
                         height: 20,
                         colorFilter: ColorFilter.mode(
-                          selectedIndex == 2 ? blueColor : textColor,
+                          widget.selectedIndex == 2 ? blueColor : textColor,
                           BlendMode.srcIn,
                         ),
                       ),
@@ -128,7 +141,7 @@ class ScaffoldWithNavigationRail extends StatelessWidget {
                         Images.icAvailableCalendar,
                         height: 20,
                         colorFilter: ColorFilter.mode(
-                          selectedIndex == 3 ? blueColor : textColor,
+                          widget.selectedIndex == 3 ? blueColor : textColor,
                           BlendMode.srcIn,
                         ),
                       ),
@@ -137,7 +150,7 @@ class ScaffoldWithNavigationRail extends StatelessWidget {
                 ),
                 const VerticalDivider(thickness: 1, width: 1),
                 // This is the main content.
-                Expanded(child: body),
+                Expanded(child: widget.body),
               ],
             ),
           ),

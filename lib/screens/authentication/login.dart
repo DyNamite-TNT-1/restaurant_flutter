@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:go_router/go_router.dart';
+import 'package:restaurant_flutter/api/api.dart';
 import 'package:restaurant_flutter/configs/configs.dart';
+import 'package:restaurant_flutter/models/service/user.dart';
 import 'package:restaurant_flutter/widgets/widgets.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -13,10 +16,11 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
-  final TextEditingController emailController = TextEditingController();
+  final TextEditingController loginController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
-  final FocusNode emailFocus = FocusNode();
+  final FocusNode loginFocus = FocusNode();
   final FocusNode passwordFocus = FocusNode();
+  bool isSigning = false;
 
   @override
   void initState() {
@@ -26,10 +30,38 @@ class _LoginScreenState extends State<LoginScreen> {
   @override
   void dispose() {
     super.dispose();
-    emailFocus.dispose();
+    loginFocus.dispose();
     passwordFocus.dispose();
-    emailController.clear();
+    loginController.clear();
     passwordController.clear();
+  }
+
+  Future<void> _requestLogin(BuildContext context) async {
+    UserModel result = await Api.requestLogin(
+        login: loginController.text, password: passwordController.text);
+    if (result.isSuccess) {
+      await UserPreferences.setToken(result.accessToken);
+
+      if (context.mounted) {
+        context.pop();
+        // Navigator.pushNamed(
+        //   context,
+        //   Routes.appContainer,
+        // );
+      }
+    } else {
+      Fluttertoast.showToast(
+          msg: "Đăng nhập thất bại",
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.CENTER,
+          timeInSecForIosWeb: 1,
+          backgroundColor: primaryColor,
+          textColor: Colors.white,
+          fontSize: 16.0);
+    }
+    setState(() {
+      isSigning = false;
+    });
   }
 
   Widget buildTitle(BuildContext context) {
@@ -87,12 +119,12 @@ class _LoginScreenState extends State<LoginScreen> {
                     height: kDefaultPadding,
                   ),
                   AppInput(
-                    name: "email",
-                    keyboardType: TextInputType.emailAddress,
-                    icon: Icons.alternate_email,
-                    controller: emailController,
-                    focusNode: emailFocus,
-                    placeHolder: "Email",
+                    name: "login",
+                    keyboardType: TextInputType.name,
+                    icon: Icons.person_outline,
+                    controller: loginController,
+                    focusNode: loginFocus,
+                    placeHolder: "Nhập email hoặc số điện thoại",
                   ),
                   SizedBox(
                     height: kDefaultPadding,
@@ -103,7 +135,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     icon: Icons.lock,
                     controller: passwordController,
                     focusNode: passwordFocus,
-                    placeHolder: "Password",
+                    placeHolder: "Nhập mật khẩu",
                     isPassword: true,
                   ),
                   SizedBox(
@@ -124,19 +156,16 @@ class _LoginScreenState extends State<LoginScreen> {
                   SizedBox(
                     height: kDefaultPadding * 2,
                   ),
-                  TextButton(
-                    onPressed: () {},
-                    style: ButtonStyle(
-                      backgroundColor: MaterialStateProperty.resolveWith(
-                          (states) => Theme.of(context).primaryColor),
-                    ),
-                    child: Center(
-                      child: Text(
-                        'Đăng nhập',
-                        style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                            fontWeight: FontWeight.bold, color: Colors.white),
-                      ),
-                    ),
+                  AppButton(
+                    "Đăng nhập",
+                    loading: isSigning,
+                    mainAxisSize: MainAxisSize.max,
+                    onPressed: () {
+                      setState(() {
+                        isSigning = true;
+                      });
+                      _requestLogin(context);
+                    },
                   ),
                   SizedBox(
                     height: kDefaultPadding / 2,

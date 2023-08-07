@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 import 'package:number_pagination/number_pagination.dart';
 import 'package:restaurant_flutter/api/api.dart';
 import 'package:restaurant_flutter/bloc/dish/dish_bloc.dart';
@@ -8,6 +9,8 @@ import 'package:restaurant_flutter/enum/bloc.dart';
 import 'package:restaurant_flutter/enum/order.dart';
 import 'package:restaurant_flutter/models/service/dish.dart';
 import 'package:restaurant_flutter/models/service/dish_type.dart';
+import 'package:restaurant_flutter/widgets/app_dialog_input.dart';
+import 'package:restaurant_flutter/widgets/app_popup_menu_button.dart';
 import 'package:restaurant_flutter/widgets/widgets.dart';
 
 import 'widget/dish_item.dart';
@@ -111,9 +114,25 @@ class _DishScreenState extends State<DishScreen> {
           "Loại: ",
           style: Theme.of(context).textTheme.bodyLarge,
         ),
-        PopupMenuButton<DishTypeModel>(
+        AppPopupMenuButton<DishTypeModel>(
           tooltip: "Chọn loại",
-          initialValue: _selectedFilter,
+          onSelected: (value) {
+            setState(() {
+              _selectedFilter = value;
+              currentPage = 1;
+            });
+            _requestDish(
+              type: _selectedFilter.dishTypeId,
+              priceOrder: _selectedPriceOrder,
+            );
+          },
+          data: dishBloc.state.dishTypes,
+          filterItemBuilder: (context, label) {
+            return PopupMenuItem<DishTypeModel>(
+              value: label,
+              child: Text(label.type),
+            );
+          },
           child: Container(
             padding: EdgeInsets.symmetric(
               horizontal: 10,
@@ -143,26 +162,6 @@ class _DishScreenState extends State<DishScreen> {
               ],
             ),
           ),
-          onSelected: (value) {
-            setState(() {
-              _selectedFilter = value;
-      currentPage = 1;
-            });
-            _requestDish(
-              type: _selectedFilter.dishTypeId,
-              priceOrder: _selectedPriceOrder,
-            );
-          },
-          itemBuilder: (context) {
-            return dishBloc.state.dishTypes.map(
-              (e) {
-                return PopupMenuItem<DishTypeModel>(
-                  value: e,
-                  child: Text(e.type),
-                );
-              },
-            ).toList();
-          },
         ),
         SizedBox(
           width: kDefaultPadding,
@@ -171,9 +170,24 @@ class _DishScreenState extends State<DishScreen> {
           "Giá: ",
           style: Theme.of(context).textTheme.bodyLarge,
         ),
-        PopupMenuButton<OrderEnum>(
+        AppPopupMenuButton<OrderEnum>(
           tooltip: "Sắp xếp giá",
-          initialValue: _selectedPriceOrder,
+          onSelected: (value) {
+            setState(() {
+              _selectedPriceOrder = value;
+            });
+            _requestDish(
+              type: _selectedFilter.dishTypeId,
+              priceOrder: _selectedPriceOrder,
+            );
+          },
+          data: OrderEnum.allOrderEnum(),
+          filterItemBuilder: (context, label) {
+            return PopupMenuItem<OrderEnum>(
+              value: label,
+              child: Text(label.name),
+            );
+          },
           child: Container(
             padding: EdgeInsets.symmetric(
               horizontal: 10,
@@ -203,25 +217,6 @@ class _DishScreenState extends State<DishScreen> {
               ],
             ),
           ),
-          onSelected: (value) {
-            setState(() {
-              _selectedPriceOrder = value;
-            });
-            _requestDish(
-              type: _selectedFilter.dishTypeId,
-              priceOrder: _selectedPriceOrder,
-            );
-          },
-          itemBuilder: (context) {
-            return OrderEnum.allOrderEnum().map(
-              (e) {
-                return PopupMenuItem<OrderEnum>(
-                  value: e,
-                  child: Text(e.name),
-                );
-              },
-            ).toList();
-          },
         ),
       ],
     );
@@ -231,6 +226,148 @@ class _DishScreenState extends State<DishScreen> {
     await _requestDish(
       type: _selectedFilter.dishTypeId,
       priceOrder: _selectedPriceOrder,
+    );
+  }
+
+  final TextEditingController _nameController = TextEditingController();
+  final FocusNode _nameFocusNode = FocusNode();
+  final TextEditingController _priceController = TextEditingController();
+  final FocusNode _priceFocusNode = FocusNode();
+  final TextEditingController _descriptionController = TextEditingController();
+  final FocusNode _descriptionFocusNode = FocusNode();
+  final TextEditingController _imageController = TextEditingController();
+  final FocusNode _imageFocusNode = FocusNode();
+  final TextEditingController _unitController = TextEditingController();
+  final FocusNode _unitFocusNode = FocusNode();
+
+  void _openDialogAddNewDish() {
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext ct) {
+        return AppDialogInput(
+          title: "Thêm món mới",
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Padding(
+                padding: const EdgeInsets.only(bottom: 5),
+                child: Text(
+                  "Tên món",
+                  style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                        fontSize: 16,
+                      ),
+                ),
+              ),
+              AppInput2(
+                name: "name",
+                keyboardType: TextInputType.name,
+                controller: _nameController,
+                placeHolder: "Điền tên món",
+                focusNode: _nameFocusNode,
+              ),
+              Row(
+                children: [
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.only(top: 10, bottom: 5),
+                          child: Text(
+                            "Giá món(VNĐ)",
+                            style: Theme.of(context)
+                                .textTheme
+                                .bodyMedium
+                                ?.copyWith(
+                                  fontSize: 16,
+                                ),
+                          ),
+                        ),
+                        AppInput2(
+                          name: "price",
+                          keyboardType: TextInputType.number,
+                          controller: _priceController,
+                          placeHolder: "Nhập giá món(VNĐ)",
+                          focusNode: _priceFocusNode,
+                        ),
+                      ],
+                    ),
+                  ),
+                  SizedBox(
+                    width: kPadding15,
+                  ),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.only(top: 10, bottom: 5),
+                          child: Text(
+                            "Đơn vị tính",
+                            style: Theme.of(context)
+                                .textTheme
+                                .bodyMedium
+                                ?.copyWith(
+                                  fontSize: 16,
+                                ),
+                          ),
+                        ),
+                        AppInput2(
+                          name: "price",
+                          keyboardType: TextInputType.number,
+                          controller: _unitController,
+                          placeHolder: "Ex: phần, dĩa, ly...",
+                          focusNode: _unitFocusNode,
+                        ),
+                      ],
+                    ),
+                  )
+                ],
+              ),
+              Padding(
+                padding: const EdgeInsets.only(top: 10, bottom: 5),
+                child: Text(
+                  "Mô tả",
+                  style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                        fontSize: 16,
+                      ),
+                ),
+              ),
+              AppInput2(
+                name: "description",
+                keyboardType: TextInputType.name,
+                controller: _descriptionController,
+                placeHolder: "Thêm mô tả(tùy chọn)",
+                focusNode: _descriptionFocusNode,
+                maxLines: 2,
+              ),
+              Padding(
+                padding: const EdgeInsets.only(top: 10, bottom: 5),
+                child: Text(
+                  "Link ảnh",
+                  style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                        fontSize: 16,
+                      ),
+                ),
+              ),
+              AppInput2(
+                name: "image",
+                keyboardType: TextInputType.name,
+                controller: _imageController,
+                placeHolder: "Url ảnh(tùy chọn)",
+                focusNode: _imageFocusNode,
+              ),
+            ],
+          ),
+          onDone: () {
+            context.pop();
+          },
+          onCancel: () {
+            context.pop();
+          },
+        );
+      },
     );
   }
 
@@ -250,27 +387,56 @@ class _DishScreenState extends State<DishScreen> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               _buildTopFilter(context),
-              Material(
-                color: Colors.transparent,
-                child: InkWell(
-                  borderRadius: BorderRadius.circular(kCornerSmall),
-                  onTap: () {
-                    _onRefresh();
-                  },
-                  child: Container(
-                    padding: EdgeInsets.symmetric(horizontal: 5),
-                    decoration: BoxDecoration(
+              Row(
+                children: [
+                  Material(
+                    color: Colors.transparent,
+                    child: InkWell(
                       borderRadius: BorderRadius.circular(kCornerSmall),
-                      border: Border.all(),
-                    ),
-                    child: Row(
-                      children: const [
-                        Icon(Icons.refresh),
-                        Text("Làm mới"),
-                      ],
+                      onTap: () {
+                        _openDialogAddNewDish();
+                      },
+                      child: Container(
+                        padding: EdgeInsets.symmetric(horizontal: 5),
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(kCornerSmall),
+                          border: Border.all(),
+                        ),
+                        child: Row(
+                          children: const [
+                            Icon(Icons.add),
+                            Text("Thêm món"),
+                          ],
+                        ),
+                      ),
                     ),
                   ),
-                ),
+                  SizedBox(
+                    width: 5,
+                  ),
+                  Material(
+                    color: Colors.transparent,
+                    child: InkWell(
+                      borderRadius: BorderRadius.circular(kCornerSmall),
+                      onTap: () {
+                        _onRefresh();
+                      },
+                      child: Container(
+                        padding: EdgeInsets.symmetric(horizontal: 5),
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(kCornerSmall),
+                          border: Border.all(),
+                        ),
+                        child: Row(
+                          children: const [
+                            Icon(Icons.refresh),
+                            Text("Làm mới"),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
               ),
             ],
           ),

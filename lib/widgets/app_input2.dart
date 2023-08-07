@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:restaurant_flutter/configs/configs.dart';
 
 import '../configs/colors.dart';
 
@@ -11,6 +13,7 @@ class AppInput2 extends StatefulWidget {
   final Function(String)? onChanged;
   final String placeHolder;
   final FocusNode focusNode;
+  final int maxLines;
 
   @override
   State<AppInput2> createState() => _AppInput2State();
@@ -24,6 +27,7 @@ class AppInput2 extends StatefulWidget {
     this.onChanged,
     required this.placeHolder,
     required this.focusNode,
+    this.maxLines = 1,
     Key? key,
   }) : super(key: key);
 }
@@ -41,13 +45,21 @@ class _AppInput2State extends State<AppInput2> {
     return Container(
       alignment: Alignment.centerLeft,
       decoration: BoxDecoration(
-          border: Border(
-              bottom: BorderSide(
-        color: widget.focusNode.hasFocus ? primaryColor : Colors.transparent,
-      ))),
+        border: Border(
+          bottom: BorderSide(
+            color:
+                widget.focusNode.hasFocus ? primaryColor : Colors.transparent,
+          ),
+        ),
+      ),
       child: TextFormField(
         controller: widget.controller,
         focusNode: widget.focusNode,
+        inputFormatters: widget.keyboardType == TextInputType.number ||
+                widget.keyboardType == TextInputType.phone
+            ? <TextInputFormatter>[FilteringTextInputFormatter.digitsOnly]
+            : null,
+        maxLines: widget.maxLines,
         onChanged: (value) {
           if (widget.onChanged != null) widget.onChanged!(value);
         },
@@ -60,24 +72,27 @@ class _AppInput2State extends State<AppInput2> {
           fillColor: backgroundColor,
           filled: true,
           enabledBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(kCornerNormal),
             borderSide: BorderSide(
-              color: Colors.transparent,
+              color: Colors.grey.shade300,
               width: 1.6,
             ),
           ),
           focusedBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(kCornerNormal),
             borderSide: BorderSide(
-              color: Colors.transparent,
+              color: Theme.of(context).primaryColor,
               width: 1.6,
             ),
           ),
           contentPadding: const EdgeInsets.only(
             top: 14,
-            // left: 50,
+            left: 20,
           ),
           prefixIcon: widget.icon,
           hintText: widget.placeHolder,
           hintStyle: const TextStyle(
+            fontSize: 12,
             color: subTextColor,
           ),
           suffixIcon: widget.isPassword

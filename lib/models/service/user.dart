@@ -46,7 +46,7 @@ class UserModel {
       role: ParseTypeData.ensureString(json["role"]),
       roleId: ParseTypeData.ensureInt(json["roleId"]),
       isSuccess: ParseTypeData.ensureBoolDef(json["isSuccess"], false),
-      accessToken: ParseTypeData.ensureString(json["token"]),
+      accessToken: ParseTypeData.ensureString(json["accessToken"]),
       expireTime: ParseTypeData.ensureInt(json["expireTime"]),
     );
   }
