@@ -7,17 +7,17 @@ import 'package:restaurant_flutter/configs/user_repository.dart';
 import 'package:restaurant_flutter/models/service/user.dart';
 import 'package:restaurant_flutter/widgets/widgets.dart';
 
-class LoginScreen extends StatefulWidget {
-  const LoginScreen({
+class SignUpScreen extends StatefulWidget {
+  const SignUpScreen({
     super.key,
     required this.onLogin,
   });
   final Function onLogin;
   @override
-  State<LoginScreen> createState() => _LoginScreenState();
+  State<SignUpScreen> createState() => _SignUpScreenState();
 }
 
-class _LoginScreenState extends State<LoginScreen> {
+class _SignUpScreenState extends State<SignUpScreen> {
   final TextEditingController loginController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
   final FocusNode loginFocus = FocusNode();
@@ -65,7 +65,7 @@ class _LoginScreenState extends State<LoginScreen> {
   }
 
   Widget buildTitle(BuildContext context) {
-    return Text("Đăng nhập",
+    return Text("Đăng ký",
         style: Theme.of(context).textTheme.titleLarge,
         textAlign: TextAlign.center);
   }
