@@ -8,11 +8,19 @@ class ReservationScreen extends StatefulWidget {
 }
 
 class _ReservationScreenState extends State<ReservationScreen> {
+  final TextEditingController _dateController = TextEditingController();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Center(
-        child: Text("trang đặt bàn"),
+      body: CustomScrollView(
+        slivers: [
+          SliverToBoxAdapter(
+            child: TextField(
+              controller: _dateController,
+              // keyboardType: TextInputType.datetime,
+            ),
+          ),
+        ],
       ),
     );
   }

@@ -5,6 +5,7 @@ import 'package:restaurant_flutter/api/api.dart';
 import 'package:restaurant_flutter/configs/configs.dart';
 import 'package:restaurant_flutter/configs/user_repository.dart';
 import 'package:restaurant_flutter/models/service/user.dart';
+import 'package:restaurant_flutter/routes/route_constants.dart';
 import 'package:restaurant_flutter/widgets/widgets.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -181,6 +182,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         onTap: () {
                           if (mounted) {
                             context.pop();
+                            context.goNamed(RouteConstants.signUp);
                           }
                         },
                         child: Padding(

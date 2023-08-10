@@ -47,6 +47,7 @@ dependencies:
   shimmer: ^3.0.0
   number_pagination: ^0.0.3+2
   carousel_slider: ^4.2.1
+  dropdown_button2: ^2.3.7
 
 dev_dependencies:
   flutter_test:

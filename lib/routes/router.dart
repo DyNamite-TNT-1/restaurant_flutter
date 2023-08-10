@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:restaurant_flutter/routes/route_constants.dart';
+import 'package:restaurant_flutter/screens/authentication/signup.dart';
 import 'package:restaurant_flutter/screens/dashboard/dashboard.dart';
 import 'package:restaurant_flutter/screens/dish/detail_dish.dart';
 import 'package:restaurant_flutter/nested_navigation.dart';
@@ -124,7 +125,16 @@ class AppRouter {
             child: ReservationScreen(),
           );
         },
-      )
+      ),
+      GoRoute(
+        name: RouteConstants.signUp,
+        path: "/signup",
+        pageBuilder: (context, state) {
+          return NoTransitionPage(
+            child: SignUpScreen(),
+          );
+        },
+      ),
     ],
     redirect: (context, state) {
       bool isAuthenticated = true;

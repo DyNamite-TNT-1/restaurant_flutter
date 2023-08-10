@@ -133,59 +133,57 @@ class _DrinkScreenState extends State<DrinkScreen> {
           "Loại: ",
           style: Theme.of(context).textTheme.bodyLarge,
         ),
-        PopupMenuButton<DishTypeModel>(
-          tooltip: "Chọn loại",
-          initialValue: _selectedFilter,
-          child: Container(
-            padding: EdgeInsets.symmetric(
-              horizontal: 10,
-              vertical: 5,
+        if (drinkBloc.state.drinkTypes.isNotEmpty &&
+            drinkBloc.state.drinkTypeState == BlocState.loadCompleted)
+          AppPopupMenuButton<DishTypeModel>(
+            items: drinkBloc.state.drinkTypes,
+            value: _selectedFilter,
+            child: Container(
+              padding: EdgeInsets.symmetric(
+                horizontal: 10,
+                vertical: 5,
+              ),
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(kCornerSmall),
+                color: Color(0XFFA0A0A0),
+              ),
+              child: Row(
+                children: [
+                  Text(
+                    _selectedFilter.type,
+                    style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                          fontSize: 14,
+                          color: Colors.white,
+                        ),
+                  ),
+                  SizedBox(
+                    width: 2,
+                  ),
+                  Icon(
+                    Icons.keyboard_arrow_down,
+                    size: 16,
+                    color: Colors.white,
+                  ),
+                ],
+              ),
             ),
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(kCornerSmall),
-              color: Color(0XFFA0A0A0),
-            ),
-            child: Row(
-              children: [
-                Text(
-                  _selectedFilter.type,
-                  style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                        fontSize: 14,
-                        color: Colors.white,
-                      ),
-                ),
-                SizedBox(
-                  width: 2,
-                ),
-                Icon(
-                  Icons.keyboard_arrow_down,
-                  size: 16,
-                  color: Colors.white,
-                ),
-              ],
-            ),
+            onChanged: (value) {
+              setState(() {
+                _selectedFilter = value;
+                currentPage = 1;
+              });
+              _requestDrink(
+                type: _selectedFilter.dishTypeId,
+                priceOrder: _selectedPriceOrder,
+              );
+            },
+            filterItemBuilder: (context, e) {
+              return DropdownMenuItem<DishTypeModel>(
+                value: e,
+                child: Text(e.type),
+              );
+            },
           ),
-          onSelected: (value) {
-            setState(() {
-              _selectedFilter = value;
-              currentPage = 1;
-            });
-            _requestDrink(
-              type: _selectedFilter.dishTypeId,
-              priceOrder: _selectedPriceOrder,
-            );
-          },
-          itemBuilder: (context) {
-            return drinkBloc.state.drinkTypes.map(
-              (e) {
-                return PopupMenuItem<DishTypeModel>(
-                  value: e,
-                  child: Text(e.type),
-                );
-              },
-            ).toList();
-          },
-        ),
         SizedBox(
           width: kDefaultPadding,
         ),
@@ -193,39 +191,21 @@ class _DrinkScreenState extends State<DrinkScreen> {
           "Giá: ",
           style: Theme.of(context).textTheme.bodyLarge,
         ),
-        PopupMenuButton<OrderEnum>(
-          tooltip: "Sắp xếp giá",
-          initialValue: _selectedPriceOrder,
-          child: Container(
-            padding: EdgeInsets.symmetric(
-              horizontal: 10,
-              vertical: 5,
-            ),
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(kCornerSmall),
-              color: Color(0XFFA0A0A0),
-            ),
-            child: Row(
-              children: [
-                Text(
-                  _selectedPriceOrder.name,
-                  style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                        fontSize: 14,
-                        color: Colors.white,
-                      ),
-                ),
-                SizedBox(
-                  width: 2,
-                ),
-                Icon(
-                  Icons.keyboard_arrow_down,
-                  size: 16,
-                  color: Colors.white,
-                ),
-              ],
-            ),
+        AppPopupMenuButton<OrderEnum>(
+          items: OrderEnum.allOrderEnum(),
+          value: _selectedPriceOrder,
+          child: Row(
+            children: [
+              Text(
+                _selectedPriceOrder.name,
+                style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                      fontSize: 14,
+                      color: Colors.white,
+                    ),
+              ),
+            ],
           ),
-          onSelected: (value) {
+          onChanged: (value) {
             setState(() {
               _selectedPriceOrder = value;
             });
@@ -234,15 +214,11 @@ class _DrinkScreenState extends State<DrinkScreen> {
               priceOrder: _selectedPriceOrder,
             );
           },
-          itemBuilder: (context) {
-            return OrderEnum.allOrderEnum().map(
-              (e) {
-                return PopupMenuItem<OrderEnum>(
-                  value: e,
-                  child: Text(e.name),
-                );
-              },
-            ).toList();
+          filterItemBuilder: (context, e) {
+            return DropdownMenuItem<OrderEnum>(
+              value: e,
+              child: Text(e.name),
+            );
           },
         ),
       ],
@@ -438,47 +414,25 @@ class _DrinkScreenState extends State<DrinkScreen> {
                   ),
                 ),
                 AppPopupMenuButton<DishTypeModel>(
-                  initialValue: selectedFilter2,
-                  tooltip: "Chọn loại",
-                  onSelected: (value) {
+                  value: selectedFilter2,
+                  onChanged: (value) {
                     newState(() {
                       selectedFilter2 = value;
                     });
                   },
-                  data: drinkBloc.state.drinkTypes.sublist(1),
+                  items: drinkBloc.state.drinkTypes.sublist(1),
                   filterItemBuilder: (context, label) {
-                    return PopupMenuItem<DishTypeModel>(
+                    return DropdownMenuItem<DishTypeModel>(
                       value: label,
                       child: Text(label.type),
                     );
                   },
-                  child: Container(
-                    padding: EdgeInsets.symmetric(
-                      horizontal: 10,
-                      vertical: 5,
-                    ),
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(kCornerSmall),
-                      color: Color(0XFFA0A0A0),
-                    ),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(
-                          selectedFilter2.type,
-                          style:
-                              Theme.of(context).textTheme.bodyMedium?.copyWith(
-                                    fontSize: 14,
-                                    color: Colors.white,
-                                  ),
-                        ),
-                        Icon(
-                          Icons.keyboard_arrow_down,
-                          size: 16,
+                  child: Text(
+                    selectedFilter2.type,
+                    style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                          fontSize: 14,
                           color: Colors.white,
                         ),
-                      ],
-                    ),
                   ),
                 ),
               ],
@@ -567,85 +521,98 @@ class _DrinkScreenState extends State<DrinkScreen> {
   Widget build(BuildContext context) {
     return BlocProvider(
       create: (context) => drinkBloc,
-      child: BlocBuilder<DrinkBloc, DrinkState>(
-        builder: (context, state) {
-          bool isLoading = state.drinkState == BlocState.loading ||
-              state.drinkTypeState == BlocState.loading;
-          return Scaffold(
-            backgroundColor: backgroundColor,
-            body: Stack(
-              children: [
-                CustomScrollView(
-                  slivers: [
-                    _makeHeaderFilter(context),
-                    if (state.drinkState == BlocState.loadCompleted ||
-                        state.drinkState == BlocState.loading)
-                      SliverPadding(
-                        padding: EdgeInsets.all(kPadding10),
-                        sliver: SliverGrid.builder(
-                          itemCount: state.drinks.length,
-                          gridDelegate:
-                              const SliverGridDelegateWithMaxCrossAxisExtent(
-                            maxCrossAxisExtent: 300.0,
-                            mainAxisSpacing: 20.0,
-                            crossAxisSpacing: 20.0,
-                            childAspectRatio: 0.7,
+      child: BlocListener<DrinkBloc, DrinkState>(
+        listenWhen: (previous, current) {
+          if (previous.drinkTypeState == BlocState.loading &&
+              current.drinkTypeState == BlocState.loadCompleted) {
+            return true;
+          }
+          return false;
+        },
+        listener: (context, state) {
+          setState(() {
+            _selectedFilter = state.drinkTypes[0];
+          });
+        },
+        child: BlocBuilder<DrinkBloc, DrinkState>(
+          builder: (context, state) {
+            bool isLoading = state.drinkState == BlocState.loading ||
+                state.drinkTypeState == BlocState.loading;
+            return Scaffold(
+              backgroundColor: backgroundColor,
+              body: Stack(
+                children: [
+                  CustomScrollView(
+                    slivers: [
+                      _makeHeaderFilter(context),
+                      if (state.drinkState == BlocState.loadCompleted ||
+                          state.drinkState == BlocState.loading)
+                        SliverPadding(
+                          padding: EdgeInsets.all(kPadding10),
+                          sliver: SliverGrid.builder(
+                            itemCount: state.drinks.length,
+                            gridDelegate:
+                                const SliverGridDelegateWithMaxCrossAxisExtent(
+                              maxCrossAxisExtent: 300.0,
+                              mainAxisSpacing: 20.0,
+                              crossAxisSpacing: 20.0,
+                              childAspectRatio: 0.7,
+                            ),
+                            itemBuilder: (BuildContext context, int index) {
+                              return DrinkItem(
+                                drink: state.drinks[index],
+                              );
+                            },
                           ),
-                          itemBuilder: (BuildContext context, int index) {
-                            return DrinkItem(
-                              drink: state.drinks[index],
-                            );
-                          },
+                        ),
+                      SliverToBoxAdapter(
+                        child: Visibility(
+                          visible: state.drinkState == BlocState.noData,
+                          child: NoDataFoundView(),
                         ),
                       ),
-                    SliverToBoxAdapter(
-                      child: Visibility(
-                        visible: state.drinkState == BlocState.noData,
-                        child: NoDataFoundView(),
+                      SliverToBoxAdapter(
+                        child: SizedBox(
+                          height: 50,
+                        ),
+                      ),
+                    ],
+                  ),
+                  Visibility(
+                    visible: isLoading,
+                    child: Container(
+                      height: double.infinity,
+                      width: double.infinity,
+                      color: Colors.grey.withOpacity(0.2),
+                      child: Center(
+                        child: CircularProgressIndicator(),
                       ),
                     ),
-                    SliverToBoxAdapter(
-                      child: SizedBox(
-                        height: 50,
-                      ),
-                    ),
-                  ],
-                ),
-                Visibility(
-                  visible: isLoading,
-                  child: Container(
-                    height: double.infinity,
-                    width: double.infinity,
-                    color: Colors.grey.withOpacity(0.2),
-                    child: Center(
-                      child: CircularProgressIndicator(),
+                  ),
+                  Positioned(
+                    bottom: 0,
+                    left: 0,
+                    right: 0,
+                    child: NumberPagination(
+                      onPageChanged: (int pageNumber) {
+                        setState(() {
+                          currentPage = pageNumber;
+                        });
+                        _requestDrink(
+                          type: _selectedFilter.dishTypeId,
+                          priceOrder: _selectedPriceOrder,
+                        );
+                      },
+                      pageTotal: state.maxPage,
+                      pageInit: currentPage, // picked number when init page
+                      colorPrimary: primaryColor,
                     ),
                   ),
-                ),
-                Positioned(
-                  bottom: 0,
-                  left: 0,
-                  right: 0,
-                  child: NumberPagination(
-                    onPageChanged: (int pageNumber) {
-                      setState(() {
-                        currentPage = pageNumber;
-                      });
-                      _requestDrink(
-                        type: _selectedFilter.dishTypeId,
-                        priceOrder: _selectedPriceOrder,
-                      );
-                    },
-                    pageTotal: state.maxPage,
-                    pageInit: currentPage, // picked number when init page
-                    colorPrimary: primaryColor,
-                    // colorSub: Colors.grey,
-                  ),
-                ),
-              ],
-            ),
-          );
-        },
+                ],
+              ),
+            );
+          },
+        ),
       ),
     );
   }

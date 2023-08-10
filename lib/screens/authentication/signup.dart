@@ -1,28 +1,38 @@
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:go_router/go_router.dart';
+import 'package:intl/intl.dart';
 import 'package:restaurant_flutter/api/api.dart';
 import 'package:restaurant_flutter/configs/configs.dart';
 import 'package:restaurant_flutter/configs/user_repository.dart';
+import 'package:restaurant_flutter/enum/enum.dart';
+import 'package:restaurant_flutter/enum/gender.dart';
 import 'package:restaurant_flutter/models/service/user.dart';
+import 'package:restaurant_flutter/widgets/app_popup_menu_button.dart';
 import 'package:restaurant_flutter/widgets/widgets.dart';
 
 class SignUpScreen extends StatefulWidget {
   const SignUpScreen({
     super.key,
-    required this.onLogin,
   });
-  final Function onLogin;
   @override
   State<SignUpScreen> createState() => _SignUpScreenState();
 }
 
 class _SignUpScreenState extends State<SignUpScreen> {
-  final TextEditingController loginController = TextEditingController();
+  final TextEditingController emailController = TextEditingController();
+  final TextEditingController phoneController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
-  final FocusNode loginFocus = FocusNode();
-  final FocusNode passwordFocus = FocusNode();
+  final TextEditingController userNameController = TextEditingController();
+  final TextEditingController addressController = TextEditingController();
+  final FocusNode emailNode = FocusNode();
+  final FocusNode phoneNode = FocusNode();
+  final FocusNode passwordNode = FocusNode();
+  final FocusNode userNameNode = FocusNode();
+  final FocusNode addressNode = FocusNode();
+  DateTime birthDay = DateTime.now();
   bool isSigning = false;
+  GenderEnum _selectedGender = GenderEnum.male;
 
   @override
   void initState() {
@@ -32,33 +42,49 @@ class _SignUpScreenState extends State<SignUpScreen> {
   @override
   void dispose() {
     super.dispose();
-    loginFocus.dispose();
-    passwordFocus.dispose();
-    loginController.clear();
+    emailNode.dispose();
+    passwordNode.dispose();
+    emailController.clear();
     passwordController.clear();
   }
 
-  Future<void> _requestLogin(BuildContext context) async {
-    UserModel result = await Api.requestLogin(
-        login: loginController.text, password: passwordController.text);
-    if (result.isSuccess) {
-      await UserPreferences.setToken(result.accessToken);
-      UserRepository.setUserModel(result.toJson());
-
-      if (context.mounted) {
-        context.pop();
-        widget.onLogin();
-      }
-    } else {
-      Fluttertoast.showToast(
-          msg: "Đăng nhập thất bại",
-          toastLength: Toast.LENGTH_SHORT,
-          gravity: ToastGravity.CENTER,
-          timeInSecForIosWeb: 1,
-          backgroundColor: primaryColor,
-          textColor: Colors.white,
-          fontSize: 16.0);
+  void selectDate(BuildContext context) async {
+    final DateTime? picked = await showDatePicker(
+      context: context,
+      initialDate: birthDay,
+      firstDate: DateTime(1900),
+      lastDate: DateTime.now(),
+      helpText: 'Chọn ngày',
+      confirmText: 'Xác nhận',
+      cancelText: 'Thoát',
+    );
+    if (picked != null && picked != birthDay) {
+      setState(() {
+        birthDay = picked;
+      });
     }
+  }
+
+  Future<void> _requestemail(BuildContext context) async {
+    // UserModel result = await Api.requestemail(
+    //     email: emailController.text, password: passwordController.text);
+    // if (result.isSuccess) {
+    //   await UserPreferences.setToken(result.accessToken);
+    //   UserRepository.setUserModel(result.toJson());
+
+    //   if (context.mounted) {
+    //     context.pop();
+    //   }
+    // } else {
+    //   Fluttertoast.showToast(
+    //       msg: "Đăng ký thất bại",
+    //       toastLength: Toast.LENGTH_SHORT,
+    //       gravity: ToastGravity.CENTER,
+    //       timeInSecForIosWeb: 1,
+    //       backgroundColor: primaryColor,
+    //       textColor: Colors.white,
+    //       fontSize: 16.0);
+    // }
     setState(() {
       isSigning = false;
     });
@@ -72,138 +98,234 @@ class _SignUpScreenState extends State<SignUpScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return AlertDialog(
-      contentPadding: const EdgeInsets.all(20),
-      backgroundColor: backgroundColor,
-      content: Container(
-        constraints: const BoxConstraints(
-          minWidth: 700,
-          maxWidth: kDialogMaxWidthNormal,
-          minHeight: 100,
-          maxHeight: 500,
-        ),
-        child: Row(
-          children: [
-            Expanded(
-              child: Image.asset(
-                Images.logoAppNoBg,
-              ),
+    return Scaffold(
+      body: Row(
+        children: [
+          Expanded(
+            flex: 1,
+            child: Image.asset(
+              Images.logoAppNoBg,
             ),
-            SizedBox(
-              width: kDefaultPadding,
-            ),
-            Expanded(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: [
-                      InkWell(
-                        borderRadius: BorderRadius.circular(30),
-                        onTap: () {
+          ),
+          Expanded(
+            flex: 2,
+            child: Column(
+              children: [
+                SizedBox(
+                  height: kDefaultPadding * 2,
+                ),
+                buildTitle(context),
+                SizedBox(
+                  height: kDefaultPadding,
+                ),
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Expanded(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: [
+                          AppInput(
+                            name: "email",
+                            keyboardType: TextInputType.name,
+                            icon: Icons.alternate_email,
+                            controller: emailController,
+                            focusNode: emailNode,
+                            placeHolder: "Nhập email",
+                          ),
+                          SizedBox(
+                            height: kDefaultPadding,
+                          ),
+                          AppInput(
+                            name: "phone",
+                            keyboardType: TextInputType.phone,
+                            icon: Icons.phone,
+                            controller: phoneController,
+                            focusNode: phoneNode,
+                            placeHolder: "Nhập số điện thoại",
+                          ),
+                          SizedBox(
+                            height: kDefaultPadding,
+                          ),
+                          AppInput(
+                            name: "password",
+                            keyboardType: TextInputType.name,
+                            icon: Icons.lock,
+                            controller: passwordController,
+                            focusNode: passwordNode,
+                            placeHolder: "Nhập mật khẩu",
+                            isPassword: true,
+                          ),
+                        ],
+                      ),
+                    ),
+                    SizedBox(
+                      width: kDefaultPadding,
+                    ),
+                    Expanded(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          AppInput(
+                            name: "name",
+                            keyboardType: TextInputType.name,
+                            icon: Icons.person_outline,
+                            controller: userNameController,
+                            focusNode: userNameNode,
+                            placeHolder: "Nhập tên",
+                          ),
+                          SizedBox(
+                            height: kDefaultPadding,
+                          ),
+                          InkWell(
+                            borderRadius: BorderRadius.circular(kCornerNormal),
+                            onTap: () {
+                              selectDate(context);
+                            },
+                            child: Container(
+                              padding: EdgeInsets.symmetric(
+                                vertical: 10,
+                                horizontal: 8,
+                              ),
+                              decoration: BoxDecoration(
+                                borderRadius:
+                                    BorderRadius.circular(kCornerNormal),
+                                border: Border.all(
+                                  color: Colors.grey.shade300,
+                                  width: 1.6,
+                                ),
+                              ),
+                              child: Row(
+                                children: [
+                                  Icon(
+                                    Icons.date_range_outlined,
+                                    color: primaryColor,
+                                  ),
+                                  SizedBox(
+                                    width: 10,
+                                  ),
+                                  Text(
+                                    DateFormat("yyyy/MM/dd").format(birthDay),
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .bodyMedium
+                                        ?.copyWith(
+                                          fontSize: 16,
+                                        ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                          SizedBox(
+                            height: kDefaultPadding,
+                          ),
+                          // Container(
+                          //   width: 200,
+                          //   height: 45,
+                          //   child: AppPopupMenuButton<GenderEnum>(
+                          //     value: _selectedGender,
+                          //     onChanged: (value) {
+                          //       setState(() {
+                          //         _selectedGender = value;
+                          //       });
+                          //     },
+                          //     items: GenderEnum.allGenderEnum(),
+                          //     filterItemBuilder: (context, label) {
+                          //       return DropdownMenuItem<GenderEnum>(
+                          //         value: label,
+                          //         child: Text(label.name),
+                          //       );
+                          //     },
+                          //     child: Container(
+                          //       padding: EdgeInsets.symmetric(
+                          //         horizontal: 10,
+                          //         vertical: 5,
+                          //       ),
+                          //       decoration: BoxDecoration(
+                          //         borderRadius:
+                          //             BorderRadius.circular(kCornerSmall),
+                          //         border: Border.all(color: primaryColor),
+                          //       ),
+                          //       child: Row(
+                          //         mainAxisAlignment:
+                          //             MainAxisAlignment.spaceBetween,
+                          //         children: [
+                          //           Text(
+                          //             _selectedGender.name,
+                          //             style: Theme.of(context)
+                          //                 .textTheme
+                          //                 .bodyMedium
+                          //                 ?.copyWith(
+                          //                   fontSize: 14,
+                          //                   // color: Colors.white,
+                          //                 ),
+                          //           ),
+                          //           Icon(
+                          //             Icons.keyboard_arrow_down,
+                          //             size: 16,
+                          //             // color: Colors.white,
+                          //           ),
+                          //         ],
+                          //       ),
+                          //     ),
+                          //   ),
+                          // ),
+                        ],
+                      ),
+                    ),
+                    SizedBox(
+                      width: kDefaultPadding,
+                    ),
+                  ],
+                ),
+                AppButton(
+                  "Đăng ký",
+                  loading: isSigning,
+                  onPressed: () {
+                    setState(() {
+                      isSigning = true;
+                    });
+                    _requestemail(context);
+                  },
+                ),
+                SizedBox(
+                  height: kDefaultPadding / 2,
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(
+                      "Đã có tài khoản?",
+                      style: Theme.of(context).textTheme.bodyMedium,
+                    ),
+                    InkWell(
+                      onTap: () {
+                        if (mounted) {
                           context.pop();
-                        },
-                        child: Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: Icon(Icons.close),
+                        }
+                      },
+                      child: Padding(
+                        padding: EdgeInsets.symmetric(
+                          horizontal: kPadding10 / 2,
+                          vertical: kPadding10 / 2,
                         ),
-                      ),
-                    ],
-                  ),
-                  SizedBox(
-                    height: kDefaultPadding * 2,
-                  ),
-                  buildTitle(context),
-                  SizedBox(
-                    height: kDefaultPadding,
-                  ),
-                  AppInput(
-                    name: "login",
-                    keyboardType: TextInputType.name,
-                    icon: Icons.person_outline,
-                    controller: loginController,
-                    focusNode: loginFocus,
-                    placeHolder: "Nhập email hoặc số điện thoại",
-                  ),
-                  SizedBox(
-                    height: kDefaultPadding,
-                  ),
-                  AppInput(
-                    name: "password",
-                    keyboardType: TextInputType.name,
-                    icon: Icons.lock,
-                    controller: passwordController,
-                    focusNode: passwordFocus,
-                    placeHolder: "Nhập mật khẩu",
-                    isPassword: true,
-                  ),
-                  SizedBox(
-                    height: kDefaultPadding,
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: [
-                      InkWell(
-                        onTap: () {},
                         child: Text(
-                          "Quên mật khẩu?",
-                          style: Theme.of(context).textTheme.bodyMedium,
+                          " Đăng nhập",
+                          style: Theme.of(context)
+                              .textTheme
+                              .bodyMedium
+                              ?.copyWith(color: primaryColor),
                         ),
                       ),
-                    ],
-                  ),
-                  SizedBox(
-                    height: kDefaultPadding * 2,
-                  ),
-                  AppButton(
-                    "Đăng nhập",
-                    loading: isSigning,
-                    mainAxisSize: MainAxisSize.max,
-                    onPressed: () {
-                      setState(() {
-                        isSigning = true;
-                      });
-                      _requestLogin(context);
-                    },
-                  ),
-                  SizedBox(
-                    height: kDefaultPadding / 2,
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text(
-                        "Bạn chưa có tài khoản?",
-                        style: Theme.of(context).textTheme.bodyMedium,
-                      ),
-                      InkWell(
-                        onTap: () {
-                          if (mounted) {
-                            context.pop();
-                          }
-                        },
-                        child: Padding(
-                          padding: EdgeInsets.symmetric(
-                            horizontal: kPadding10 / 2,
-                            vertical: kPadding10 / 2,
-                          ),
-                          child: Text(
-                            " Đăng ký",
-                            style: Theme.of(context)
-                                .textTheme
-                                .bodyMedium
-                                ?.copyWith(color: primaryColor),
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ],
-              ),
+                    ),
+                  ],
+                ),
+              ],
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }

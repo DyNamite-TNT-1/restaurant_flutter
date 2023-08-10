@@ -4,6 +4,7 @@ import 'package:restaurant_flutter/configs/configs.dart';
 import 'package:restaurant_flutter/configs/user_repository.dart';
 import 'package:restaurant_flutter/routes/route_constants.dart';
 import 'package:restaurant_flutter/screens/authentication/login.dart';
+import 'package:restaurant_flutter/screens/authentication/signup.dart';
 import 'package:restaurant_flutter/widgets/app_button.dart';
 
 class AppCeiling extends StatefulWidget {
@@ -40,10 +41,12 @@ class _AppCeilingState extends State<AppCeiling> {
           onLogin: () {
             checkLogin();
           },
+         
         );
       },
     );
   }
+
 
   @override
   Widget build(BuildContext context) {
