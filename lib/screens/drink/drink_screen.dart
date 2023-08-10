@@ -297,7 +297,10 @@ class _DrinkScreenState extends State<DrinkScreen> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Padding(
-                  padding: const EdgeInsets.only(bottom: 5),
+                  padding: const EdgeInsets.only(
+                    bottom: 5,
+                    top: 10,
+                  ),
                   child: Text(
                     "Tên đồ uống",
                     style: Theme.of(context).textTheme.bodyMedium?.copyWith(
@@ -341,7 +344,7 @@ class _DrinkScreenState extends State<DrinkScreen> {
                       ),
                     ),
                     SizedBox(
-                      width: kPadding15,
+                      width: kPadding10,
                     ),
                     Expanded(
                       child: Column(
@@ -365,6 +368,54 @@ class _DrinkScreenState extends State<DrinkScreen> {
                             controller: _unitController,
                             placeHolder: "Ex: lon, chai...",
                             focusNode: _unitFocusNode,
+                          ),
+                        ],
+                      ),
+                    ),
+                    SizedBox(
+                      width: kPadding10,
+                    ),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.only(top: 10, bottom: 5),
+                            child: Text(
+                              "Loại đồ uống",
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .bodyMedium
+                                  ?.copyWith(
+                                    fontSize: 16,
+                                  ),
+                            ),
+                          ),
+                          AppPopupMenuButton<DishTypeModel>(
+                            height: 45,
+                            value: selectedFilter2,
+                            onChanged: (value) {
+                              newState(() {
+                                selectedFilter2 = value;
+                              });
+                            },
+                            items: drinkBloc.state.drinkTypes.sublist(1),
+                            filterItemBuilder: (context, label) {
+                              return DropdownMenuItem<DishTypeModel>(
+                                value: label,
+                                child: Text(label.type),
+                              );
+                            },
+                            child: Text(
+                              selectedFilter2.type,
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .bodyMedium
+                                  ?.copyWith(
+                                    fontSize: 14,
+                                    color: Colors.white,
+                                  ),
+                            ),
                           ),
                         ],
                       ),
@@ -403,37 +454,6 @@ class _DrinkScreenState extends State<DrinkScreen> {
                   controller: _imageController,
                   placeHolder: "Url ảnh(tùy chọn)",
                   focusNode: _imageFocusNode,
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(top: 10, bottom: 5),
-                  child: Text(
-                    "Loại",
-                    style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                          fontSize: 16,
-                        ),
-                  ),
-                ),
-                AppPopupMenuButton<DishTypeModel>(
-                  value: selectedFilter2,
-                  onChanged: (value) {
-                    newState(() {
-                      selectedFilter2 = value;
-                    });
-                  },
-                  items: drinkBloc.state.drinkTypes.sublist(1),
-                  filterItemBuilder: (context, label) {
-                    return DropdownMenuItem<DishTypeModel>(
-                      value: label,
-                      child: Text(label.type),
-                    );
-                  },
-                  child: Text(
-                    selectedFilter2.type,
-                    style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                          fontSize: 14,
-                          color: Colors.white,
-                        ),
-                  ),
                 ),
               ],
             ),

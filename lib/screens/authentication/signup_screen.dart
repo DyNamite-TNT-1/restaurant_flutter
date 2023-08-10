@@ -7,7 +7,9 @@ import 'package:restaurant_flutter/configs/configs.dart';
 import 'package:restaurant_flutter/configs/user_repository.dart';
 import 'package:restaurant_flutter/enum/enum.dart';
 import 'package:restaurant_flutter/enum/gender.dart';
+import 'package:restaurant_flutter/models/service/common_response.dart';
 import 'package:restaurant_flutter/models/service/user.dart';
+import 'package:restaurant_flutter/routes/route_constants.dart';
 import 'package:restaurant_flutter/widgets/app_popup_menu_button.dart';
 import 'package:restaurant_flutter/widgets/widgets.dart';
 
@@ -65,29 +67,45 @@ class _SignUpScreenState extends State<SignUpScreen> {
     }
   }
 
-  Future<void> _requestemail(BuildContext context) async {
-    // UserModel result = await Api.requestemail(
-    //     email: emailController.text, password: passwordController.text);
+  Future<void> _requestSignUp(BuildContext context) async {
+    // CommonResponse result = await Api.requestSignUp(
+    //   email: emailController.text,
+    //   password: passwordController.text,
+    //   phone: phoneController.text,
+    //   address: addressController.text,
+    //   gender: _selectedGender,
+    //   birthDay: DateFormat("yyyy/MM/dd").format(birthDay),
+    //   userName: userNameController.text,
+    // );
     // if (result.isSuccess) {
-    //   await UserPreferences.setToken(result.accessToken);
-    //   UserRepository.setUserModel(result.toJson());
-
-    //   if (context.mounted) {
-    //     context.pop();
-    //   }
+    //   Fluttertoast.showToast(
+    //     msg: result.msg,
+    //     toastLength: Toast.LENGTH_SHORT,
+    //     gravity: ToastGravity.CENTER,
+    //     timeInSecForIosWeb: 5,
+    //     backgroundColor: primaryColor,
+    //     textColor: Colors.white,
+    //     fontSize: 16.0,
+    //     webBgColor: successColorToast,
+    //   );
+    if (context.mounted) {
+      context.goNamed(RouteConstants.verifyOTP);
+    }
     // } else {
     //   Fluttertoast.showToast(
-    //       msg: "Đăng ký thất bại",
-    //       toastLength: Toast.LENGTH_SHORT,
-    //       gravity: ToastGravity.CENTER,
-    //       timeInSecForIosWeb: 1,
-    //       backgroundColor: primaryColor,
-    //       textColor: Colors.white,
-    //       fontSize: 16.0);
+    //     msg: result.msg,
+    //     toastLength: Toast.LENGTH_SHORT,
+    //     gravity: ToastGravity.CENTER,
+    //     timeInSecForIosWeb: 5,
+    //     backgroundColor: primaryColor,
+    //     textColor: Colors.white,
+    //     fontSize: 16.0,
+    //     webBgColor: dangerColorToast,
+    //   );
     // }
-    setState(() {
-      isSigning = false;
-    });
+    // setState(() {
+    //   isSigning = false;
+    // });
   }
 
   Widget buildTitle(BuildContext context) {
@@ -102,18 +120,16 @@ class _SignUpScreenState extends State<SignUpScreen> {
       body: Row(
         children: [
           Expanded(
-            flex: 1,
+            flex: 2,
             child: Image.asset(
               Images.logoAppNoBg,
             ),
           ),
           Expanded(
-            flex: 2,
+            flex: 3,
             child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                SizedBox(
-                  height: kDefaultPadding * 2,
-                ),
                 buildTitle(context),
                 SizedBox(
                   height: kDefaultPadding,
@@ -138,7 +154,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                           ),
                           AppInput(
                             name: "phone",
-                            keyboardType: TextInputType.phone,
+                            keyboardType: TextInputType.number,
                             icon: Icons.phone,
                             controller: phoneController,
                             focusNode: phoneNode,
@@ -174,6 +190,17 @@ class _SignUpScreenState extends State<SignUpScreen> {
                             controller: userNameController,
                             focusNode: userNameNode,
                             placeHolder: "Nhập tên",
+                          ),
+                          SizedBox(
+                            height: kDefaultPadding,
+                          ),
+                          AppInput(
+                            name: "address",
+                            keyboardType: TextInputType.name,
+                            icon: Icons.location_on,
+                            controller: addressController,
+                            focusNode: addressNode,
+                            placeHolder: "Nhập địa chỉ",
                           ),
                           SizedBox(
                             height: kDefaultPadding,
@@ -221,57 +248,46 @@ class _SignUpScreenState extends State<SignUpScreen> {
                           SizedBox(
                             height: kDefaultPadding,
                           ),
-                          // Container(
-                          //   width: 200,
-                          //   height: 45,
-                          //   child: AppPopupMenuButton<GenderEnum>(
-                          //     value: _selectedGender,
-                          //     onChanged: (value) {
-                          //       setState(() {
-                          //         _selectedGender = value;
-                          //       });
-                          //     },
-                          //     items: GenderEnum.allGenderEnum(),
-                          //     filterItemBuilder: (context, label) {
-                          //       return DropdownMenuItem<GenderEnum>(
-                          //         value: label,
-                          //         child: Text(label.name),
-                          //       );
-                          //     },
-                          //     child: Container(
-                          //       padding: EdgeInsets.symmetric(
-                          //         horizontal: 10,
-                          //         vertical: 5,
-                          //       ),
-                          //       decoration: BoxDecoration(
-                          //         borderRadius:
-                          //             BorderRadius.circular(kCornerSmall),
-                          //         border: Border.all(color: primaryColor),
-                          //       ),
-                          //       child: Row(
-                          //         mainAxisAlignment:
-                          //             MainAxisAlignment.spaceBetween,
-                          //         children: [
-                          //           Text(
-                          //             _selectedGender.name,
-                          //             style: Theme.of(context)
-                          //                 .textTheme
-                          //                 .bodyMedium
-                          //                 ?.copyWith(
-                          //                   fontSize: 14,
-                          //                   // color: Colors.white,
-                          //                 ),
-                          //           ),
-                          //           Icon(
-                          //             Icons.keyboard_arrow_down,
-                          //             size: 16,
-                          //             // color: Colors.white,
-                          //           ),
-                          //         ],
-                          //       ),
-                          //     ),
-                          //   ),
-                          // ),
+                          SizedBox(
+                            width: 200,
+                            height: 45,
+                            child: AppPopupMenuButton<GenderEnum>(
+                              value: _selectedGender,
+                              onChanged: (value) {
+                                setState(() {
+                                  _selectedGender = value;
+                                });
+                              },
+                              items: GenderEnum.allGenderEnum(),
+                              filterItemBuilder: (context, label) {
+                                return DropdownMenuItem<GenderEnum>(
+                                  value: label,
+                                  child: Text(label.name),
+                                );
+                              },
+                              child: Container(
+                                padding: EdgeInsets.symmetric(
+                                  horizontal: 10,
+                                  vertical: 5,
+                                ),
+                                decoration: BoxDecoration(
+                                  borderRadius:
+                                      BorderRadius.circular(kCornerSmall),
+                                  border: Border.all(color: primaryColor),
+                                ),
+                                child: Text(
+                                  _selectedGender.name,
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .bodyMedium
+                                      ?.copyWith(
+                                        fontSize: 14,
+                                        // color: Colors.white,
+                                      ),
+                                ),
+                              ),
+                            ),
+                          ),
                         ],
                       ),
                     ),
@@ -280,15 +296,20 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     ),
                   ],
                 ),
-                AppButton(
-                  "Đăng ký",
-                  loading: isSigning,
-                  onPressed: () {
-                    setState(() {
-                      isSigning = true;
-                    });
-                    _requestemail(context);
-                  },
+                Container(
+                  margin: EdgeInsets.only(top: kDefaultPadding * 2),
+                  width: 200,
+                  child: AppButton(
+                    "Đăng ký",
+                    loading: isSigning,
+                    mainAxisSize: MainAxisSize.max,
+                    onPressed: () {
+                      setState(() {
+                        isSigning = true;
+                      });
+                      _requestSignUp(context);
+                    },
+                  ),
                 ),
                 SizedBox(
                   height: kDefaultPadding / 2,

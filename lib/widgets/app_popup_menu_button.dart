@@ -10,6 +10,7 @@ class AppPopupMenuButton<T> extends StatefulWidget {
     required this.items,
     required this.value,
     required this.child,
+    this.height = 40,
   });
   final void Function(T value) onChanged;
   final DropdownMenuItem<T> Function(BuildContext context, T label)
@@ -17,6 +18,7 @@ class AppPopupMenuButton<T> extends StatefulWidget {
   final List<T> items;
   final T value;
   final Widget child;
+  final double height;
   @override
   State<AppPopupMenuButton> createState() => _TPopupMenuButtonState<T>();
 }
@@ -36,7 +38,7 @@ class _TPopupMenuButtonState<T> extends State<AppPopupMenuButton<T>> {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      height: 40,
+      height: widget.height,
       child: DropdownButtonHideUnderline(
         child: DropdownButton2<T>(
           style: Theme.of(context).textTheme.bodyMedium?.copyWith(

@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:restaurant_flutter/routes/route_constants.dart';
-import 'package:restaurant_flutter/screens/authentication/signup.dart';
+import 'package:restaurant_flutter/screens/authentication/otp_screen.dart';
+import 'package:restaurant_flutter/screens/authentication/signup_screen.dart';
 import 'package:restaurant_flutter/screens/dashboard/dashboard.dart';
 import 'package:restaurant_flutter/screens/dish/detail_dish.dart';
 import 'package:restaurant_flutter/nested_navigation.dart';
@@ -134,6 +135,18 @@ class AppRouter {
             child: SignUpScreen(),
           );
         },
+        routes: [
+          GoRoute(
+              name: RouteConstants.verifyOTP,
+              path: "verify",
+              pageBuilder: (context, state) {
+                return MaterialPage(
+                  child: OtpScreen(
+                  ),
+                );
+              },
+            ),
+        ]
       ),
     ],
     redirect: (context, state) {

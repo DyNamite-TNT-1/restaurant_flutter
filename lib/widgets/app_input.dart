@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:restaurant_flutter/configs/configs.dart';
 
 class AppInput extends StatefulWidget {
@@ -45,6 +46,10 @@ class _AppInputState extends State<AppInput> {
       child: TextFormField(
         controller: widget.controller,
         focusNode: widget.focusNode,
+        inputFormatters: widget.keyboardType == TextInputType.number ||
+                widget.keyboardType == TextInputType.phone
+            ? <TextInputFormatter>[FilteringTextInputFormatter.digitsOnly]
+            : null,
         onChanged: (value) {
           if (widget.onChanged != null) widget.onChanged!(value);
         },

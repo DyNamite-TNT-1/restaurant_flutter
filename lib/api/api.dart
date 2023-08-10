@@ -1,5 +1,6 @@
 import 'package:restaurant_flutter/api/http_manager.dart';
 import 'package:restaurant_flutter/configs/configs.dart';
+import 'package:restaurant_flutter/enum/enum.dart';
 import 'package:restaurant_flutter/enum/order.dart';
 import 'package:restaurant_flutter/models/service/common_response.dart';
 import 'package:restaurant_flutter/models/service/dish.dart';
@@ -43,11 +44,14 @@ class Api {
   }
 
   static String loginUrl = "/account/login";
+  static String signUpUrl = "/account/create";
+  static String verifyOTPUrl = "/account/create/verify";
   //dish & drink screen
   static String requestDishUrl = "/dish/get";
   static String requestDishTypeUrl = "/dish/get/type";
   static String addDishUrl = "/manager/dish/create";
 
+  //authorization
   static Future<UserModel> requestLogin({
     String login = "",
     String password = "",
@@ -63,6 +67,33 @@ class Api {
       cancelTag: tagRequest,
     );
     return UserModel.fromJson(result);
+  }
+
+   static Future<CommonResponse> requestSignUp({
+    String email = "",
+    String phone = "",
+    String password = "",
+    String userName = "",
+    String birthDay = "",
+    String address = "",
+    GenderEnum gender = GenderEnum.male,
+    String tagRequest = HTTPManager.DEFAULT_CANCEL_TAG,
+  }) async {
+    var params = {
+      "email": email,
+      "phone": phone,
+      "password": password,
+      "userName": userName,
+      "birthDay": birthDay,
+      "address" : address,
+      "gender": gender.value,
+    };
+    final result = await httpManager.post(
+      url: appendBranch(signUpUrl),
+      data: params,
+      cancelTag: tagRequest,
+    );
+    return CommonResponse.fromJson(result);
   }
 
   //dish screen

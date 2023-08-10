@@ -1,6 +1,7 @@
 class RouteConstants {
   static String login = "login";
   static String signUp = "signUp";
+  static String verifyOTP = "verifyOTP";
   //trang chủ
   static String dashboard = "dashboard";
   //thực đơn

@@ -3,8 +3,8 @@ import 'package:go_router/go_router.dart';
 import 'package:restaurant_flutter/configs/configs.dart';
 import 'package:restaurant_flutter/configs/user_repository.dart';
 import 'package:restaurant_flutter/routes/route_constants.dart';
-import 'package:restaurant_flutter/screens/authentication/login.dart';
-import 'package:restaurant_flutter/screens/authentication/signup.dart';
+import 'package:restaurant_flutter/screens/authentication/login_screen.dart';
+import 'package:restaurant_flutter/screens/authentication/signup_screen.dart';
 import 'package:restaurant_flutter/widgets/app_button.dart';
 
 class AppCeiling extends StatefulWidget {

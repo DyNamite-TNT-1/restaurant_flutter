@@ -363,6 +363,54 @@ class _DishScreenState extends State<DishScreen> {
                         ],
                       ),
                     ),
+                    SizedBox(
+                      width: kPadding10,
+                    ),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.only(top: 10, bottom: 5),
+                            child: Text(
+                              "Loại món",
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .bodyMedium
+                                  ?.copyWith(
+                                    fontSize: 16,
+                                  ),
+                            ),
+                          ),
+                          AppPopupMenuButton<DishTypeModel>(
+                            height: 45,
+                            value: selectedFilter2,
+                            onChanged: (value) {
+                              newState(() {
+                                selectedFilter2 = value;
+                              });
+                            },
+                            items: dishBloc.state.dishTypes.sublist(1),
+                            filterItemBuilder: (context, label) {
+                              return DropdownMenuItem<DishTypeModel>(
+                                value: label,
+                                child: Text(label.type),
+                              );
+                            },
+                            child: Text(
+                              selectedFilter2.type,
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .bodyMedium
+                                  ?.copyWith(
+                                    fontSize: 14,
+                                    color: Colors.white,
+                                  ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
                   ],
                 ),
                 Padding(
@@ -404,28 +452,6 @@ class _DishScreenState extends State<DishScreen> {
                     "Loại",
                     style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                           fontSize: 16,
-                        ),
-                  ),
-                ),
-                AppPopupMenuButton<DishTypeModel>(
-                  value: selectedFilter2,
-                  onChanged: (value) {
-                    newState(() {
-                      selectedFilter2 = value;
-                    });
-                  },
-                  items: dishBloc.state.dishTypes.sublist(1),
-                  filterItemBuilder: (context, label) {
-                    return DropdownMenuItem<DishTypeModel>(
-                      value: label,
-                      child: Text(label.type),
-                    );
-                  },
-                  child: Text(
-                    selectedFilter2.type,
-                    style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                          fontSize: 14,
-                          color: Colors.white,
                         ),
                   ),
                 ),
