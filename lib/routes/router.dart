@@ -11,6 +11,7 @@ import 'package:restaurant_flutter/screens/drink/detail_drink.dart';
 import 'package:restaurant_flutter/screens/drink/drink_screen.dart';
 import 'package:restaurant_flutter/screens/reservation/reservation_screen.dart';
 import 'package:restaurant_flutter/screens/table/table_screen.dart';
+import 'package:restaurant_flutter/utils/parse_type_value.dart';
 
 final _rootNavigatorKey = GlobalKey<NavigatorState>();
 final _shellNavigatorDashboardKey =
@@ -128,26 +129,27 @@ class AppRouter {
         },
       ),
       GoRoute(
-        name: RouteConstants.signUp,
-        path: "/signup",
-        pageBuilder: (context, state) {
-          return NoTransitionPage(
-            child: SignUpScreen(),
-          );
-        },
-        routes: [
-          GoRoute(
+          name: RouteConstants.signUp,
+          path: "/signup",
+          pageBuilder: (context, state) {
+            return NoTransitionPage(
+              child: SignUpScreen(),
+            );
+          },
+          routes: [
+            GoRoute(
               name: RouteConstants.verifyOTP,
               path: "verify",
               pageBuilder: (context, state) {
+                final params = state.uri.queryParameters;
+                final String email =
+                    ParseTypeData.ensureString(params["email"]);
                 return MaterialPage(
-                  child: OtpScreen(
-                  ),
+                  child: OtpScreen(email: email),
                 );
               },
             ),
-        ]
-      ),
+          ]),
     ],
     redirect: (context, state) {
       bool isAuthenticated = true;

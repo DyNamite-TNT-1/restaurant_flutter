@@ -6,6 +6,9 @@ class Images {
       "assets/images/mini_logo_website_nobg.png";
   static const String logoAppDarkMode =
       "assets/images/logo_website_darkmode.png";
+      static const String logoAppDarkModeNoBg =
+      "assets/images/logo_website_darkmode_nobg.png";
+  static const String backgroundLogin = "assets/images/background_login.jpg";
   //slider on dashboard
   static const String slider1 = "assets/images/slider1.png";
   static const String slider2 = "assets/images/slider2.png";

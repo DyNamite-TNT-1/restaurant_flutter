@@ -9,7 +9,7 @@ class AppInput extends StatefulWidget {
   final IconData icon;
   final TextEditingController controller;
   final Function(String)? onChanged;
-  final String placeHolder;
+  final String? placeHolder;
   final FocusNode focusNode;
 
   @override
@@ -22,7 +22,7 @@ class AppInput extends StatefulWidget {
     required this.icon,
     required this.controller,
     this.onChanged,
-    required this.placeHolder,
+    this.placeHolder,
     required this.focusNode,
     Key? key,
   }) : super(key: key);
@@ -43,6 +43,7 @@ class _AppInputState extends State<AppInput> {
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(kCornerNormal),
       ),
+      height: 40,
       child: TextFormField(
         controller: widget.controller,
         focusNode: widget.focusNode,
