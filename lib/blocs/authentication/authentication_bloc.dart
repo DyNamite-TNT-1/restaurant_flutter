@@ -1,6 +1,8 @@
 import 'dart:async';
+import 'dart:convert';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:restaurant_flutter/configs/configs.dart';
 import 'package:restaurant_flutter/configs/user_repository.dart';
 
 import 'bloc.dart';
@@ -43,17 +45,16 @@ class AuthenticationBloc
   }
 
   Future<void> _onCheck(OnAuthenticationCheck event, Emitter emit) async {
-    // if (UserPreferences.isExistAuthenticateSession()) {
-    //   String? userString = UserPreferences.getUserLoggedInfo();
-    //   if (userString != null) {
-    //     Map<String, dynamic> json = jsonDecode(userString);
-    //     UserRepository.setUserModel(json);
-    //   }
-
-    //   emit(AuthenticationSuccess());
-    // } else {
-    //   emit(AuthenticationFail(messageError: ''));
-    // }
+    if (UserPreferences.isExistAuthenticateSession()) {
+      String? userString = UserPreferences.getUserLoggedInfo();
+      if (userString != null) {
+        Map<String, dynamic> json = jsonDecode(userString);
+        UserRepository.setUserModel(json);
+      }
+      emit(AuthenticationSuccess());
+    } else {
+      emit(AuthenticationFail(messageError: ''));
+    }
   }
 
   Future<void> _onLogout(OnAuthenticationLogout event, Emitter emit) async {
@@ -62,6 +63,7 @@ class AuthenticationBloc
     // if (event.clearBiometric) {
     //   await UserPreferences.clearBiometricLogin();
     // }
+    await UserPreferences.setSecurePassword("");
     if (event.callback != null) {
       event.callback!();
     }

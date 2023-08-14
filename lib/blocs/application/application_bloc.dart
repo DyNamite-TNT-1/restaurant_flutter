@@ -1,4 +1,3 @@
-
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:restaurant_flutter/blocs/app_bloc.dart';
 import 'package:restaurant_flutter/blocs/bloc.dart';
@@ -81,12 +80,12 @@ class ApplicationBloc extends Bloc<ApplicationEvent, ApplicationState> {
 
     // await Future.delayed(Duration(milliseconds: 300));
 
-    // emit(ApplicationSetupCompleted());
+    emit(ApplicationSetupCompleted());
 
     // if (!hasReview) {
     //   emit(ApplicationIntroView());
     // } else {
-      AppBloc.authenticationBloc.add(OnAuthenticationCheck());
+    AppBloc.authenticationBloc.add(OnAuthenticationCheck());
     // }
   }
 

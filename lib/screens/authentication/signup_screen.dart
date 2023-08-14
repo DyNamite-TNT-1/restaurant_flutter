@@ -85,7 +85,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
     //   );
     if (context.mounted) {
       context.goNamed(RouteConstants.verifyOTP,
-          queryParameters: {"email": "tdhuaco372001@gmail.com"});
+          extra: {"email": "tdhuaco372001@gmail.com"} );
     }
     // } else {
     //   Fluttertoast.showToast(
@@ -151,8 +151,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
           ),
           Positioned(
             right: 200,
-            top: 150,
-            bottom: 150,
+            top: 0,
+            bottom: 0,
             child: Container(
               decoration: BoxDecoration(
                 color: Colors.black.withOpacity(0.7),

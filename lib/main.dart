@@ -9,6 +9,8 @@ import 'package:restaurant_flutter/routes/router.dart';
 // ignore: depend_on_referenced_packages
 import 'package:flutter_web_plugins/url_strategy.dart';
 
+import 'app.dart';
+
 class MyHttpOverrides extends HttpOverrides {
   @override
   HttpClient createHttpClient(SecurityContext? context) {
@@ -22,25 +24,5 @@ void main() {
   WidgetsFlutterBinding.ensureInitialized();
   usePathUrlStrategy();
   HttpOverrides.global = MyHttpOverrides();
-  runApp(const MyApp());
-}
-
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return MultiBlocProvider(
-      providers: AppBloc.providers,
-      child: BlocBuilder<AuthenticationBloc, AuthenticationState>(
-        builder: (context, state) {
-          return MaterialApp.router(
-            theme: CollectionTheme.getCollectionTheme(),
-            debugShowCheckedModeBanner: false,
-            routerConfig: AppRouter.router,
-          );
-        },
-      ),
-    );
-  }
+  runApp(const App());
 }

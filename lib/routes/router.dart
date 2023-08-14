@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:go_router/go_router.dart';
+import 'package:restaurant_flutter/blocs/bloc.dart';
+import 'package:restaurant_flutter/configs/configs.dart';
 import 'package:restaurant_flutter/routes/route_constants.dart';
 import 'package:restaurant_flutter/screens/authentication/otp_screen.dart';
 import 'package:restaurant_flutter/screens/authentication/signup_screen.dart';
@@ -39,6 +43,7 @@ class AppRouter {
             navigatorKey: _shellNavigatorDashboardKey,
             routes: [
               GoRoute(
+                name: RouteConstants.dashboard,
                 path: "/dashboard",
                 pageBuilder: (context, state) {
                   return NoTransitionPage(
@@ -142,7 +147,7 @@ class AppRouter {
               name: RouteConstants.verifyOTP,
               path: "verify",
               pageBuilder: (context, state) {
-                final params = state.uri.queryParameters;
+                final params = state.extra as Map<String, dynamic>;
                 final String email =
                     ParseTypeData.ensureString(params["email"]);
                 return MaterialPage(
@@ -150,14 +155,27 @@ class AppRouter {
                 );
               },
             ),
-        ]
+          ]),
+      GoRoute(
+        name: RouteConstants.profile,
+        path: "/profile",
+        pageBuilder: (context, state) {
+          return NoTransitionPage(
+            child: Profile(),
+          );
+        },
       ),
     ],
     redirect: (context, state) {
-      bool isAuthenticated = true;
-      if (!isAuthenticated) {
-        return state.namedLocation(RouteConstants.login);
-      }
+      // var authState = context.watch<AuthenticationBloc>().state;
+      // bool isAuthenticated = authState is AuthenticationSuccess;
+      // if (state.matchedLocation == "/profile") {
+      //   if (!isAuthenticated) {
+      //     return state.namedLocation(RouteConstants.dashboard);
+      //   } else {
+      //     state.namedLocation(RouteConstants.profile);
+      //   }
+      // }
       return null;
     },
   );

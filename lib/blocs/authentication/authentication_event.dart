@@ -7,14 +7,12 @@ class OnAuthenticationCheck extends AuthenticationEvent {}
 class OnAuthenticationLogout extends AuthenticationEvent {
   final int timeout;
   final Function? callback;
-  final bool clearBiometric;
   final String errorMessage;
   final bool ignoreApi;
 
   OnAuthenticationLogout({
     required this.timeout,
     this.callback,
-    this.clearBiometric = false,
     this.errorMessage = '',
     this.ignoreApi = false,
   });

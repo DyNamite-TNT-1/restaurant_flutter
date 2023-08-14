@@ -50,7 +50,15 @@ class UserPreferences {
     return UtilPreferences.getString(Preferences.token);
   }
 
-    static Future<bool> setUserLogin(String userLogin) {
+  static bool isExistAuthenticateSession() {
+    String? token = getToken();
+    if (token != null && token != "") {
+      return true;
+    }
+    return false;
+  }
+
+  static Future<bool> setUserLogin(String userLogin) {
     return UtilPreferences.setString(Preferences.userLogin, userLogin);
   }
 
