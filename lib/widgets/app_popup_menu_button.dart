@@ -11,6 +11,10 @@ class AppPopupMenuButton<T> extends StatefulWidget {
     required this.value,
     required this.child,
     this.height = 40,
+    this.menuDropBorderColor = Colors.transparent,
+    this.menuDropBgColor = Colors.grey,
+    this.buttonBorderColor = Colors.transparent,
+    this.buttonBgColor = Colors.grey,
   });
   final void Function(T value) onChanged;
   final DropdownMenuItem<T> Function(BuildContext context, T label)
@@ -19,6 +23,10 @@ class AppPopupMenuButton<T> extends StatefulWidget {
   final T value;
   final Widget child;
   final double height;
+  final Color menuDropBorderColor;
+  final Color menuDropBgColor;
+  final Color buttonBorderColor;
+  final Color buttonBgColor;
   @override
   State<AppPopupMenuButton> createState() => _TPopupMenuButtonState<T>();
 }
@@ -58,7 +66,8 @@ class _TPopupMenuButtonState<T> extends State<AppPopupMenuButton<T>> {
             ),
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(kCornerSmall),
-              color: Color(0XFFA0A0A0),
+              border: Border.all(color: widget.buttonBorderColor),
+              color: widget.buttonBgColor,
             ),
           ),
           iconStyleData: const IconStyleData(
@@ -73,7 +82,10 @@ class _TPopupMenuButtonState<T> extends State<AppPopupMenuButton<T>> {
             // width: 200,
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(14),
-              color: Colors.grey,
+              border: Border.all(
+                color: widget.menuDropBorderColor,
+              ),
+              color: widget.menuDropBgColor,
             ),
             scrollbarTheme: ScrollbarThemeData(
               radius: const Radius.circular(40),

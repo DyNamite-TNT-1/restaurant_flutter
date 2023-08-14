@@ -12,6 +12,7 @@ import 'package:restaurant_flutter/screens/drink/drink_screen.dart';
 import 'package:restaurant_flutter/screens/profile/profile.dart';
 import 'package:restaurant_flutter/screens/reservation/reservation_screen.dart';
 import 'package:restaurant_flutter/screens/table/table_screen.dart';
+import 'package:restaurant_flutter/utils/parse_type_value.dart';
 
 final _rootNavigatorKey = GlobalKey<NavigatorState>();
 final _shellNavigatorDashboardKey =
@@ -141,20 +142,15 @@ class AppRouter {
               name: RouteConstants.verifyOTP,
               path: "verify",
               pageBuilder: (context, state) {
+                final params = state.uri.queryParameters;
+                final String email =
+                    ParseTypeData.ensureString(params["email"]);
                 return MaterialPage(
-                  child: OtpScreen(),
+                  child: OtpScreen(email: email),
                 );
               },
             ),
-          ]),
-      GoRoute(
-        name: RouteConstants.profile,
-        path: "/profile",
-        pageBuilder: (context, state) {
-          return NoTransitionPage(
-            child: Profile(),
-          );
-        },
+        ]
       ),
     ],
     redirect: (context, state) {
