@@ -161,7 +161,7 @@ class HTTPManager {
     if (external) {
       request = dioExternal;
     }
-    
+
     request.options = _optionsCookie();
     dioInternal.options.method = 'PUT';
     dioInternal.options.headers['Content-Type'] =
@@ -219,7 +219,7 @@ class HTTPManager {
       cancelTokenMap.remove(cancelTag);
       UtilLogger.log('RESPONSE ${response.realUri}: \n', response.data);
       return response.data;
-    } on DioError catch (error) {
+    } on DioException catch (error) {
       if (CancelToken.isCancel(error)) {
         return null;
       }
@@ -332,21 +332,20 @@ class HTTPManager {
   }
 
   ///Error common handle
-  Map<String, dynamic> errorHandle(DioError error) {
+  Map<String, dynamic> errorHandle(DioException error) {
     String message = "unknown_error";
     dynamic data = <String, dynamic>{};
 
     switch (error.type) {
-      case DioErrorType.sendTimeout:
-      case DioErrorType.receiveTimeout:
+      case DioExceptionType.sendTimeout:
+      case DioExceptionType.receiveTimeout:
         message = "request_time_out";
         break;
-      case DioErrorType.badResponse:
+      case DioExceptionType.badResponse:
         data = error.response?.data ?? <String, dynamic>{};
         if (data is Map) {
           var serverMsg = ParseTypeData.ensureString(data["msg"]);
           message = serverMsg.isEmpty ? message : serverMsg;
-          print(message);
         }
         if (error.response?.statusCode == 401) {
           // move to login page

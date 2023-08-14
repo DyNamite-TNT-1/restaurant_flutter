@@ -2,7 +2,7 @@ import 'package:restaurant_flutter/api/http_manager.dart';
 import 'package:restaurant_flutter/configs/configs.dart';
 import 'package:restaurant_flutter/enum/enum.dart';
 import 'package:restaurant_flutter/enum/order.dart';
-import 'package:restaurant_flutter/models/service/common_response.dart';
+import 'package:restaurant_flutter/models/service/model_result_api.dart';
 import 'package:restaurant_flutter/models/service/dish.dart';
 import 'package:restaurant_flutter/models/service/dish_type.dart';
 import 'package:restaurant_flutter/models/service/user.dart';
@@ -44,6 +44,7 @@ class Api {
   }
 
   static String loginUrl = "/account/login";
+  static String logoutUrl = "/account/logout";
   static String signUpUrl = "/account/create";
   static String verifyOTPUrl = "/account/create/verify";
   //dish & drink screen
@@ -69,7 +70,9 @@ class Api {
     return UserModel.fromJson(result);
   }
 
-   static Future<CommonResponse> requestSignUp({
+  // static Future<ResultModel>
+
+  static Future<ResultModel> requestSignUp({
     String email = "",
     String phone = "",
     String password = "",
@@ -85,7 +88,7 @@ class Api {
       "password": password,
       "userName": userName,
       "birthDay": birthDay,
-      "address" : address,
+      "address": address,
       "gender": gender.value,
     };
     final result = await httpManager.post(
@@ -93,11 +96,11 @@ class Api {
       data: params,
       cancelTag: tagRequest,
     );
-    return CommonResponse.fromJson(result);
+    return ResultModel.fromJson(result);
   }
 
   //dish screen
-  static Future<DishModel> requestDish({
+  static Future<ResultModel> requestDish({
     int type = 0,
     int limit = kLimit,
     required page,
@@ -118,10 +121,10 @@ class Api {
       params: params,
       cancelTag: tagRequest,
     );
-    return DishModel.fromJson(result);
+    return ResultModel.fromJson(result);
   }
 
-  static Future<DishTypeFilterModel> requestDishType({
+  static Future<ResultModel> requestDishType({
     required bool isDrinkType,
     String tagRequest = HTTPManager.DEFAULT_CANCEL_TAG,
   }) async {
@@ -134,10 +137,10 @@ class Api {
       params: params,
       cancelTag: tagRequest,
     );
-    return DishTypeFilterModel.fromJson(result);
+    return ResultModel.fromJson(result);
   }
 
-  static Future<CommonResponse> addDish({
+  static Future<ResultModel> addDish({
     required String name,
     required String description,
     required String price,
@@ -162,6 +165,6 @@ class Api {
       data: data,
       cancelTag: tagRequest,
     );
-    return CommonResponse.fromJson(result);
+    return ResultModel.fromJson(result);
   }
 }

@@ -1,19 +1,17 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:go_router/go_router.dart';
 import 'package:restaurant_flutter/api/api.dart';
+import 'package:restaurant_flutter/blocs/bloc.dart';
 import 'package:restaurant_flutter/configs/configs.dart';
-import 'package:restaurant_flutter/configs/user_repository.dart';
-import 'package:restaurant_flutter/models/service/user.dart';
 import 'package:restaurant_flutter/routes/route_constants.dart';
 import 'package:restaurant_flutter/widgets/widgets.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({
     super.key,
-    required this.onLogin,
   });
-  final Function onLogin;
   @override
   State<LoginScreen> createState() => _LoginScreenState();
 }
@@ -23,7 +21,6 @@ class _LoginScreenState extends State<LoginScreen> {
   final TextEditingController passwordController = TextEditingController();
   final FocusNode loginFocus = FocusNode();
   final FocusNode passwordFocus = FocusNode();
-  bool isSigning = false;
 
   @override
   void initState() {
@@ -40,29 +37,46 @@ class _LoginScreenState extends State<LoginScreen> {
   }
 
   Future<void> _requestLogin(BuildContext context) async {
-    UserModel result = await Api.requestLogin(
-        login: loginController.text, password: passwordController.text);
-    if (result.isSuccess) {
-      await UserPreferences.setToken(result.accessToken);
-      UserRepository.setUserModel(result.toJson());
-
-      if (context.mounted) {
-        context.pop();
-        widget.onLogin();
-      }
-    } else {
+    if (loginController.text.isEmpty || passwordController.text.isEmpty) {
       Fluttertoast.showToast(
-          msg: "Đăng nhập thất bại",
-          toastLength: Toast.LENGTH_SHORT,
-          gravity: ToastGravity.CENTER,
-          timeInSecForIosWeb: 1,
-          backgroundColor: primaryColor,
-          textColor: Colors.white,
-          fontSize: 16.0);
+        msg: "Vui lòng nhập hết trường dữ liệu",
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.CENTER,
+        timeInSecForIosWeb: 5,
+        backgroundColor: primaryColor,
+        textColor: Colors.white,
+        fontSize: 16.0,
+        webBgColor: dangerColorToast,
+      );
+    } else {
+      Map<String, String> map = {
+        "login": loginController.text,
+        "password": passwordController.text,
+      };
+      context.read<AuthenticationBloc>().add(OnAuthenticate(map: map));
+
+      // UserModel result = await Api.requestLogin(
+      //     login: loginController.text, password: passwordController.text);
+      // if (result.isSuccess) {
+      //   await UserPreferences.setToken(result.accessToken);
+      //   UserRepository.setUserModel(result.toJson());
+
+      //   if (context.mounted) {
+      //     context.pop();
+      //     widget.onLogin();
+      //   }
+      // } else {
+      //   Fluttertoast.showToast(
+      //       msg: "Đăng nhập thất bại",
+      //       toastLength: Toast.LENGTH_SHORT,
+      //       gravity: ToastGravity.CENTER,
+      //       timeInSecForIosWeb: 1,
+      //       backgroundColor: primaryColor,
+      //       textColor: Colors.white,
+      //       fontSize: 16.0);
+      // }
     }
-    setState(() {
-      isSigning = false;
-    });
+    FocusManager.instance.primaryFocus?.unfocus();
   }
 
   Widget buildTitle(BuildContext context) {
@@ -71,140 +85,168 @@ class _LoginScreenState extends State<LoginScreen> {
         textAlign: TextAlign.center);
   }
 
-  @override
-  Widget build(BuildContext context) {
-    return AlertDialog(
-      contentPadding: const EdgeInsets.all(20),
-      backgroundColor: backgroundColor,
-      content: Container(
-        constraints: const BoxConstraints(
-          minWidth: 700,
-          maxWidth: kDialogMaxWidthNormal,
-          minHeight: 100,
-          maxHeight: 500,
+  Widget _buildBody(BuildContext context) {
+    var authState = context.select((AuthenticationBloc bloc) => bloc.state);
+    return Row(
+      children: [
+        Expanded(
+          child: Image.asset(
+            Images.logoAppNoBg,
+          ),
         ),
-        child: Row(
-          children: [
-            Expanded(
-              child: Image.asset(
-                Images.logoAppNoBg,
-              ),
-            ),
-            SizedBox(
-              width: kDefaultPadding,
-            ),
-            Expanded(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.start,
+        SizedBox(
+          width: kDefaultPadding,
+        ),
+        Expanded(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.end,
                 children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: [
-                      InkWell(
-                        borderRadius: BorderRadius.circular(30),
-                        onTap: () {
-                          context.pop();
-                        },
-                        child: Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: Icon(Icons.close),
-                        ),
-                      ),
-                    ],
-                  ),
-                  SizedBox(
-                    height: kDefaultPadding * 2,
-                  ),
-                  buildTitle(context),
-                  SizedBox(
-                    height: kDefaultPadding,
-                  ),
-                  AppInput(
-                    name: "login",
-                    keyboardType: TextInputType.name,
-                    icon: Icons.person_outline,
-                    controller: loginController,
-                    focusNode: loginFocus,
-                    placeHolder: "Nhập email hoặc số điện thoại",
-                  ),
-                  SizedBox(
-                    height: kDefaultPadding,
-                  ),
-                  AppInput(
-                    name: "password",
-                    keyboardType: TextInputType.name,
-                    icon: Icons.lock,
-                    controller: passwordController,
-                    focusNode: passwordFocus,
-                    placeHolder: "Nhập mật khẩu",
-                    isPassword: true,
-                  ),
-                  SizedBox(
-                    height: kDefaultPadding,
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: [
-                      InkWell(
-                        onTap: () {},
-                        child: Text(
-                          "Quên mật khẩu?",
-                          style: Theme.of(context).textTheme.bodyMedium,
-                        ),
-                      ),
-                    ],
-                  ),
-                  SizedBox(
-                    height: kDefaultPadding * 2,
-                  ),
-                  AppButton(
-                    "Đăng nhập",
-                    loading: isSigning,
-                    mainAxisSize: MainAxisSize.max,
-                    onPressed: () {
-                      setState(() {
-                        isSigning = true;
-                      });
-                      _requestLogin(context);
+                  InkWell(
+                    borderRadius: BorderRadius.circular(30),
+                    onTap: () {
+                      context.pop();
                     },
-                  ),
-                  SizedBox(
-                    height: kDefaultPadding / 2,
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text(
-                        "Bạn chưa có tài khoản?",
-                        style: Theme.of(context).textTheme.bodyMedium,
-                      ),
-                      InkWell(
-                        onTap: () {
-                          if (mounted) {
-                            context.pop();
-                            context.goNamed(RouteConstants.signUp);
-                          }
-                        },
-                        child: Padding(
-                          padding: EdgeInsets.symmetric(
-                            horizontal: kPadding10 / 2,
-                            vertical: kPadding10 / 2,
-                          ),
-                          child: Text(
-                            " Đăng ký",
-                            style: Theme.of(context)
-                                .textTheme
-                                .bodyMedium
-                                ?.copyWith(color: primaryColor),
-                          ),
-                        ),
-                      ),
-                    ],
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Icon(Icons.close),
+                    ),
                   ),
                 ],
               ),
-            ),
-          ],
+              SizedBox(
+                height: kDefaultPadding * 2,
+              ),
+              buildTitle(context),
+              SizedBox(
+                height: kDefaultPadding,
+              ),
+              AppInput(
+                name: "login",
+                keyboardType: TextInputType.name,
+                icon: Icons.person_outline,
+                controller: loginController,
+                focusNode: loginFocus,
+                placeHolder: "Nhập email hoặc số điện thoại",
+              ),
+              SizedBox(
+                height: kDefaultPadding,
+              ),
+              AppInput(
+                name: "password",
+                keyboardType: TextInputType.name,
+                icon: Icons.lock,
+                controller: passwordController,
+                focusNode: passwordFocus,
+                placeHolder: "Nhập mật khẩu",
+                isPassword: true,
+              ),
+              SizedBox(
+                height: kDefaultPadding,
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  InkWell(
+                    onTap: () {},
+                    child: Text(
+                      "Quên mật khẩu?",
+                      style: Theme.of(context).textTheme.bodyMedium,
+                    ),
+                  ),
+                ],
+              ),
+              SizedBox(
+                height: kDefaultPadding * 2,
+              ),
+              AppButton(
+                "Đăng nhập",
+                loading: authState is Authenticating,
+                mainAxisSize: MainAxisSize.max,
+                onPressed: () {
+                  _requestLogin(context);
+                },
+              ),
+              SizedBox(
+                height: kDefaultPadding / 2,
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(
+                    "Bạn chưa có tài khoản?",
+                    style: Theme.of(context).textTheme.bodyMedium,
+                  ),
+                  InkWell(
+                    onTap: () {
+                      if (mounted) {
+                        context.pop();
+                        context.goNamed(RouteConstants.signUp);
+                      }
+                    },
+                    child: Padding(
+                      padding: EdgeInsets.symmetric(
+                        horizontal: kPadding10 / 2,
+                        vertical: kPadding10 / 2,
+                      ),
+                      child: Text(
+                        " Đăng ký",
+                        style: Theme.of(context)
+                            .textTheme
+                            .bodyMedium
+                            ?.copyWith(color: primaryColor),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ),
+        ),
+      ],
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return BlocListener<AuthenticationBloc, AuthenticationState>(
+      listener: (context, state) {
+        if (state is AuthenticationFail) {
+          String errorMessage = "";
+          errorMessage = state.messageError.trim();
+          Fluttertoast.showToast(
+            msg: errorMessage.isNotEmpty ? errorMessage : "Đăng nhập thất bại!",
+            toastLength: Toast.LENGTH_SHORT,
+            gravity: ToastGravity.CENTER,
+            timeInSecForIosWeb: 1,
+            webBgColor: dangerColorToast,
+            webShowClose: true,
+          );
+        } else if (state is AuthenticationSuccess) {
+          Fluttertoast.showToast(
+            msg: "Đăng nhập thành công!",
+            toastLength: Toast.LENGTH_SHORT,
+            gravity: ToastGravity.CENTER,
+            timeInSecForIosWeb: 1,
+            webBgColor: successColorToast,
+            webShowClose: true,
+          );
+          context.pop();
+        }
+      },
+      child: AlertDialog(
+        contentPadding: const EdgeInsets.all(20),
+        backgroundColor: backgroundColor,
+        content: Container(
+          constraints: const BoxConstraints(
+            minWidth: 700,
+            maxWidth: kDialogMaxWidthNormal,
+            minHeight: 100,
+            maxHeight: 500,
+          ),
+          child: _buildBody(context),
         ),
       ),
     );

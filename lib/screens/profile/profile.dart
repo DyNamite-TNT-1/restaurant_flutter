@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:restaurant_flutter/widgets/app_button.dart';
 
 class Profile extends StatefulWidget {
   const Profile({super.key});
@@ -11,11 +12,17 @@ class _ProfileState extends State<Profile> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text("Profile"),
-      ),
-      body: Center(
-        child: Text("Profile"),
+      body: Column(
+        children: [
+          Center(
+            child: AppButton(
+              "Đăng xuất",
+              onPressed: () {
+                
+              },
+            ),
+          ),
+        ],
       ),
     );
   }

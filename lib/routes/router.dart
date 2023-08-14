@@ -9,6 +9,7 @@ import 'package:restaurant_flutter/nested_navigation.dart';
 import 'package:restaurant_flutter/screens/dish/dish_screen.dart';
 import 'package:restaurant_flutter/screens/drink/detail_drink.dart';
 import 'package:restaurant_flutter/screens/drink/drink_screen.dart';
+import 'package:restaurant_flutter/screens/profile/profile.dart';
 import 'package:restaurant_flutter/screens/reservation/reservation_screen.dart';
 import 'package:restaurant_flutter/screens/table/table_screen.dart';
 
@@ -128,25 +129,32 @@ class AppRouter {
         },
       ),
       GoRoute(
-        name: RouteConstants.signUp,
-        path: "/signup",
-        pageBuilder: (context, state) {
-          return NoTransitionPage(
-            child: SignUpScreen(),
-          );
-        },
-        routes: [
-          GoRoute(
+          name: RouteConstants.signUp,
+          path: "/signup",
+          pageBuilder: (context, state) {
+            return NoTransitionPage(
+              child: SignUpScreen(),
+            );
+          },
+          routes: [
+            GoRoute(
               name: RouteConstants.verifyOTP,
               path: "verify",
               pageBuilder: (context, state) {
                 return MaterialPage(
-                  child: OtpScreen(
-                  ),
+                  child: OtpScreen(),
                 );
               },
             ),
-        ]
+          ]),
+      GoRoute(
+        name: RouteConstants.profile,
+        path: "/profile",
+        pageBuilder: (context, state) {
+          return NoTransitionPage(
+            child: Profile(),
+          );
+        },
       ),
     ],
     redirect: (context, state) {

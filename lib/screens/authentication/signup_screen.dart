@@ -7,7 +7,7 @@ import 'package:restaurant_flutter/configs/configs.dart';
 import 'package:restaurant_flutter/configs/user_repository.dart';
 import 'package:restaurant_flutter/enum/enum.dart';
 import 'package:restaurant_flutter/enum/gender.dart';
-import 'package:restaurant_flutter/models/service/common_response.dart';
+import 'package:restaurant_flutter/models/service/model_result_api.dart';
 import 'package:restaurant_flutter/models/service/user.dart';
 import 'package:restaurant_flutter/routes/route_constants.dart';
 import 'package:restaurant_flutter/widgets/app_popup_menu_button.dart';

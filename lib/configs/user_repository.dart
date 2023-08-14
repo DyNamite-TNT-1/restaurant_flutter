@@ -2,7 +2,7 @@ import 'dart:convert';
 
 import 'package:restaurant_flutter/api/api.dart';
 import 'package:restaurant_flutter/configs/configs.dart';
-import 'package:restaurant_flutter/models/service/common_response.dart';
+import 'package:restaurant_flutter/models/service/model_result_api.dart';
 import 'package:restaurant_flutter/models/service/user.dart';
 import 'package:restaurant_flutter/utils/utils.dart';
 
@@ -30,33 +30,24 @@ class UserRepository {
 
   ///Login
   static Future<UserModel?> login({
-    required String domain,
-    required String username,
+    required String login,
     required String password,
-    required String pushtoken,
-    required String otpCode,
   }) async {
     try {
       final result = await Api.requestLogin(
-          // domain: domain,
-          // id: username,
-          // pass: password,
-          // token: pushtoken,
-          // otpcode: otpCode,
-          );
+        login: login,
+        password: password,
+      );
 
-      ///Case API success
-      // if (result.success) {
-      //   _userModel = result;
+      // /Case API success
+      if (result.isSuccess) {
+        _userModel = result;
 
-      //   await UserPreferences.setSecurePassword(password);
-      //   await UserPreferences.setUserLoggedInfo(
-      //       json.encode(result.toDatabase()));
-      //   await UserPreferences.setDomain(domain);
-      //   await UserPreferences.setUserId(username);
-      //   await UserPreferences.setHanGWSession(result.cookie);
-      //   await UserPreferences.setHmailKey(result.hmail_key);
-      // }
+        await UserPreferences.setSecurePassword(password);
+        await UserPreferences.setUserLoggedInfo(json.encode(result.toJson()));
+        await UserPreferences.setUserLogin(login);
+        await UserPreferences.setToken(result.accessToken);
+      }
       return result;
     } catch (e) {
       UtilLogger.log('Exception Login', e);
@@ -64,7 +55,7 @@ class UserRepository {
     return null;
   }
 
-  static Future<CommonResponse?> logout(bool ignoreApi, int timeout) async {
+  static Future<ResultModel?> logout(bool ignoreApi, int timeout) async {
     if (!ignoreApi) {
       // Api.requestLogout();
     }

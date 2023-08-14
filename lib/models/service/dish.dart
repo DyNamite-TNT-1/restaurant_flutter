@@ -54,13 +54,11 @@ class DishDetailModel {
 
 class DishModel {
   final int total;
-  final bool isSuccess;
   final int maxPage;
   final int currentPage;
   final List<DishDetailModel> dishes;
   DishModel({
     this.total = 0,
-    this.isSuccess = false,
     this.maxPage = 0,
     this.currentPage = 0,
     this.dishes = const [],
@@ -68,7 +66,6 @@ class DishModel {
   factory DishModel.fromJson(Map<String, dynamic> json) {
     return DishModel(
       total: ParseTypeData.ensureInt(json["total"]),
-      isSuccess: ParseTypeData.ensureBool(json["isSuccess"]),
       maxPage: ParseTypeData.ensureInt(json["maxPage"]),
       currentPage: ParseTypeData.ensureInt(json["currentPage"]),
       dishes: DishDetailModel.parseListDishItem(json["rows"]),

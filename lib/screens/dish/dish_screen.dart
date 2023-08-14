@@ -1,17 +1,16 @@
-import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:go_router/go_router.dart';
 import 'package:number_pagination/number_pagination.dart';
 import 'package:restaurant_flutter/api/api.dart';
-import 'package:restaurant_flutter/bloc/dish/dish_bloc.dart';
+import 'package:restaurant_flutter/blocs/dish/dish_bloc.dart';
 import 'package:restaurant_flutter/configs/configs.dart';
 import 'package:restaurant_flutter/enum/bloc.dart';
 import 'package:restaurant_flutter/enum/order.dart';
-import 'package:restaurant_flutter/models/service/common_response.dart';
 import 'package:restaurant_flutter/models/service/dish.dart';
 import 'package:restaurant_flutter/models/service/dish_type.dart';
+import 'package:restaurant_flutter/models/service/model_result_api.dart';
 import 'package:restaurant_flutter/utils/extension.dart';
 import 'package:restaurant_flutter/widgets/app_dialog_input.dart';
 import 'package:restaurant_flutter/widgets/app_popup_menu_button.dart';
@@ -48,6 +47,9 @@ class _DishScreenState extends State<DishScreen> {
   final TextEditingController _unitController = TextEditingController();
   final FocusNode _unitFocusNode = FocusNode();
 
+  bool isShowAddNewDishValidateText = false;
+  String addNewDishValidateText = "";
+
   @override
   void initState() {
     super.initState();
@@ -82,14 +84,15 @@ class _DishScreenState extends State<DishScreen> {
         ),
       );
       tagRequestDishes = Api.buildIncreaseTagRequestWithID("dishes");
-      DishModel dishModel = await Api.requestDish(
+      ResultModel result = await Api.requestDish(
         type: type,
         order: priceOrder,
         page: currentPage,
         isDrink: false,
         tagRequest: tagRequestDishes,
       );
-      if (!isServiceClosed && dishModel.isSuccess) {
+      if (!isServiceClosed && result.isSuccess) {
+        DishModel dishModel = DishModel.fromJson(result.data);
         dishBloc.add(
           OnLoadDish(
             params: {
@@ -111,11 +114,13 @@ class _DishScreenState extends State<DishScreen> {
         ),
       );
       tagRequestDishTypes = Api.buildIncreaseTagRequestWithID("dishTypes");
-      DishTypeFilterModel dishTypeModel = await Api.requestDishType(
+      ResultModel result = await Api.requestDishType(
         isDrinkType: false,
         tagRequest: tagRequestDishTypes,
       );
-      if (!isServiceClosed) {
+      if (!isServiceClosed && result.isSuccess) {
+        DishTypeFilterModel dishTypeModel =
+            DishTypeFilterModel.fromJson(result.data);
         dishBloc.add(
           OnLoadDishType(
             params: {
@@ -134,33 +139,6 @@ class _DishScreenState extends State<DishScreen> {
           "Loại: ",
           style: Theme.of(context).textTheme.bodyLarge,
         ),
-        // AppPopupMenuButton<DishTypeModel>(
-        //   value: _selectedFilter,
-        //   onChanged: (value) {
-        //     setState(() {
-        //       _selectedFilter = value;
-        //       currentPage = 1;
-        //     });
-        //     _requestDish(
-        //       type: _selectedFilter.dishTypeId,
-        //       priceOrder: _selectedPriceOrder,
-        //     );
-        //   },
-        //   items: dishBloc.state.dishTypes,
-        //   filterItemBuilder: dishBloc.state.dishTypes
-        //       .map((e) => DropdownMenuItem<DishTypeModel>(
-        //             value: e,
-        //             child: Text(e.type),
-        //           ))
-        //       .toList(),
-        //   child: Text(
-        //     _selectedFilter.type,
-        //     style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-        //           fontSize: 14,
-        //           color: Colors.white,
-        //         ),
-        //   ),
-        // ),
         if (dishBloc.state.dishTypes.isNotEmpty &&
             dishBloc.state.dishTypeState == BlocState.loadCompleted)
           AppPopupMenuButton<DishTypeModel>(
@@ -198,7 +176,16 @@ class _DishScreenState extends State<DishScreen> {
           style: Theme.of(context).textTheme.bodyLarge,
         ),
         AppPopupMenuButton<OrderEnum>(
-          onChanged: (value) {},
+          onChanged: (value) {
+            setState(() {
+              _selectedPriceOrder = value;
+              currentPage = 1;
+            });
+            _requestDish(
+              type: _selectedFilter.dishTypeId,
+              priceOrder: _selectedPriceOrder,
+            );
+          },
           filterItemBuilder: (context, e) {
             return DropdownMenuItem<OrderEnum>(
               value: e,
@@ -226,8 +213,25 @@ class _DishScreenState extends State<DishScreen> {
     );
   }
 
-  Future<void> _addNewDish(DishTypeModel dishType) async {
-    CommonResponse result = await Api.addDish(
+  Future<bool> _addNewDish(DishTypeModel dishType) async {
+    if (_nameController.text.trim().isEmpty ||
+        _unitController.text.trim().isEmpty ||
+        _priceController.text.trim().isEmpty) {
+      if (!isShowAddNewDishValidateText) {
+        setState(() {
+          isShowAddNewDishValidateText = true;
+          addNewDishValidateText = "Tên, giá, đơn vị tính là bắt buộc";
+        });
+      }
+      return true;
+    }
+    if (isShowAddNewDishValidateText) {
+      setState(() {
+        isShowAddNewDishValidateText = false;
+        addNewDishValidateText = "";
+      });
+    }
+    ResultModel result = await Api.addDish(
       name: _nameController.text,
       description: _descriptionController.text,
       image: _imageController.text,
@@ -268,10 +272,12 @@ class _DishScreenState extends State<DishScreen> {
         webBgColor: dangerColorToast,
       );
     }
+    return false;
   }
 
   void _openDialogAddNewDish() {
     DishTypeModel selectedFilter2 = dishBloc.state.dishTypes.sublist(1)[0];
+    bool isShow = false;
     showDialog(
       context: context,
       barrierDismissible: false,
@@ -281,8 +287,9 @@ class _DishScreenState extends State<DishScreen> {
             title: "Thêm món mới",
             buttonDoneTitle: "Tạo",
             buttonCancelTitle: "Thoát",
-            onDone: () {
-              _addNewDish(selectedFilter2);
+            onDone: () async {
+              isShow = await _addNewDish(selectedFilter2);
+              newState(() {});
             },
             onCancel: () {
               context.pop();
@@ -446,15 +453,17 @@ class _DishScreenState extends State<DishScreen> {
                   placeHolder: "Url ảnh(tùy chọn)",
                   focusNode: _imageFocusNode,
                 ),
-                Padding(
-                  padding: const EdgeInsets.only(top: 10, bottom: 5),
-                  child: Text(
-                    "Loại",
-                    style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                          fontSize: 16,
-                        ),
+                if (isShow)
+                  Padding(
+                    padding: const EdgeInsets.only(top: 10, bottom: 5),
+                    child: Text(
+                      addNewDishValidateText,
+                      style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                            fontSize: 14,
+                            color: Colors.red,
+                          ),
+                    ),
                   ),
-                ),
               ],
             ),
           );

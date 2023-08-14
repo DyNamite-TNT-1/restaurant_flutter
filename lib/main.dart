@@ -1,6 +1,9 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:restaurant_flutter/blocs/app_bloc.dart';
+import 'package:restaurant_flutter/blocs/bloc.dart';
 import 'package:restaurant_flutter/configs/configs.dart';
 import 'package:restaurant_flutter/routes/router.dart';
 // ignore: depend_on_referenced_packages
@@ -16,6 +19,7 @@ class MyHttpOverrides extends HttpOverrides {
 }
 
 void main() {
+  WidgetsFlutterBinding.ensureInitialized();
   usePathUrlStrategy();
   HttpOverrides.global = MyHttpOverrides();
   runApp(const MyApp());
@@ -26,10 +30,17 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp.router(
-      theme: CollectionTheme.getCollectionTheme(),
-      debugShowCheckedModeBanner: false,
-      routerConfig: AppRouter.router,
+    return MultiBlocProvider(
+      providers: AppBloc.providers,
+      child: BlocBuilder<AuthenticationBloc, AuthenticationState>(
+        builder: (context, state) {
+          return MaterialApp.router(
+            theme: CollectionTheme.getCollectionTheme(),
+            debugShowCheckedModeBanner: false,
+            routerConfig: AppRouter.router,
+          );
+        },
+      ),
     );
   }
 }

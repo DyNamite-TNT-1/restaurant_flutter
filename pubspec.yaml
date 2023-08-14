@@ -49,6 +49,7 @@ dependencies:
   carousel_slider: ^4.2.1
   dropdown_button2: ^2.3.7
   pin_code_fields: ^8.0.1
+  crypto: ^3.0.3
 
 dev_dependencies:
   flutter_test:

@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import 'package:restaurant_flutter/blocs/bloc.dart';
 import 'package:restaurant_flutter/configs/configs.dart';
 import 'package:restaurant_flutter/configs/user_repository.dart';
 import 'package:restaurant_flutter/routes/route_constants.dart';
@@ -15,21 +17,9 @@ class AppCeiling extends StatefulWidget {
 }
 
 class _AppCeilingState extends State<AppCeiling> {
-  bool isHasToken = false;
-
   @override
   void initState() {
     super.initState();
-    checkLogin();
-  }
-
-  void checkLogin() {
-    final token = UserPreferences.getToken();
-    if (token != null) {
-      setState(() {
-        isHasToken = true;
-      });
-    }
   }
 
   _openLoginDialog() {
@@ -37,19 +27,14 @@ class _AppCeilingState extends State<AppCeiling> {
       context: context,
       barrierDismissible: false,
       builder: (BuildContext ct) {
-        return LoginScreen(
-          onLogin: () {
-            checkLogin();
-          },
-         
-        );
+        return LoginScreen();
       },
     );
   }
 
-
   @override
   Widget build(BuildContext context) {
+    var authState = context.select((AuthenticationBloc bloc) => bloc.state);
     return Row(
       children: [
         SizedBox(
@@ -86,7 +71,7 @@ class _AppCeilingState extends State<AppCeiling> {
                 endIndent: 3,
                 color: Colors.grey,
               ),
-              !isHasToken
+              (authState is! AuthenticationSuccess)
                   ? AppButton(
                       "Đăng nhập",
                       type: ButtonType.outline,
@@ -95,7 +80,9 @@ class _AppCeilingState extends State<AppCeiling> {
                       },
                     )
                   : InkWell(
-                      onTap: () {},
+                      onTap: () {
+                        context.goNamed(RouteConstants.profile);
+                      },
                       child: Row(
                         children: [
                           Icon(

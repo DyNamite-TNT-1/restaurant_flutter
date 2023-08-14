@@ -10,6 +10,7 @@ class UserModel {
   final bool isSuccess;
   final String accessToken;
   final int expireTime;
+  final String msg;
 
   UserModel({
     this.userId = 0,
@@ -21,6 +22,7 @@ class UserModel {
     this.isSuccess = false,
     this.accessToken = "",
     this.expireTime = 0,
+    this.msg = "",
   });
 
   factory UserModel.empty() {
@@ -34,6 +36,7 @@ class UserModel {
       roleId: 0,
       accessToken: "",
       expireTime: 0,
+      msg: "",
     );
   }
 
@@ -48,6 +51,7 @@ class UserModel {
       isSuccess: ParseTypeData.ensureBoolDef(json["isSuccess"], false),
       accessToken: ParseTypeData.ensureString(json["accessToken"]),
       expireTime: ParseTypeData.ensureInt(json["expireTime"]),
+      msg: ParseTypeData.ensureString(json["msg"]),
     );
   }
 

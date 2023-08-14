@@ -4,13 +4,13 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:go_router/go_router.dart';
 import 'package:number_pagination/number_pagination.dart';
 import 'package:restaurant_flutter/api/api.dart';
-import 'package:restaurant_flutter/bloc/drink/drink_bloc.dart';
+import 'package:restaurant_flutter/blocs/drink/drink_bloc.dart';
 import 'package:restaurant_flutter/configs/configs.dart';
 import 'package:restaurant_flutter/enum/bloc.dart';
 import 'package:restaurant_flutter/enum/order.dart';
-import 'package:restaurant_flutter/models/service/common_response.dart';
 import 'package:restaurant_flutter/models/service/dish.dart';
 import 'package:restaurant_flutter/models/service/dish_type.dart';
+import 'package:restaurant_flutter/models/service/model_result_api.dart';
 import 'package:restaurant_flutter/utils/extension.dart';
 import 'package:restaurant_flutter/widgets/app_dialog_input.dart';
 import 'package:restaurant_flutter/widgets/app_popup_menu_button.dart';
@@ -81,14 +81,15 @@ class _DrinkScreenState extends State<DrinkScreen> {
         ),
       );
       tagRequestDrinks = Api.buildIncreaseTagRequestWithID("drinks");
-      DishModel drinkModel = await Api.requestDish(
+      ResultModel result = await Api.requestDish(
         type: type,
         order: priceOrder,
         page: currentPage,
         isDrink: true,
         tagRequest: tagRequestDrinks,
       );
-      if (!isServiceClosed && drinkModel.isSuccess) {
+      if (!isServiceClosed && result.isSuccess) {
+        DishModel drinkModel = DishModel.fromJson(result.data);
         drinkBloc.add(
           OnLoadDrink(
             params: {
@@ -110,11 +111,13 @@ class _DrinkScreenState extends State<DrinkScreen> {
         ),
       );
       tagRequestDrinkTypes = Api.buildIncreaseTagRequestWithID("drinkTypes");
-      DishTypeFilterModel drinkTypeModel = await Api.requestDishType(
+      ResultModel result = await Api.requestDishType(
         isDrinkType: true,
         tagRequest: tagRequestDrinkTypes,
       );
-      if (!isServiceClosed) {
+      if (!isServiceClosed && result.isSuccess) {
+        DishTypeFilterModel drinkTypeModel =
+            DishTypeFilterModel.fromJson(result.data);
         drinkBloc.add(
           OnLoadDrinkType(
             params: {
@@ -233,7 +236,7 @@ class _DrinkScreenState extends State<DrinkScreen> {
   }
 
   Future<void> _addNewDrink(DishTypeModel dishType) async {
-    CommonResponse result = await Api.addDish(
+    ResultModel result = await Api.addDish(
       name: _nameController.text,
       description: _descriptionController.text,
       image: _imageController.text,
