@@ -52,6 +52,9 @@ class Api {
   static String requestDishTypeUrl = "/dish/get/type";
   static String addDishUrl = "/manager/dish/create";
 
+  //reservation
+  static String requestTableUrl = "/table/get";
+
   //authorization
   static Future<UserModel> requestLogin({
     String login = "",
@@ -180,6 +183,24 @@ class Api {
     final result = await httpManager.post(
       url: appendBranch(url),
       data: data,
+      cancelTag: tagRequest,
+    );
+    return ResultModel.fromJson(result);
+  }
+
+  //reservation
+  static Future<ResultModel> requestTable({
+    required String datetime,
+    String tableTypeId = "",
+    String tagRequest = HTTPManager.DEFAULT_CANCEL_TAG,
+  }) async {
+    var params = {
+      "datetime": datetime,
+      "tableTypeId": tableTypeId,
+    };
+    final result = await httpManager.get(
+      url: appendBranch(requestTableUrl),
+      params: params,
       cancelTag: tagRequest,
     );
     return ResultModel.fromJson(result);

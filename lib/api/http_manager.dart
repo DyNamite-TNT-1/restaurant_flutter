@@ -107,7 +107,7 @@ class HTTPManager {
 
       UtilLogger.log("====================================");
       UtilLogger.log('Request POST', requestUrl);
-      UtilLogger.log('PARAMS:', data);
+      UtilLogger.log('DATAS:', data);
       UtilLogger.log('REQUEST OPTIONS:', request.options.receiveTimeout);
 
       final Response<dynamic> response;
@@ -264,7 +264,7 @@ class HTTPManager {
       cancelTokenMap.remove(cancelTag);
       UtilLogger.log('RESPONSE ${response.realUri}: \n', response.data);
       return response.data;
-    } on DioError catch (error) {
+    } on DioException catch (error) {
       if (CancelToken.isCancel(error)) {
         // print("GET REQUEST CANCEL $error");
         return null;
@@ -308,7 +308,7 @@ class HTTPManager {
       UtilLogger.log('PARAMS:', params);
       UtilLogger.log('RESPONSE $requestUrl: \n', response.data);
       return response.data;
-    } on DioError catch (error) {
+    } on DioException catch (error) {
       if (CancelToken.isCancel(error)) {
         // print("GET REQUEST CANCEL $error");
         return null;

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:restaurant_flutter/configs/colors.dart';
 
 enum ButtonType { normal, outline, text }
 
@@ -17,7 +18,7 @@ class AppButton extends StatelessWidget {
     Key? key,
     required this.onPressed,
     this.icon,
-    this.color = const Color(0XFFFF651D),
+    this.color = primaryColor,
     this.loading = false,
     this.disabled = false,
     this.type = ButtonType.normal,
@@ -170,7 +171,7 @@ class AppButton extends StatelessWidget {
           onPressed: disabled ? null : onPressed,
           style: ElevatedButton.styleFrom(
             minimumSize: const Size(64, 44),
-            backgroundColor: Theme.of(context).primaryColor,
+            backgroundColor: color,
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(8),
             ),

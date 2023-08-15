@@ -62,6 +62,7 @@ class _DrinkScreenState extends State<DrinkScreen> {
     _descriptionController.clear();
     _imageController.clear();
     _unitController.clear();
+    drinkBloc.close();
     Api.cancelRequest(tag: tagRequestDrinks);
     Api.cancelRequest(tag: tagRequestDrinkTypes);
   }
