@@ -99,6 +99,23 @@ class Api {
     return ResultModel.fromJson(result);
   }
 
+  static Future<ResultModel> verifyOTPSignUp({
+    String login = "",
+    String otp = "",
+    String tagRequest = HTTPManager.DEFAULT_CANCEL_TAG,
+  }) async {
+    var params = {
+      "login": login,
+      "verifyOTP": otp,
+    };
+    final result = await httpManager.post(
+      url: appendBranch(verifyOTPUrl),
+      data: params,
+      cancelTag: tagRequest,
+    );
+    return ResultModel.fromJson(result);
+  }
+
   //dish screen
   static Future<ResultModel> requestDish({
     int type = 0,

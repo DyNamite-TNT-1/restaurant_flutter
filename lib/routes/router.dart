@@ -135,27 +135,27 @@ class AppRouter {
         },
       ),
       GoRoute(
-          name: RouteConstants.signUp,
-          path: "/signup",
-          pageBuilder: (context, state) {
-            return NoTransitionPage(
-              child: SignUpScreen(),
-            );
-          },
-          routes: [
-            GoRoute(
-              name: RouteConstants.verifyOTP,
-              path: "verify",
-              pageBuilder: (context, state) {
-                final params = state.extra as Map<String, dynamic>;
-                final String email =
-                    ParseTypeData.ensureString(params["email"]);
-                return MaterialPage(
-                  child: OtpScreen(email: email),
-                );
-              },
-            ),
-          ]),
+        name: RouteConstants.signUp,
+        path: "/signup",
+        pageBuilder: (context, state) {
+          return NoTransitionPage(
+            child: SignUpScreen(),
+          );
+        },
+        routes: [
+          GoRoute(
+            name: RouteConstants.verifyOTP,
+            path: "verify",
+            pageBuilder: (context, state) {
+              final params = state.extra as Map<String, dynamic>;
+              final String email = ParseTypeData.ensureString(params["email"]);
+              return MaterialPage(
+                child: OtpScreen(email: email),
+              );
+            },
+          ),
+        ],
+      ),
       GoRoute(
         name: RouteConstants.profile,
         path: "/profile",

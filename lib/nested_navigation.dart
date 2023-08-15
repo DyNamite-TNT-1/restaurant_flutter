@@ -1,8 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
 import 'package:restaurant_flutter/app_ceiling.dart';
+import 'package:restaurant_flutter/blocs/bloc.dart';
 import 'package:restaurant_flutter/configs/configs.dart';
+import 'package:restaurant_flutter/configs/user_repository.dart';
+import 'package:restaurant_flutter/widgets/widgets.dart';
+
+import 'routes/route_constants.dart';
+import 'screens/authentication/login_screen.dart';
 
 class ScaffoldWithNestedNavigation extends StatelessWidget {
   const ScaffoldWithNestedNavigation({
@@ -149,7 +156,6 @@ class _ScaffoldWithNavigationRailState
                   ],
                 ),
                 const VerticalDivider(thickness: 1, width: 1),
-                // This is the main content.
                 Expanded(child: widget.body),
               ],
             ),

@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:go_router/go_router.dart';
-import 'package:restaurant_flutter/api/api.dart';
 import 'package:restaurant_flutter/blocs/bloc.dart';
 import 'package:restaurant_flutter/configs/configs.dart';
 import 'package:restaurant_flutter/routes/route_constants.dart';
@@ -54,27 +53,6 @@ class _LoginScreenState extends State<LoginScreen> {
         "password": passwordController.text,
       };
       context.read<AuthenticationBloc>().add(OnAuthenticate(map: map));
-
-      // UserModel result = await Api.requestLogin(
-      //     login: loginController.text, password: passwordController.text);
-      // if (result.isSuccess) {
-      //   await UserPreferences.setToken(result.accessToken);
-      //   UserRepository.setUserModel(result.toJson());
-
-      //   if (context.mounted) {
-      //     context.pop();
-      //     widget.onLogin();
-      //   }
-      // } else {
-      //   Fluttertoast.showToast(
-      //       msg: "Đăng nhập thất bại",
-      //       toastLength: Toast.LENGTH_SHORT,
-      //       gravity: ToastGravity.CENTER,
-      //       timeInSecForIosWeb: 1,
-      //       backgroundColor: primaryColor,
-      //       textColor: Colors.white,
-      //       fontSize: 16.0);
-      // }
     }
     FocusManager.instance.primaryFocus?.unfocus();
   }
@@ -182,7 +160,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   InkWell(
                     onTap: () {
                       if (mounted) {
-                        context.pop();
+                        Navigator.pop(context);
                         context.goNamed(RouteConstants.signUp);
                       }
                     },

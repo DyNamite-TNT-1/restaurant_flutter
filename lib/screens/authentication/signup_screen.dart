@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
+import 'package:restaurant_flutter/api/api.dart';
 import 'package:restaurant_flutter/configs/configs.dart';
 import 'package:restaurant_flutter/enum/enum.dart';
 import 'package:restaurant_flutter/enum/gender.dart';
+import 'package:restaurant_flutter/models/service/model_result_api.dart';
 import 'package:restaurant_flutter/routes/route_constants.dart';
 import 'package:restaurant_flutter/widgets/app_popup_menu_button.dart';
 import 'package:restaurant_flutter/widgets/widgets.dart';
@@ -30,6 +33,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
   DateTime birthDay = DateTime.now();
   bool isSigning = false;
   GenderEnum _selectedGender = GenderEnum.male;
+  String signUpValidateText = "";
+  bool isShowValidateText = false;
 
   @override
   void initState() {
@@ -40,6 +45,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
   void dispose() {
     super.dispose();
     emailNode.dispose();
+    phoneController.dispose();
     passwordNode.dispose();
     emailController.clear();
     passwordController.clear();
@@ -63,54 +69,109 @@ class _SignUpScreenState extends State<SignUpScreen> {
   }
 
   Future<void> _requestSignUp(BuildContext context) async {
-    // CommonResponse result = await Api.requestSignUp(
-    //   email: emailController.text,
-    //   password: passwordController.text,
-    //   phone: phoneController.text,
-    //   address: addressController.text,
-    //   gender: _selectedGender,
-    //   birthDay: DateFormat("yyyy/MM/dd").format(birthDay),
-    //   userName: userNameController.text,
-    // );
-    // if (result.isSuccess) {
-    //   Fluttertoast.showToast(
-    //     msg: result.msg,
-    //     toastLength: Toast.LENGTH_SHORT,
-    //     gravity: ToastGravity.CENTER,
-    //     timeInSecForIosWeb: 5,
-    //     backgroundColor: primaryColor,
-    //     textColor: Colors.white,
-    //     fontSize: 16.0,
-    //     webBgColor: successColorToast,
-    //   );
-    if (context.mounted) {
-      context.goNamed(RouteConstants.verifyOTP,
-          extra: {"email": "tdhuaco372001@gmail.com"} );
+    if (emailController.text.trim().isEmpty ||
+        phoneController.text.trim().isEmpty ||
+        passwordController.text.trim().isEmpty ||
+        userNameController.text.trim().isEmpty ||
+        addressController.text.trim().isEmpty) {
+      Fluttertoast.showToast(
+        msg: "Các trường nhập là bắt buộc",
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.CENTER,
+        timeInSecForIosWeb: 1,
+        backgroundColor: primaryColor,
+        textColor: Colors.white,
+        fontSize: 16.0,
+        webBgColor: dangerColorToast,
+      );
+      return;
     }
-    // } else {
-    //   Fluttertoast.showToast(
-    //     msg: result.msg,
-    //     toastLength: Toast.LENGTH_SHORT,
-    //     gravity: ToastGravity.CENTER,
-    //     timeInSecForIosWeb: 5,
-    //     backgroundColor: primaryColor,
-    //     textColor: Colors.white,
-    //     fontSize: 16.0,
-    //     webBgColor: dangerColorToast,
-    //   );
-    // }
-    // setState(() {
-    //   isSigning = false;
-    // });
+    signUpValidateText = "";
+    setState(() {
+      isSigning = true;
+    });
+    ResultModel result = await Api.requestSignUp(
+      email: emailController.text,
+      password: passwordController.text,
+      phone: phoneController.text,
+      address: addressController.text,
+      gender: _selectedGender,
+      birthDay: DateFormat("yyyy/MM/dd").format(birthDay),
+      userName: userNameController.text,
+    );
+    if (result.isSuccess) {
+      Fluttertoast.showToast(
+        msg: result.message,
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.CENTER,
+        timeInSecForIosWeb: 5,
+        backgroundColor: primaryColor,
+        textColor: Colors.white,
+        fontSize: 16.0,
+        webBgColor: successColorToast,
+      );
+      if (context.mounted) {
+        context.goNamed(RouteConstants.verifyOTP,
+            extra: {"email": "tdhuaco372001@gmail.com"});
+      }
+    } else {
+      Fluttertoast.showToast(
+        msg: result.message,
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.CENTER,
+        timeInSecForIosWeb: 5,
+        backgroundColor: primaryColor,
+        textColor: Colors.white,
+        fontSize: 16.0,
+        webBgColor: dangerColorToast,
+      );
+    }
+    setState(() {
+      isSigning = false;
+    });
   }
 
   Widget buildTitle(BuildContext context) {
-    return Text(
-      "Tạo tài khoản",
-      style: Theme.of(context).textTheme.titleLarge?.copyWith(
-            color: Colors.white,
-            fontSize: 24,
-          ),
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          "Tạo tài khoản",
+          style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                color: Colors.white,
+                fontSize: 24,
+              ),
+        ),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: [
+            Text(
+              "Đã có tài khoản?",
+              style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                    color: Colors.grey,
+                  ),
+            ),
+            InkWell(
+              onTap: () {
+                context.goNamed(RouteConstants.dashboard);
+              },
+              child: Padding(
+                padding: EdgeInsets.symmetric(
+                  horizontal: kPadding10 / 2,
+                  vertical: kPadding10 / 2,
+                ),
+                child: Text(
+                  " Đăng nhập",
+                  style: Theme.of(context)
+                      .textTheme
+                      .bodyMedium
+                      ?.copyWith(color: primaryColor),
+                ),
+              ),
+            ),
+          ],
+        ),
+      ],
     );
   }
 
@@ -165,37 +226,6 @@ class _SignUpScreenState extends State<SignUpScreen> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   buildTitle(context),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: [
-                      Text(
-                        "Đã có tài khoản?",
-                        style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                              color: Colors.grey,
-                            ),
-                      ),
-                      InkWell(
-                        onTap: () {
-                          if (mounted) {
-                            context.pop();
-                          }
-                        },
-                        child: Padding(
-                          padding: EdgeInsets.symmetric(
-                            horizontal: kPadding10 / 2,
-                            vertical: kPadding10 / 2,
-                          ),
-                          child: Text(
-                            " Đăng nhập",
-                            style: Theme.of(context)
-                                .textTheme
-                                .bodyMedium
-                                ?.copyWith(color: primaryColor),
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
                   buildTitleTextField(context, "Họ và tên"),
                   AppInput(
                     name: "name",
@@ -350,9 +380,6 @@ class _SignUpScreenState extends State<SignUpScreen> {
                       loading: isSigning,
                       mainAxisSize: MainAxisSize.max,
                       onPressed: () {
-                        setState(() {
-                          isSigning = true;
-                        });
                         _requestSignUp(context);
                       },
                     ),

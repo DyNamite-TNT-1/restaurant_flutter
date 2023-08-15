@@ -217,20 +217,10 @@ class _DishScreenState extends State<DishScreen> {
     if (_nameController.text.trim().isEmpty ||
         _unitController.text.trim().isEmpty ||
         _priceController.text.trim().isEmpty) {
-      if (!isShowAddNewDishValidateText) {
-        setState(() {
-          isShowAddNewDishValidateText = true;
-          addNewDishValidateText = "Tên, giá, đơn vị tính là bắt buộc";
-        });
-      }
+      addNewDishValidateText = "Tên, giá, đơn vị tính là bắt buộc";
       return true;
     }
-    if (isShowAddNewDishValidateText) {
-      setState(() {
-        isShowAddNewDishValidateText = false;
-        addNewDishValidateText = "";
-      });
-    }
+    addNewDishValidateText = "";
     ResultModel result = await Api.addDish(
       name: _nameController.text,
       description: _descriptionController.text,
