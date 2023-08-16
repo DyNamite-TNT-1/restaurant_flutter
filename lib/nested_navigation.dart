@@ -1,15 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
 import 'package:restaurant_flutter/app_ceiling.dart';
-import 'package:restaurant_flutter/blocs/bloc.dart';
 import 'package:restaurant_flutter/configs/configs.dart';
-import 'package:restaurant_flutter/configs/user_repository.dart';
-import 'package:restaurant_flutter/widgets/widgets.dart';
+import 'package:restaurant_flutter/screens/reservation_tab/reservation_tab.dart';
 
-import 'routes/route_constants.dart';
-import 'screens/authentication/login_screen.dart';
 
 class ScaffoldWithNestedNavigation extends StatelessWidget {
   const ScaffoldWithNestedNavigation({
@@ -89,12 +84,44 @@ class ScaffoldWithNavigationRail extends StatefulWidget {
       _ScaffoldWithNavigationRailState();
 }
 
-class _ScaffoldWithNavigationRailState
-    extends State<ScaffoldWithNavigationRail> {
+class _ScaffoldWithNavigationRailState extends State<ScaffoldWithNavigationRail>
+    with SingleTickerProviderStateMixin {
+  late AnimationController _moveController;
+  late Animation<double> _moveAnimation;
+  bool isOpenReservationTab = false;
+  String tagRequestServices = "";
   @override
   void initState() {
-    Preferences.setPreferences();
     super.initState();
+    Preferences.setPreferences();
+    prepareAnimations();
+  }
+
+  //Setting up the animation
+  void prepareAnimations() {
+    _moveController = AnimationController(
+      vsync: this,
+      duration: Duration(milliseconds: 300),
+      reverseDuration: Duration(milliseconds: 300),
+    );
+    _moveAnimation = CurvedAnimation(
+      parent: _moveController,
+      curve: Curves.easeInOut,
+    );
+  }
+
+  void _runAnimationCheck() {
+    if (isOpenReservationTab) {
+      _moveController.forward();
+    } else {
+      _moveController.reverse();
+    }
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    _moveController.dispose();
   }
 
   @override
@@ -104,60 +131,90 @@ class _ScaffoldWithNavigationRailState
         onPressed: () {},
         child: Icon(Icons.chat),
       ),
-      body: Column(
+      body: Stack(
         children: [
-          AppCeiling(),
-          Expanded(
-            child: Row(
-              children: [
-                NavigationRail(
-                  selectedIndex: widget.selectedIndex,
-                  onDestinationSelected: widget.onDestinationSelected,
-                  labelType: NavigationRailLabelType.all,
-                  backgroundColor: backgroundColor,
-                  destinations: <NavigationRailDestination>[
-                    NavigationRailDestination(
-                      label: Text('Trang chủ'),
-                      icon: Icon(Icons.home),
-                    ),
-                    NavigationRailDestination(
-                      label: Text('Món ăn'),
-                      icon: SvgPicture.asset(
-                        Images.icForkKnife,
-                        height: 20,
-                        colorFilter: ColorFilter.mode(
-                          widget.selectedIndex == 1 ? blueColor : textColor,
-                          BlendMode.srcIn,
+          Column(
+            children: [
+              AppCeiling(
+                onTapReservation: () {
+                  setState(() {
+                    isOpenReservationTab = !isOpenReservationTab;
+                  });
+                  _runAnimationCheck();
+                },
+              ),
+              Expanded(
+                child: Row(
+                  children: [
+                    NavigationRail(
+                      selectedIndex: widget.selectedIndex,
+                      onDestinationSelected: widget.onDestinationSelected,
+                      labelType: NavigationRailLabelType.all,
+                      backgroundColor: backgroundColor,
+                      destinations: <NavigationRailDestination>[
+                        NavigationRailDestination(
+                          label: Text('Trang chủ'),
+                          icon: Icon(Icons.home),
                         ),
-                      ),
-                    ),
-                    NavigationRailDestination(
-                      label: Text('Đồ uống'),
-                      icon: SvgPicture.asset(
-                        Images.icDrink,
-                        height: 20,
-                        colorFilter: ColorFilter.mode(
-                          widget.selectedIndex == 2 ? blueColor : textColor,
-                          BlendMode.srcIn,
+                        NavigationRailDestination(
+                          label: Text('Món ăn'),
+                          icon: SvgPicture.asset(
+                            Images.icForkKnife,
+                            height: 20,
+                            colorFilter: ColorFilter.mode(
+                              widget.selectedIndex == 1 ? blueColor : textColor,
+                              BlendMode.srcIn,
+                            ),
+                          ),
                         ),
-                      ),
-                    ),
-                    NavigationRailDestination(
-                      label: Text('Chỗ trống'),
-                      icon: SvgPicture.asset(
-                        Images.icAvailableCalendar,
-                        height: 20,
-                        colorFilter: ColorFilter.mode(
-                          widget.selectedIndex == 3 ? blueColor : textColor,
-                          BlendMode.srcIn,
+                        NavigationRailDestination(
+                          label: Text('Đồ uống'),
+                          icon: SvgPicture.asset(
+                            Images.icDrink,
+                            height: 20,
+                            colorFilter: ColorFilter.mode(
+                              widget.selectedIndex == 2 ? blueColor : textColor,
+                              BlendMode.srcIn,
+                            ),
+                          ),
                         ),
-                      ),
+                        NavigationRailDestination(
+                          label: Text('Dịch vụ'),
+                          icon: SvgPicture.asset(
+                            Images.icMicro,
+                            height: 20,
+                            colorFilter: ColorFilter.mode(
+                              widget.selectedIndex == 3 ? blueColor : textColor,
+                              BlendMode.srcIn,
+                            ),
+                          ),
+                        ),
+                      ],
                     ),
+                    const VerticalDivider(thickness: 1, width: 1),
+                    Expanded(child: widget.body),
                   ],
                 ),
-                const VerticalDivider(thickness: 1, width: 1),
-                Expanded(child: widget.body),
-              ],
+              ),
+            ],
+          ),
+          Positioned(
+            bottom: 20,
+            right: 20,
+            //TODO ANHDUC not use both top and bottom params here, if not, animation failed
+            child: SizeTransition(
+              axisAlignment: 1.0,
+              sizeFactor: _moveAnimation,
+              child: ReservationTab(
+                onTapClose: () {
+                  if (isOpenReservationTab) {
+                    setState(() {
+                      isOpenReservationTab = false;
+                    });
+                    _runAnimationCheck();
+                  }
+                },
+              ),
             ),
           ),
         ],

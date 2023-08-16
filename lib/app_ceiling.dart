@@ -9,7 +9,8 @@ import 'package:restaurant_flutter/screens/authentication/login_screen.dart';
 import 'package:restaurant_flutter/widgets/app_button.dart';
 
 class AppCeiling extends StatefulWidget {
-  const AppCeiling({super.key});
+  const AppCeiling({super.key, required this.onTapReservation});
+  final Function onTapReservation;
 
   @override
   State<AppCeiling> createState() => _AppCeilingState();
@@ -60,7 +61,8 @@ class _AppCeilingState extends State<AppCeiling> {
                 "Đặt bàn",
                 type: ButtonType.normal,
                 onPressed: () {
-                  context.goNamed(RouteConstants.reservation);
+                  // context.goNamed(RouteConstants.reservation);
+                  widget.onTapReservation();
                 },
               ),
               VerticalDivider(

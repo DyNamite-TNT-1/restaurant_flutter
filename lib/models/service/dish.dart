@@ -11,6 +11,7 @@ class DishDetailModel {
   final int dishTypeId;
   final String dishType;
   final String unit;
+  int quantity;
 
   DishDetailModel({
     this.dishId = 0,
@@ -23,6 +24,7 @@ class DishDetailModel {
     this.dishTypeId = 0,
     this.dishType = "",
     this.unit = "",
+    this.quantity = 1, //count of this dish in menu, not get from server
   });
 
   factory DishDetailModel.fromJson(Map<String, dynamic> json) {

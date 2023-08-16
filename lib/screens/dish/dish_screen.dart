@@ -4,8 +4,10 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:go_router/go_router.dart';
 import 'package:number_pagination/number_pagination.dart';
 import 'package:restaurant_flutter/api/api.dart';
+import 'package:restaurant_flutter/blocs/authentication/bloc.dart';
 import 'package:restaurant_flutter/blocs/dish/dish_bloc.dart';
 import 'package:restaurant_flutter/configs/configs.dart';
+import 'package:restaurant_flutter/configs/user_repository.dart';
 import 'package:restaurant_flutter/enum/bloc.dart';
 import 'package:restaurant_flutter/enum/order.dart';
 import 'package:restaurant_flutter/models/service/dish.dart';
@@ -463,6 +465,7 @@ class _DishScreenState extends State<DishScreen> {
   }
 
   SliverPersistentHeader _makeHeaderFilter(BuildContext context) {
+    var authState = context.select((AuthenticationBloc bloc) => bloc.state);
     return SliverPersistentHeader(
       pinned: true,
       delegate: PinSliverAppBarDelegate(
@@ -480,28 +483,30 @@ class _DishScreenState extends State<DishScreen> {
               _buildTopFilter(context),
               Row(
                 children: [
-                  Material(
-                    color: Colors.transparent,
-                    child: InkWell(
-                      borderRadius: BorderRadius.circular(kCornerSmall),
-                      onTap: () {
-                        _openDialogAddNewDish();
-                      },
-                      child: Container(
-                        padding: EdgeInsets.symmetric(horizontal: 5),
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(kCornerSmall),
-                          border: Border.all(),
-                        ),
-                        child: Row(
-                          children: const [
-                            Icon(Icons.add),
-                            Text("Thêm món"),
-                          ],
+                  if (authState is AuthenticationSuccess &&
+                      UserRepository.userModel.isManager)
+                    Material(
+                      color: Colors.transparent,
+                      child: InkWell(
+                        borderRadius: BorderRadius.circular(kCornerSmall),
+                        onTap: () {
+                          _openDialogAddNewDish();
+                        },
+                        child: Container(
+                          padding: EdgeInsets.symmetric(horizontal: 5),
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(kCornerSmall),
+                            border: Border.all(),
+                          ),
+                          child: Row(
+                            children: const [
+                              Icon(Icons.add),
+                              Text("Thêm món"),
+                            ],
+                          ),
                         ),
                       ),
                     ),
-                  ),
                   SizedBox(
                     width: 5,
                   ),

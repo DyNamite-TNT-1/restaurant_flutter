@@ -6,16 +6,17 @@ import 'package:restaurant_flutter/blocs/ui/ui_bloc.dart';
 import 'package:restaurant_flutter/configs/configs.dart';
 import 'package:restaurant_flutter/enum/enum.dart';
 import 'package:restaurant_flutter/models/service/dish.dart';
+import 'package:restaurant_flutter/models/service/service.dart';
 
-class DishItem extends StatefulWidget {
-  const DishItem({super.key, required this.dish});
-  final DishDetailModel dish;
+class ServiceItem extends StatefulWidget {
+  const ServiceItem({super.key, required this.item});
+  final ServiceDetailModel item;
 
   @override
-  State<DishItem> createState() => _DishItemState();
+  State<ServiceItem> createState() => _ServiceItemState();
 }
 
-class _DishItemState extends State<DishItem> {
+class _ServiceItemState extends State<ServiceItem> {
   bool isHover = false;
 
   @override
@@ -32,14 +33,14 @@ class _DishItemState extends State<DishItem> {
         color: Colors.transparent,
         child: InkWell(
           onTap: () {
-            context.read<UiBloc>().add(
-                  OnUpdateState(params: const {"dishState": BlocState.loading}),
-                );
-            context.read<UiBloc>().add(
-                  OnAddDish(params: {
-                    "dish": widget.dish,
-                  }),
-                );
+            // context.read<UiBloc>().add(
+            //       OnUpdateState(params: const {"dishState": BlocState.loading}),
+            //     );
+            // context.read<UiBloc>().add(
+            //       OnAddDish(params: {
+            //         "dish": widget.dish,
+            //       }),
+            //     );
           },
           onHover: (value) {
             setState(() {
@@ -54,7 +55,7 @@ class _DishItemState extends State<DishItem> {
                   topRight: Radius.circular(5),
                 ),
                 child: CachedNetworkImage(
-                  imageUrl: widget.dish.image,
+                  imageUrl: widget.item.image,
                   height: 200,
                   width: double.infinity,
                   fit: BoxFit.fill,
@@ -67,26 +68,26 @@ class _DishItemState extends State<DishItem> {
                 height: kPadding10,
               ),
               Text(
-                widget.dish.name,
+                widget.item.name,
                 maxLines: 2,
                 style: Theme.of(context).textTheme.bodyLarge,
               ),
               SizedBox(
                 height: kDefaultPadding,
               ),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: kPadding15),
-                child: Text(
-                  widget.dish.description,
-                  textAlign: TextAlign.center,
-                  style: Theme.of(context).textTheme.bodyMedium,
-                ),
-              ),
+              // Padding(
+              //   padding: const EdgeInsets.symmetric(horizontal: kPadding15),
+              //   child: Text(
+              //     widget.dish.description,
+              //     textAlign: TextAlign.center,
+              //     style: Theme.of(context).textTheme.bodyMedium,
+              //   ),
+              // ),
               SizedBox(
                 height: kDefaultPadding,
               ),
               Text(
-                "${widget.dish.priceStr} VNĐ/ ${widget.dish.unit}",
+                "${widget.item.priceStr} VNĐ/ ${widget.item.unit}",
                 style: Theme.of(context).textTheme.bodyLarge?.copyWith(
                       color: primaryColor,
                     ),
@@ -114,7 +115,7 @@ class _DishItemState extends State<DishItem> {
                   ),
                   child: Center(
                     child: Text(
-                      "Thêm vào menu",
+                      "Thêm vào dịch vụ",
                       style: Theme.of(context).textTheme.bodyLarge?.copyWith(
                             color: Colors.white,
                           ),

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:restaurant_flutter/blocs/app_bloc.dart';
 import 'package:restaurant_flutter/blocs/bloc.dart';
+import 'package:restaurant_flutter/blocs/ui/ui_bloc.dart';
 import 'package:restaurant_flutter/configs/configs.dart';
 import 'package:restaurant_flutter/routes/router.dart';
 
@@ -29,12 +30,16 @@ class _AppState extends State<App> {
   Widget build(BuildContext context) {
     return MultiBlocProvider(
       providers: AppBloc.providers,
-      child: BlocBuilder<AuthenticationBloc, AuthenticationState>(
+      child: BlocBuilder<UiBloc, UiState>(
         builder: (context, state) {
-          return MaterialApp.router(
-            theme: CollectionTheme.getCollectionTheme(),
-            debugShowCheckedModeBanner: false,
-            routerConfig: AppRouter.router,
+          return BlocBuilder<AuthenticationBloc, AuthenticationState>(
+            builder: (context, state) {
+              return MaterialApp.router(
+                theme: CollectionTheme.getCollectionTheme(),
+                debugShowCheckedModeBanner: false,
+                routerConfig: AppRouter.router,
+              );
+            },
           );
         },
       ),

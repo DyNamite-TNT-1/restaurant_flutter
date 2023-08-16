@@ -6,7 +6,7 @@ class Images {
       "assets/images/mini_logo_website_nobg.png";
   static const String logoAppDarkMode =
       "assets/images/logo_website_darkmode.png";
-      static const String logoAppDarkModeNoBg =
+  static const String logoAppDarkModeNoBg =
       "assets/images/logo_website_darkmode_nobg.png";
   static const String backgroundLogin = "assets/images/background_login.jpg";
   //slider on dashboard
@@ -19,6 +19,7 @@ class Images {
       "assets/images/ic_available_calendar.svg";
   static const String icForkKnife = "assets/images/ic_fork_knife.svg";
   static const String icDrink = "assets/images/ic_drink.svg";
+  static const String icMicro = "assets/images/ic_micro.svg";
 
   ///Singleton factory
   static final Images _instance = Images._internal();

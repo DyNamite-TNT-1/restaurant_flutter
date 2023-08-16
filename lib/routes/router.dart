@@ -14,7 +14,7 @@ import 'package:restaurant_flutter/screens/dish/dish_screen.dart';
 import 'package:restaurant_flutter/screens/drink/detail_drink.dart';
 import 'package:restaurant_flutter/screens/drink/drink_screen.dart';
 import 'package:restaurant_flutter/screens/profile/profile.dart';
-import 'package:restaurant_flutter/screens/reservation/reservation_screen.dart';
+import 'package:restaurant_flutter/screens/service/service_screen.dart';
 import 'package:restaurant_flutter/screens/table/table_screen.dart';
 import 'package:restaurant_flutter/utils/parse_type_value.dart';
 
@@ -25,7 +25,7 @@ final _shellNavigatorDishKey =
     GlobalKey<NavigatorState>(debugLabel: "shellDish");
 final _shellNavigatorDrinkKey =
     GlobalKey<NavigatorState>(debugLabel: "shellDrink");
-final _shellNavigatorTableKey =
+final _shellNavigatorServiceKey =
     GlobalKey<NavigatorState>(debugLabel: "shellService");
 
 class AppRouter {
@@ -109,14 +109,14 @@ class AppRouter {
             ],
           ),
           StatefulShellBranch(
-            navigatorKey: _shellNavigatorTableKey,
+            navigatorKey: _shellNavigatorServiceKey,
             routes: [
               GoRoute(
-                name: RouteConstants.table,
-                path: "/table",
+                name: RouteConstants.service,
+                path: "/service",
                 pageBuilder: (context, state) {
                   return NoTransitionPage(
-                    child: TableScreen(),
+                    child: ServiceScreen(),
                   );
                 },
                 routes: const [],
@@ -124,15 +124,6 @@ class AppRouter {
             ],
           ),
         ],
-      ),
-      GoRoute(
-        name: RouteConstants.reservation,
-        path: "/reservation",
-        pageBuilder: (context, state) {
-          return NoTransitionPage(
-            child: ReservationScreen(),
-          );
-        },
       ),
       GoRoute(
         name: RouteConstants.signUp,

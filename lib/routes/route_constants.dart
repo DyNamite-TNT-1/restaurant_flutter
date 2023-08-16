@@ -10,8 +10,8 @@ class RouteConstants {
   //đồ uống
   static String drinks = "drinks";
   static String drinkDetail = "drinkDetail";
-  //chỗ trống
-  static String table = "table";
+  //dịch vụ
+  static String service = "service";
   //hồ sơ
   static String profile = "profile";
   //đặt bàn

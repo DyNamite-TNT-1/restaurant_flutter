@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:restaurant_flutter/blocs/app_bloc.dart';
 import 'package:restaurant_flutter/blocs/bloc.dart';
+import 'package:restaurant_flutter/blocs/ui/ui_bloc.dart';
 import 'package:restaurant_flutter/routes/route_constants.dart';
 import 'package:restaurant_flutter/widgets/widgets.dart';
 
@@ -31,6 +32,7 @@ class _ProfileState extends State<Profile> {
             setState(() {
               loadingLogout = true;
             });
+            AppBloc.uiBloc.add(OnAddDish(params: const {"dishes": []}));
             AppBloc.authenticationBloc.add(OnAuthenticationLogout(
                 timeout: 2,
                 callback: () {

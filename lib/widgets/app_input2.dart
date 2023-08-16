@@ -2,8 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:restaurant_flutter/configs/configs.dart';
 
-import '../configs/colors.dart';
-
 class AppInput2 extends StatefulWidget {
   final String name;
   final TextInputType keyboardType;
@@ -14,7 +12,6 @@ class AppInput2 extends StatefulWidget {
   final String placeHolder;
   final FocusNode focusNode;
   final int maxLines;
-
   @override
   State<AppInput2> createState() => _AppInput2State();
 

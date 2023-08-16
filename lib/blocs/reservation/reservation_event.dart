@@ -1,12 +1,13 @@
 part of 'reservation_bloc.dart';
 
 abstract class ReservationEvent extends Equatable {
-    final Map<String, dynamic> params;
+  final Map<String, dynamic> params;
   const ReservationEvent({required this.params});
 
   @override
   List<Object> get props => [params];
 }
+
 class OnLoadTable extends ReservationEvent {
   const OnLoadTable({required Map<String, dynamic> params})
       : super(params: params);

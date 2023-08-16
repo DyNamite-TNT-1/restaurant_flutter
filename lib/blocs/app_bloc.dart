@@ -1,4 +1,5 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:restaurant_flutter/blocs/ui/ui_bloc.dart';
 
 import 'bloc.dart';
 
@@ -7,6 +8,7 @@ class AppBloc {
   // static final languageBloc = LanguageBloc();
   // static final themeBloc = ThemeBloc();
   static final authenticationBloc = AuthenticationBloc();
+  static final uiBloc = UiBloc(UiState());
 
   static final List<BlocProvider> providers = [
     BlocProvider<ApplicationBloc>(
@@ -18,6 +20,7 @@ class AppBloc {
     // BlocProvider<ThemeBloc>(
     //   create: (context) => themeBloc,
     // ),
+    BlocProvider<UiBloc>(create: (context) => uiBloc),
     BlocProvider<AuthenticationBloc>(
       create: (context) => authenticationBloc,
     ),
@@ -27,6 +30,7 @@ class AppBloc {
     applicationBloc.close();
     // languageBloc.close();
     // themeBloc.close();
+    uiBloc.close();
     authenticationBloc.close();
   }
 

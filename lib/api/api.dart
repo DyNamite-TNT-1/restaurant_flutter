@@ -54,6 +54,10 @@ class Api {
 
   //reservation
   static String requestTableUrl = "/table/get";
+  static String requestCreateReservationUrl = "/reservation/create";
+
+  //service
+  static String requestAllServiceUrl = "/service/get/all";
 
   //authorization
   static Future<UserModel> requestLogin({
@@ -201,6 +205,44 @@ class Api {
     final result = await httpManager.get(
       url: appendBranch(requestTableUrl),
       params: params,
+      cancelTag: tagRequest,
+    );
+    return ResultModel.fromJson(result);
+  }
+
+  static Future<ResultModel> requestCreateReservation({
+    required List<int> serviceIds,
+    required List<int> quantities,
+    required List<int> dishIds,
+    required int tableTypeId,
+    required int countGuest,
+    required String schedule,
+    String note = "",
+    String tagRequest = HTTPManager.DEFAULT_CANCEL_TAG,
+  }) async {
+     var data = {
+      "services": serviceIds.join(","),
+      "dishes": dishIds.join(","),
+      "quantities": quantities.join(","),
+      "schedule": schedule,
+      "countGuest": countGuest,
+      "tableTypeId": tableTypeId,
+      "note": note,
+    };
+     final result = await httpManager.post(
+      url: appendBranch(requestCreateReservationUrl),
+      data: data,
+      cancelTag: tagRequest,
+    );
+    return ResultModel.fromJson(result);
+  }
+
+  //service
+  static Future<ResultModel> requestListService({
+    String tagRequest = HTTPManager.DEFAULT_CANCEL_TAG,
+  }) async {
+    final result = await httpManager.get(
+      url: appendBranch(requestAllServiceUrl),
       cancelTag: tagRequest,
     );
     return ResultModel.fromJson(result);
