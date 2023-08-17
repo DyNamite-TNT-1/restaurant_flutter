@@ -19,6 +19,7 @@ class UiBloc extends Bloc<UiEvent, UiState> {
     on<OnSubtractService>(_onSubtractService);
     on<OnChangeTableType>(_onChangeTableType);
     on<OnUpdateState>(_onUpdateState);
+    on<OnReservationSuccess>(_onReservationSuccess);
   }
 
   Future<void> _onAddDish(OnAddDish event, Emitter emit) async {
@@ -190,10 +191,11 @@ class UiBloc extends Bloc<UiEvent, UiState> {
     if (tableType.tableTypeId == 0) {
       return;
     }
-
+    BlocState status = BlocState.loadCompleted;
     emit(
       state.copyWith(
         selectedTableType: tableType,
+        tableTypeState: status,
       ),
     );
   }
@@ -208,11 +210,28 @@ class UiBloc extends Bloc<UiEvent, UiState> {
     BlocState serviceState = event.params.containsKey('serviceState')
         ? event.params['serviceState']
         : state.serviceState;
-
+    BlocState tableTypeState = event.params.containsKey('tableTypeState')
+        ? event.params['tableTypeState']
+        : state.serviceState;
     emit(state.copyWith(
       dishState: dishState,
       drinkState: drinkState,
       serviceState: serviceState,
+      tableTypeState: tableTypeState,
+    ));
+  }
+
+  Future<void> _onReservationSuccess(
+      OnReservationSuccess event, Emitter emit) async {
+    emit(state.copyWith(
+      dishes: [],
+      dishState: BlocState.init,
+      drinks: [],
+      drinkState: BlocState.init,
+      services: [],
+      serviceState: BlocState.init,
+      // selectedTableType: ,
+      tableTypeState: BlocState.init,
     ));
   }
 }

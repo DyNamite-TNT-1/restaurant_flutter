@@ -10,7 +10,9 @@ import 'package:restaurant_flutter/widgets/widgets.dart';
 class LoginScreen extends StatefulWidget {
   const LoginScreen({
     super.key,
+    this.onLoginDone,
   });
+  final Function? onLoginDone;
   @override
   State<LoginScreen> createState() => _LoginScreenState();
 }
@@ -203,6 +205,7 @@ class _LoginScreenState extends State<LoginScreen> {
             webShowClose: true,
           );
         } else if (state is AuthenticationSuccess) {
+          Navigator.pop(context);
           Fluttertoast.showToast(
             msg: "Đăng nhập thành công!",
             toastLength: Toast.LENGTH_SHORT,
@@ -211,7 +214,9 @@ class _LoginScreenState extends State<LoginScreen> {
             webBgColor: successColorToast,
             webShowClose: true,
           );
-          context.pop();
+          if (widget.onLoginDone != null) {
+            widget.onLoginDone!();
+          }
         }
       },
       child: AlertDialog(

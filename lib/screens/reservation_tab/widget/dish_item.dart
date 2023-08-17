@@ -59,31 +59,37 @@ class _DishReservationItemState extends State<DishReservationItem> {
           SizedBox(
             width: kPadding10 / 2,
           ),
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                widget.item.name,
-                style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                      fontSize: 14,
-                    ),
-              ),
-              SizedBox(
-                height: 3,
-              ),
-              Text(
-                "${widget.item.priceStr} VNĐ/ ${widget.item.unit}",
-                style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                      color: primaryColor,
-                      fontSize: 12,
-                    ),
-              ),
-            ],
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  widget.item.name,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                        fontSize: 14,
+                      ),
+                ),
+                SizedBox(
+                  height: 3,
+                ),
+                Text(
+                  "${widget.item.priceStr} VNĐ/ ${widget.item.unit}",
+                  style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                        color: primaryColor,
+                        fontSize: 12,
+                      ),
+                ),
+              ],
+            ),
           ),
-          Spacer(),
+          SizedBox(
+            width: kPadding10,
+          ),
           Text("Số lượng: ${widget.item.quantity}"),
           SizedBox(
-            width: kDefaultPadding,
+            width: kPadding10,
           ),
           Row(
             children: [

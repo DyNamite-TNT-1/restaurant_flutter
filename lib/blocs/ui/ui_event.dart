@@ -53,3 +53,8 @@ class OnUpdateState extends UiEvent {
   const OnUpdateState({required Map<String, dynamic> params})
       : super(params: params);
 }
+
+class OnReservationSuccess extends  UiEvent {
+  const OnReservationSuccess({required Map<String, dynamic> params})
+      : super(params: params);
+}

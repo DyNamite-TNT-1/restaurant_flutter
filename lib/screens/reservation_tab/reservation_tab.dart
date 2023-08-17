@@ -1,15 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:intl/intl.dart';
 import 'package:restaurant_flutter/api/api.dart';
 import 'package:restaurant_flutter/blocs/app_bloc.dart';
+import 'package:restaurant_flutter/blocs/bloc.dart';
 import 'package:restaurant_flutter/blocs/ui/ui_bloc.dart';
 import 'package:restaurant_flutter/configs/configs.dart';
 import 'package:restaurant_flutter/enum/enum.dart';
 import 'package:restaurant_flutter/models/service/model_result_api.dart';
+import 'package:restaurant_flutter/models/service/reservation.dart';
 import 'package:restaurant_flutter/models/service/table.dart';
+import 'package:restaurant_flutter/screens/authentication/login_screen.dart';
 import 'package:restaurant_flutter/screens/reservation_tab/widget/service_item.dart';
+import 'package:restaurant_flutter/utils/extension.dart';
+import 'package:restaurant_flutter/utils/parse_type_value.dart';
 import 'package:restaurant_flutter/widgets/app_popup_menu_button.dart';
 import 'package:restaurant_flutter/widgets/widgets.dart';
 
@@ -63,12 +69,132 @@ class _ReservationTabState extends State<ReservationTab>
     }
   }
 
+  Future<void> _requestMakeReservation(BuildContext context) async {
+    if (!AppBloc.uiBloc.state.canMakeReservation()) {
+      Fluttertoast.showToast(
+        msg: "Bạn chưa chọn món!",
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.CENTER,
+        timeInSecForIosWeb: 1,
+        backgroundColor: primaryColor,
+        textColor: Colors.white,
+        fontSize: 16.0,
+        webBgColor: dangerColorToast,
+      );
+      return;
+    }
+
+    ResultModel result = await Api.requestCreateReservation(
+      dishes: AppBloc.uiBloc.state.dishes,
+      drinks: AppBloc.uiBloc.state.drinks,
+      services: AppBloc.uiBloc.state.services,
+      tableType: AppBloc.uiBloc.state.selectedTableType!,
+      countGuest: ParseTypeData.ensureInt(peopleController.text),
+      schedule:
+          "${DateFormat("yyyy-MM-dd").format(scheduleDate)} ${scheduleHour.hour.toString().padLeft(2, "0")}:${scheduleHour.minute.toString().padLeft(2, "0")}",
+      note: textEditingController.text,
+    );
+    if (result.isSuccess) {
+      ReservationDetailModel reservation =
+          ReservationDetailModel.fromJson(result.data);
+      _openDialogPayment(
+        reservation.preFee,
+        reservation.deadline.toDateTime(),
+      );
+      AppBloc.uiBloc.add(OnReservationSuccess(params: const {}));
+    }
+  }
+
+  void _openDialogPayment(
+    int preFee,
+    String deadline,
+  ) {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AppDialogText(
+          onDone: () {
+            Navigator.pop(context);
+          },
+          onCancel: () {
+            Navigator.pop(context);
+          },
+          child: Column(
+            children: [
+              Text("Đặt bàn thành công!"),
+              preFee > 0
+                  ? Column(
+                      children: [
+                        Text(
+                            "Phí trả trước là ${NumberFormat.simpleCurrency(locale: "vi-VN", name: "VNĐ", decimalDigits: 0).format(preFee)}"),
+                        Text(
+                            "Bạn phải thanh toán trước $deadline. Nếu không, hệ thống sẽ xóa yêu cầu đặt bàn này!"),
+                      ],
+                    )
+                  : SizedBox(),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
+  void _openDialogConfirmReservation() {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AppDialogText(
+            child: Text("Xác nhận đặt bàn?"),
+            onDone: () {
+              Navigator.pop(context);
+              _requestMakeReservation(context);
+            },
+            onCancel: () {
+              Navigator.pop(context);
+            });
+      },
+    );
+  }
+
+  void _openDialogNeedAuthentication() {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AppDialogText(
+          buttonDoneTitle: "Đăng nhập",
+          onDone: () {
+            Navigator.pop(context);
+            _openLoginDialog();
+          },
+          onCancel: () {
+            Navigator.pop(context);
+          },
+          child: Text("Vui lòng đăng nhập!"),
+        );
+      },
+    );
+  }
+
+  _openLoginDialog() {
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext ct) {
+        return LoginScreen(
+          onLoginDone: () {
+            _openDialogConfirmReservation();
+          },
+        );
+      },
+    );
+  }
+
   void selectDate(BuildContext context) async {
     final DateTime? picked = await showDatePicker(
       context: context,
       initialDate: scheduleDate,
-      firstDate: DateTime(1900),
-      lastDate: DateTime.now(),
+      firstDate: DateTime.now(),
+      lastDate: DateTime(2025),
       helpText: 'Chọn ngày',
       confirmText: 'Xác nhận',
       cancelText: 'Thoát',
@@ -98,7 +224,6 @@ class _ReservationTabState extends State<ReservationTab>
   void _openDialogPeople() {
     showDialog(
       context: context,
-      barrierDismissible: false,
       builder: (BuildContext ct) {
         return StatefulBuilder(builder: (context, newState) {
           return AppDialogInput(
@@ -258,7 +383,7 @@ class _ReservationTabState extends State<ReservationTab>
                 _buildRowHeader(
                   context,
                   title: "Ngày",
-                  content: DateFormat("yyyy/MM/dd").format(scheduleDate),
+                  content: DateFormat("dd/MM/yyyy").format(scheduleDate),
                   onTap: () {
                     selectDate(context);
                   },
@@ -290,7 +415,7 @@ class _ReservationTabState extends State<ReservationTab>
                     height: 35,
                     value: AppBloc.uiBloc.state.selectedTableType!,
                     buttonBgColor: Color(0XFF313131),
-                    menuDropBgColor: Colors.white,
+                    menuDropBgColor: Color(0XFF313131),
                     child: Container(
                       constraints: BoxConstraints(
                         maxWidth: 260,
@@ -309,13 +434,13 @@ class _ReservationTabState extends State<ReservationTab>
                             flex: 1,
                             child: Text(
                               "Loại bàn",
-                              style: Theme.of(context)
-                                  .textTheme
-                                  .bodyMedium
-                                  ?.copyWith(
-                                    fontStyle: FontStyle.italic,
-                                    color: Color(0XFFB6B6B6),
-                                  ),
+                              // style: Theme.of(context)
+                              //     .textTheme
+                              //     .bodyMedium
+                              //     ?.copyWith(
+                              //       fontStyle: FontStyle.italic,
+                              //       color: Color(0XFFB6B6B6),
+                              //     ),
                             ),
                           ),
                           Expanded(
@@ -330,15 +455,19 @@ class _ReservationTabState extends State<ReservationTab>
                                   ),
                             ),
                           ),
-                          Icon(
-                            Icons.keyboard_arrow_down,
-                            color: Colors.white,
-                            size: 16,
-                          )
                         ],
                       ),
                     ),
-                    onChanged: (value) {},
+                    onChanged: (value) {
+                      AppBloc.uiBloc.add(
+                        OnUpdateState(params: const {
+                          "tableTypeState": BlocState.loading
+                        }),
+                      );
+                      AppBloc.uiBloc.add(
+                        OnChangeTableType(params: {"tableType": value}),
+                      );
+                    },
                     filterItemBuilder: (context, e) {
                       return DropdownMenuItem<TableTypeDetailModel>(
                         value: e,
@@ -529,7 +658,13 @@ class _ReservationTabState extends State<ReservationTab>
           Divider(),
           AppButton(
             "Xác nhận đặt bàn",
-            onPressed: () {},
+            onPressed: () {
+              if (AppBloc.authenticationBloc.state is AuthenticationSuccess) {
+                _openDialogConfirmReservation();
+              } else {
+                _openDialogNeedAuthentication();
+              }
+            },
           ),
           SizedBox(
             height: kPadding10,

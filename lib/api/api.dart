@@ -1,7 +1,10 @@
 import 'package:restaurant_flutter/api/http_manager.dart';
 import 'package:restaurant_flutter/configs/configs.dart';
 import 'package:restaurant_flutter/enum/enum.dart';
+import 'package:restaurant_flutter/models/service/dish.dart';
 import 'package:restaurant_flutter/models/service/model_result_api.dart';
+import 'package:restaurant_flutter/models/service/service.dart';
+import 'package:restaurant_flutter/models/service/table.dart';
 import 'package:restaurant_flutter/models/service/user.dart';
 
 class Api {
@@ -222,22 +225,25 @@ class Api {
 
   //reservation
   static Future<ResultModel> requestCreateReservation({
-    required List<int> serviceIds,
-    required List<int> quantities,
-    required List<int> dishIds,
-    required int tableTypeId,
+    required List<DishDetailModel> dishes,
+    required List<DishDetailModel> drinks,
+    required List<ServiceDetailModel> services,
+    required TableTypeDetailModel tableType,
     required int countGuest,
     required String schedule,
     String note = "",
     String tagRequest = HTTPManager.DEFAULT_CANCEL_TAG,
   }) async {
     var data = {
-      "services": serviceIds.join(","),
-      "dishes": dishIds.join(","),
-      "quantities": quantities.join(","),
+      "dishes": dishes.map((e) => e.dishId).toList().join(","),
+      "dishQuantities": dishes.map((e) => e.quantity).toList().join(","),
+      "drinks": drinks.map((e) => e.dishId).toList().join(","),
+      "drinkQuantities": drinks.map((e) => e.quantity).toList().join(","),
+      "services": services.map((e) => e.serviceId).toList().join(","),
+      "serviceQuantities": services.map((e) => e.quantity).toList().join(","),
       "schedule": schedule,
       "countGuest": countGuest,
-      "tableTypeId": tableTypeId,
+      "tableTypeId": tableType.tableTypeId,
       "note": note,
     };
     final result = await httpManager.post(

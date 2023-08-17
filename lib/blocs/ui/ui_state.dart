@@ -8,6 +8,7 @@ class UiState extends Equatable {
   final List<ServiceDetailModel> services;
   final BlocState serviceState;
   final TableTypeDetailModel? selectedTableType;
+  final BlocState tableTypeState;
 
   const UiState({
     this.dishes = const [],
@@ -17,17 +18,25 @@ class UiState extends Equatable {
     this.services = const [],
     this.serviceState = BlocState.init,
     this.selectedTableType,
+    this.tableTypeState = BlocState.init,
   });
 
-  UiState copyWith({
-    List<DishDetailModel>? dishes,
-    BlocState? dishState,
-    List<DishDetailModel>? drinks,
-    BlocState? drinkState,
-    List<ServiceDetailModel>? services,
-    BlocState? serviceState,
-    TableTypeDetailModel?  selectedTableType,
-  }) {
+  bool canMakeReservation() {
+    if (dishes.isEmpty) {
+      return false;
+    }
+    return true;
+  }
+
+  UiState copyWith(
+      {List<DishDetailModel>? dishes,
+      BlocState? dishState,
+      List<DishDetailModel>? drinks,
+      BlocState? drinkState,
+      List<ServiceDetailModel>? services,
+      BlocState? serviceState,
+      TableTypeDetailModel? selectedTableType,
+      BlocState? tableTypeState}) {
     return UiState(
       dishes: dishes ?? this.dishes,
       dishState: dishState ?? this.dishState,
@@ -36,6 +45,7 @@ class UiState extends Equatable {
       services: services ?? this.services,
       serviceState: serviceState ?? this.serviceState,
       selectedTableType: selectedTableType ?? this.selectedTableType,
+      tableTypeState: tableTypeState ?? this.tableTypeState,
     );
   }
 
@@ -47,5 +57,6 @@ class UiState extends Equatable {
         drinkState,
         services,
         serviceState,
+        tableTypeState,
       ];
 }
