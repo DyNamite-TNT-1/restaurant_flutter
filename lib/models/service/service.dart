@@ -7,7 +7,7 @@ class ServiceDetailModel {
   final String priceStr;
   final String image;
   final String unit;
-  bool isSelected;
+  int quantity;
   ServiceDetailModel({
     this.serviceId = 0,
     this.name = "",
@@ -15,7 +15,7 @@ class ServiceDetailModel {
     this.priceStr = "0",
     this.image = "",
     this.unit = "",
-    this.isSelected = false, // not get from server
+    this.quantity = 1, // not get from server
   });
 
   factory ServiceDetailModel.fromJson(Map<String, dynamic> json) {

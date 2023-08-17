@@ -24,13 +24,28 @@ class OnChangeOrderDish extends UiEvent {
       : super(params: params);
 }
 
-class OnLoadService extends UiEvent {
-   const OnLoadService({required Map<String, dynamic> params})
+class OnAddDrink extends UiEvent {
+  const OnAddDrink({required Map<String, dynamic> params})
       : super(params: params);
 }
 
-class OnChangeSelectedService extends UiEvent {
-  const OnChangeSelectedService({required Map<String, dynamic> params})
+class OnSubtractDrink extends UiEvent {
+  const OnSubtractDrink({required Map<String, dynamic> params})
+      : super(params: params);
+}
+
+class OnAddService extends UiEvent {
+   const OnAddService({required Map<String, dynamic> params})
+      : super(params: params);
+}
+
+class OnSubtractService extends UiEvent {
+  const OnSubtractService({required Map<String, dynamic> params})
+      : super(params: params);
+}
+
+class OnChangeTableType extends UiEvent {
+  const OnChangeTableType({required Map<String, dynamic> params})
       : super(params: params);
 }
 

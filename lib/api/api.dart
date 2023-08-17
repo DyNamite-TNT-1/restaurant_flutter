@@ -1,10 +1,7 @@
 import 'package:restaurant_flutter/api/http_manager.dart';
 import 'package:restaurant_flutter/configs/configs.dart';
 import 'package:restaurant_flutter/enum/enum.dart';
-import 'package:restaurant_flutter/enum/order.dart';
 import 'package:restaurant_flutter/models/service/model_result_api.dart';
-import 'package:restaurant_flutter/models/service/dish.dart';
-import 'package:restaurant_flutter/models/service/dish_type.dart';
 import 'package:restaurant_flutter/models/service/user.dart';
 
 class Api {
@@ -53,8 +50,11 @@ class Api {
   static String addDishUrl = "/manager/dish/create";
 
   //reservation
-  static String requestTableUrl = "/table/get";
   static String requestCreateReservationUrl = "/reservation/create";
+
+  //table
+  static String requestTableUrl = "/table/get";
+  static String requestTableTypeUrl = "/table/get/type/all";
 
   //service
   static String requestAllServiceUrl = "/service/get/all";
@@ -192,7 +192,7 @@ class Api {
     return ResultModel.fromJson(result);
   }
 
-  //reservation
+  //table
   static Future<ResultModel> requestTable({
     required String datetime,
     String tableTypeId = "",
@@ -210,6 +210,17 @@ class Api {
     return ResultModel.fromJson(result);
   }
 
+  static Future<ResultModel> requestTableType({
+    String tagRequest = HTTPManager.DEFAULT_CANCEL_TAG,
+  }) async {
+    final result = await httpManager.get(
+      url: appendBranch(requestTableTypeUrl),
+      cancelTag: tagRequest,
+    );
+    return ResultModel.fromJson(result);
+  }
+
+  //reservation
   static Future<ResultModel> requestCreateReservation({
     required List<int> serviceIds,
     required List<int> quantities,
@@ -220,7 +231,7 @@ class Api {
     String note = "",
     String tagRequest = HTTPManager.DEFAULT_CANCEL_TAG,
   }) async {
-     var data = {
+    var data = {
       "services": serviceIds.join(","),
       "dishes": dishIds.join(","),
       "quantities": quantities.join(","),
@@ -229,7 +240,7 @@ class Api {
       "tableTypeId": tableTypeId,
       "note": note,
     };
-     final result = await httpManager.post(
+    final result = await httpManager.post(
       url: appendBranch(requestCreateReservationUrl),
       data: data,
       cancelTag: tagRequest,

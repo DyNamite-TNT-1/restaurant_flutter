@@ -5,7 +5,6 @@ import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:restaurant_flutter/blocs/ui/ui_bloc.dart';
 import 'package:restaurant_flutter/configs/configs.dart';
 import 'package:restaurant_flutter/enum/enum.dart';
-import 'package:restaurant_flutter/models/service/dish.dart';
 import 'package:restaurant_flutter/models/service/service.dart';
 
 class ServiceItem extends StatefulWidget {
@@ -33,14 +32,15 @@ class _ServiceItemState extends State<ServiceItem> {
         color: Colors.transparent,
         child: InkWell(
           onTap: () {
-            // context.read<UiBloc>().add(
-            //       OnUpdateState(params: const {"dishState": BlocState.loading}),
-            //     );
-            // context.read<UiBloc>().add(
-            //       OnAddDish(params: {
-            //         "dish": widget.dish,
-            //       }),
-            //     );
+            context.read<UiBloc>().add(
+                  OnUpdateState(
+                      params: const {"serviceState": BlocState.loading}),
+                );
+            context.read<UiBloc>().add(
+                  OnAddService(params: {
+                    "service": widget.item,
+                  }),
+                );
           },
           onHover: (value) {
             setState(() {

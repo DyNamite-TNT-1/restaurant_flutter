@@ -42,7 +42,7 @@ class AppDialogInput extends StatelessWidget {
         backgroundColor: backgroundColor,
         content: Container(
           constraints: const BoxConstraints(
-            minWidth: 500,
+            minWidth: 200,
             maxWidth: 500,
             minHeight: 100,
             maxHeight: 500,

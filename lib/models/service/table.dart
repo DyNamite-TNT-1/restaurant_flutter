@@ -36,3 +36,36 @@ class TableDetailModel {
     return list;
   }
 }
+
+class TableTypeDetailModel {
+  final int tableTypeId;
+  final String name;
+  final String description;
+  final double fee;
+  TableTypeDetailModel({
+    this.tableTypeId = 0,
+    this.name = "",
+    this.description = "",
+    this.fee = 0,
+  });
+
+  factory TableTypeDetailModel.fromJson(Map<String, dynamic> json) {
+    return TableTypeDetailModel(
+      tableTypeId: ParseTypeData.ensureInt(json["tableTypeId"]),
+      name: ParseTypeData.ensureString(json["name"]),
+      description: ParseTypeData.ensureString(json["description"]),
+      fee: ParseTypeData.ensureDouble(json["fee"]),
+    );
+  }
+
+  static List<TableTypeDetailModel> parseListDishItem(dynamic data) {
+    List<TableTypeDetailModel> list = [];
+    if (data is List) {
+      for (var item in data) {
+        TableTypeDetailModel model = TableTypeDetailModel.fromJson(item);
+        list.add(model);
+      }
+    }
+    return list;
+  }
+}

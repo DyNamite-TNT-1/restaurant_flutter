@@ -14,12 +14,39 @@ class ServiceReservationItem extends StatefulWidget {
 }
 
 class _ServiceReservationItemState extends State<ServiceReservationItem> {
-  late bool isSelected;
 
   @override
   void initState() {
-    isSelected = widget.item.isSelected;
     super.initState();
+  }
+
+   Widget _iconBtn(
+    BuildContext context,
+    IconData icon,
+    Function onTap,
+  ) {
+    return Material(
+      color: Colors.transparent,
+      child: InkWell(
+        borderRadius: BorderRadius.circular(50),
+        onTap: () {
+          onTap();
+        },
+        child: Container(
+          padding: EdgeInsets.all(3),
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(50),
+            border: Border.all(
+              color: Colors.red,
+            ),
+          ),
+          child: Icon(
+            icon,
+            size: 14,
+          ),
+        ),
+      ),
+    );
   }
 
   @override
@@ -51,7 +78,7 @@ class _ServiceReservationItemState extends State<ServiceReservationItem> {
                 height: 3,
               ),
               Text(
-                "${widget.item.priceStr} VNĐ",
+                "${widget.item.priceStr} VNĐ/ ${widget.item.unit}",
                 style: Theme.of(context).textTheme.bodyLarge?.copyWith(
                       color: primaryColor,
                       fontSize: 12,
@@ -60,21 +87,47 @@ class _ServiceReservationItemState extends State<ServiceReservationItem> {
             ],
           ),
           Spacer(),
-          Checkbox(
-              value: isSelected,
-              onChanged: (value) {
-                isSelected = value!;
-                context.read<UiBloc>().add(
-                      OnUpdateState(
-                          params: const {"dishState": BlocState.loading}),
-                    );
-                context.read<UiBloc>().add(OnChangeSelectedService(
-                      params: {
-                        "service": widget.item,
-                        "isSelected": isSelected,
-                      },
-                    ));
-              }),
+          Text("Số lượng: ${widget.item.quantity}"),
+          SizedBox(
+            width: kDefaultPadding,
+          ),
+          Row(
+            children: [
+              _iconBtn(
+                context,
+                Icons.add,
+                () {
+                  context.read<UiBloc>().add(
+                        OnUpdateState(
+                            params: const {"serviceState": BlocState.loading}),
+                      );
+                  context.read<UiBloc>().add(
+                        OnAddService(
+                          params: {"service": widget.item},
+                        ),
+                      );
+                },
+              ),
+              SizedBox(
+                width: kPadding10 / 2,
+              ),
+              _iconBtn(
+                context,
+                Icons.remove,
+                () {
+                  context.read<UiBloc>().add(
+                        OnUpdateState(
+                            params: const {"serviceState": BlocState.loading}),
+                      );
+                  context.read<UiBloc>().add(
+                        OnSubtractService(
+                          params: {"service": widget.item},
+                        ),
+                      );
+                },
+              ),
+            ],
+          ),
         ],
       ),
     );

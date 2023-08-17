@@ -2,13 +2,19 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
+import 'package:restaurant_flutter/api/api.dart';
+import 'package:restaurant_flutter/blocs/app_bloc.dart';
 import 'package:restaurant_flutter/blocs/ui/ui_bloc.dart';
 import 'package:restaurant_flutter/configs/configs.dart';
 import 'package:restaurant_flutter/enum/enum.dart';
+import 'package:restaurant_flutter/models/service/model_result_api.dart';
+import 'package:restaurant_flutter/models/service/table.dart';
 import 'package:restaurant_flutter/screens/reservation_tab/widget/service_item.dart';
+import 'package:restaurant_flutter/widgets/app_popup_menu_button.dart';
 import 'package:restaurant_flutter/widgets/widgets.dart';
 
 import 'widget/dish_item.dart';
+import 'widget/drink_item.dart';
 
 class ReservationTab extends StatefulWidget {
   const ReservationTab({super.key, required this.onTapClose});
@@ -21,9 +27,13 @@ class ReservationTab extends StatefulWidget {
 class _ReservationTabState extends State<ReservationTab>
     with SingleTickerProviderStateMixin {
   late TabController tabController;
-  final TextEditingController textEditingController = TextEditingController();
+  final TextEditingController peopleController =
+      TextEditingController(text: "2");
+  final FocusNode peopleNode = FocusNode();
   DateTime scheduleDate = DateTime.now();
   TimeOfDay scheduleHour = TimeOfDay.now();
+  List<TableTypeDetailModel> tableTypes = [];
+  final TextEditingController textEditingController = TextEditingController();
   late final _noteNode = FocusNode(
     onKey: (FocusNode node, RawKeyEvent evt) {
       if (!evt.isShiftPressed && evt.logicalKey.keyLabel == 'Enter') {
@@ -37,7 +47,20 @@ class _ReservationTabState extends State<ReservationTab>
   @override
   void initState() {
     super.initState();
-    tabController = TabController(length: 3, vsync: this);
+    tabController = TabController(length: 4, vsync: this);
+    _requestListTableType();
+  }
+
+  Future<void> _requestListTableType() async {
+    ResultModel result = await Api.requestTableType();
+    if (result.isSuccess) {
+      tableTypes = TableTypeDetailModel.parseListDishItem(result.data);
+      if (AppBloc.uiBloc.state.selectedTableType == null) {
+        AppBloc.uiBloc.add(
+          OnChangeTableType(params: {"tableType": tableTypes[0]}),
+        );
+      }
+    }
   }
 
   void selectDate(BuildContext context) async {
@@ -70,6 +93,41 @@ class _ReservationTabState extends State<ReservationTab>
         scheduleHour = picked;
       });
     }
+  }
+
+  void _openDialogPeople() {
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext ct) {
+        return StatefulBuilder(builder: (context, newState) {
+          return AppDialogInput(
+            title: "Số người",
+            buttonDoneTitle: "Đồng ý",
+            buttonCancelTitle: "Thoát",
+            onDone: () {
+              setState(() {});
+              Navigator.pop(context);
+            },
+            onCancel: () {
+              Navigator.pop(context);
+            },
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                AppInput2(
+                  name: "people",
+                  keyboardType: TextInputType.number,
+                  controller: peopleController,
+                  placeHolder: "1, 2, 3...",
+                  focusNode: peopleNode,
+                )
+              ],
+            ),
+          );
+        });
+      },
+    );
   }
 
   Widget _buildRowHeader(BuildContext context,
@@ -189,8 +247,10 @@ class _ReservationTabState extends State<ReservationTab>
                 _buildRowHeader(
                   context,
                   title: "Số người",
-                  content: "3 người",
-                  onTap: () {},
+                  content: "${peopleController.text} người",
+                  onTap: () {
+                    _openDialogPeople();
+                  },
                 ),
                 SizedBox(
                   height: 5,
@@ -218,12 +278,76 @@ class _ReservationTabState extends State<ReservationTab>
                 SizedBox(
                   height: 5,
                 ),
-                _buildRowHeader(
-                  context,
-                  title: "Loại bàn",
-                  content: "Tầng 1",
-                  onTap: () {},
-                ),
+                // _buildRowHeader(
+                //   context,
+                //   title: "Loại bàn",
+                //   content: AppBloc.uiBloc.state.selectedTableType?.name ?? "",
+                //   onTap: () {},
+                // ),
+                if (AppBloc.uiBloc.state.selectedTableType != null)
+                  AppPopupMenuButton<TableTypeDetailModel>(
+                    items: tableTypes,
+                    height: 35,
+                    value: AppBloc.uiBloc.state.selectedTableType!,
+                    buttonBgColor: Color(0XFF313131),
+                    menuDropBgColor: Colors.white,
+                    child: Container(
+                      constraints: BoxConstraints(
+                        maxWidth: 260,
+                        minWidth: 200,
+                      ),
+                      padding: EdgeInsets.symmetric(
+                        horizontal: 10,
+                        vertical: 5,
+                      ),
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(kCornerSmall),
+                      ),
+                      child: Row(
+                        children: [
+                          Expanded(
+                            flex: 1,
+                            child: Text(
+                              "Loại bàn",
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .bodyMedium
+                                  ?.copyWith(
+                                    fontStyle: FontStyle.italic,
+                                    color: Color(0XFFB6B6B6),
+                                  ),
+                            ),
+                          ),
+                          Expanded(
+                            flex: 2,
+                            child: Text(
+                              AppBloc.uiBloc.state.selectedTableType!.name,
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .bodyLarge
+                                  ?.copyWith(
+                                    color: Colors.white,
+                                  ),
+                            ),
+                          ),
+                          Icon(
+                            Icons.keyboard_arrow_down,
+                            color: Colors.white,
+                            size: 16,
+                          )
+                        ],
+                      ),
+                    ),
+                    onChanged: (value) {},
+                    filterItemBuilder: (context, e) {
+                      return DropdownMenuItem<TableTypeDetailModel>(
+                        value: e,
+                        child: Text(
+                          e.name,
+                        ),
+                      );
+                    },
+                  ),
               ],
             ),
           ),
@@ -250,6 +374,23 @@ class _ReservationTabState extends State<ReservationTab>
                       color: primaryColor,
                     ),
                   ),
+                ],
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(
+                    "Đồ uống",
+                    style: Theme.of(context).textTheme.bodyLarge,
+                  ),
+                  // Tooltip(
+                  //   message: "Thay đổi thứ tự dọn món bằng cách di chuyển món.",
+                  //   child: Icon(
+                  //     Icons.info_outline,
+                  //     size: 16,
+                  //     color: primaryColor,
+                  //   ),
+                  // ),
                 ],
               ),
               Row(
@@ -322,7 +463,29 @@ class _ReservationTabState extends State<ReservationTab>
                                 ));
                           },
                         )
-                      : NoDataFoundView(),
+                      : NoDataFoundView(
+                          message: "Bạn chưa thêm món ăn",
+                        ),
+                ),
+                Container(
+                  padding: EdgeInsets.all(kPadding10),
+                  child: context.read<UiBloc>().state.drinks.isNotEmpty
+                      ? ListView.builder(
+                          itemCount: context.read<UiBloc>().state.drinks.length,
+                          itemBuilder: (context, index) {
+                            return Container(
+                              margin: EdgeInsets.only(bottom: 3, top: 3),
+                              child: DrinkReservationItem(
+                                  item: context
+                                      .read<UiBloc>()
+                                      .state
+                                      .drinks[index]),
+                            );
+                          },
+                        )
+                      : NoDataFoundView(
+                          message: "Bạn chưa thêm đồ uống",
+                        ),
                 ),
                 Container(
                   padding: EdgeInsets.all(kPadding10),
@@ -341,7 +504,9 @@ class _ReservationTabState extends State<ReservationTab>
                             );
                           },
                         )
-                      : NoDataFoundView(),
+                      : NoDataFoundView(
+                          message: "Bạn chưa thêm dịch vụ",
+                        ),
                 ),
                 TextField(
                   controller: textEditingController,

@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:restaurant_flutter/configs/configs.dart';
 
 class NoDataFoundView extends StatelessWidget {
-  const NoDataFoundView({super.key});
+  const NoDataFoundView({super.key, this.message = "Không có dữ liệu"});
+  final String message;
 
   @override
   Widget build(BuildContext context) {
@@ -21,7 +22,7 @@ class NoDataFoundView extends StatelessWidget {
               height: kDefaultPadding,
             ),
             Text(
-              "Không có dữ liệu!",
+              message,
               style: Theme.of(context).textTheme.bodyLarge,
             ),
           ],

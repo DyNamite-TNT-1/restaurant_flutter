@@ -1,7 +1,10 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
+import 'package:restaurant_flutter/blocs/ui/ui_bloc.dart';
 import 'package:restaurant_flutter/configs/configs.dart';
+import 'package:restaurant_flutter/enum/enum.dart';
 import 'package:restaurant_flutter/models/service/dish.dart';
 
 class DrinkItem extends StatefulWidget {
@@ -29,9 +32,14 @@ class _DrinkItemState extends State<DrinkItem> {
         color: Colors.transparent,
         child: InkWell(
           onTap: () {
-            // context.goNamed(RouteConstants.dishDetail, pathParameters: {
-            //   "id": widget.id,
-            // });
+            context.read<UiBloc>().add(
+                  OnUpdateState(params: const {"drinkState": BlocState.loading}),
+                );
+            context.read<UiBloc>().add(
+                  OnAddDrink(params: {
+                    "drink": widget.drink,
+                  }),
+                );
           },
           onHover: (value) {
             setState(() {
@@ -106,7 +114,7 @@ class _DrinkItemState extends State<DrinkItem> {
                   ),
                   child: Center(
                     child: Text(
-                      "Xem chi tiết",
+                      "Thêm vào đồ uống",
                       style: Theme.of(context).textTheme.bodyLarge?.copyWith(
                             color: Colors.white,
                           ),

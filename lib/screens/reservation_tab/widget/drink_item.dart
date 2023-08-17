@@ -5,15 +5,15 @@ import 'package:restaurant_flutter/configs/configs.dart';
 import 'package:restaurant_flutter/enum/enum.dart';
 import 'package:restaurant_flutter/models/service/dish.dart';
 
-class DishReservationItem extends StatefulWidget {
-  const DishReservationItem({super.key, required this.item});
+class DrinkReservationItem extends StatefulWidget {
+  const DrinkReservationItem({super.key, required this.item});
   final DishDetailModel item;
 
   @override
-  State<DishReservationItem> createState() => _DishReservationItemState();
+  State<DrinkReservationItem> createState() => _DrinkReservationItemState();
 }
 
-class _DishReservationItemState extends State<DishReservationItem> {
+class _DrinkReservationItemState extends State<DrinkReservationItem> {
   Widget _iconBtn(
     BuildContext context,
     IconData icon,
@@ -93,11 +93,11 @@ class _DishReservationItemState extends State<DishReservationItem> {
                 () {
                   context.read<UiBloc>().add(
                         OnUpdateState(
-                            params: const {"dishState": BlocState.loading}),
+                            params: const {"drinkState": BlocState.loading}),
                       );
                   context.read<UiBloc>().add(
-                        OnAddDish(
-                          params: {"dish": widget.item},
+                        OnAddDrink(
+                          params: {"drink": widget.item},
                         ),
                       );
                 },
@@ -111,19 +111,16 @@ class _DishReservationItemState extends State<DishReservationItem> {
                 () {
                   context.read<UiBloc>().add(
                         OnUpdateState(
-                            params: const {"dishState": BlocState.loading}),
+                            params: const {"drinkState": BlocState.loading}),
                       );
                   context.read<UiBloc>().add(
-                        OnSubtractDish(
-                          params: {"dish": widget.item},
+                        OnSubtractDrink(
+                          params: {"drink": widget.item},
                         ),
                       );
                 },
               ),
             ],
-          ),
-          SizedBox(
-            width: kPadding15 * 2,
           ),
         ],
       ),
