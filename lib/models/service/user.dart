@@ -63,6 +63,10 @@ class UserModel {
     return roleId == 1 ? true : false;
   }
 
+  bool get isClient {
+    return roleId == 3 ? true : false;
+  }
+
   Map<String, dynamic> toJson() {
     return {
       "userId": userId,

@@ -25,7 +25,7 @@ class TableDetailModel {
     );
   }
 
-  static List<TableDetailModel> parseListDishItem(dynamic data) {
+  static List<TableDetailModel> parseListItem(dynamic data) {
     List<TableDetailModel> list = [];
     if (data is List) {
       for (var item in data) {
@@ -58,7 +58,7 @@ class TableTypeDetailModel {
     );
   }
 
-  static List<TableTypeDetailModel> parseListDishItem(dynamic data) {
+  static List<TableTypeDetailModel> parseListItem(dynamic data) {
     List<TableTypeDetailModel> list = [];
     if (data is List) {
       for (var item in data) {

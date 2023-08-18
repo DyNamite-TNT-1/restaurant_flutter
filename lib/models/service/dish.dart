@@ -42,7 +42,7 @@ class DishDetailModel {
     );
   }
 
-  static List<DishDetailModel> parseListDishItem(dynamic data) {
+  static List<DishDetailModel> parseListItem(dynamic data) {
     List<DishDetailModel> list = [];
     if (data is List) {
       for (var item in data) {
@@ -70,7 +70,7 @@ class DishModel {
       total: ParseTypeData.ensureInt(json["total"]),
       maxPage: ParseTypeData.ensureInt(json["maxPage"]),
       currentPage: ParseTypeData.ensureInt(json["currentPage"]),
-      dishes: DishDetailModel.parseListDishItem(json["rows"]),
+      dishes: DishDetailModel.parseListItem(json["rows"]),
     );
   }
 }

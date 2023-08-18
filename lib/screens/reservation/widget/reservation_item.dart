@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 import 'package:restaurant_flutter/configs/configs.dart';
+import 'package:restaurant_flutter/configs/user_repository.dart';
 import 'package:restaurant_flutter/models/service/reservation.dart';
+import 'package:restaurant_flutter/routes/route_constants.dart';
 import 'package:restaurant_flutter/utils/extension.dart';
 
 class ReservationItem extends StatefulWidget {
@@ -128,21 +131,30 @@ class _ReservationItemState extends State<ReservationItem> {
           SizedBox(
             width: kPadding10,
           ),
-          Expanded(
-            flex: 2,
-            child: Text(
-              widget.item.userModel?.userName ?? "",
-              style: Theme.of(context).textTheme.bodyLarge,
+          if (!UserRepository.userModel.isClient)
+            Expanded(
+              flex: 2,
+              child: Text(
+                widget.item.userModel?.userName ?? "",
+                style: Theme.of(context).textTheme.bodyLarge,
+              ),
             ),
-          ),
           SizedBox(
             width: kPadding10,
           ),
           Material(
             color: Colors.transparent,
-            child: InkWell(
-              onTap: () {},
-              child: Icon(Icons.more_vert),
+            child: Tooltip(
+              message: "Xem chi tiết",
+              child: InkWell(
+                onTap: () {
+                  context.goNamed(RouteConstants.reservationDetail,
+                      pathParameters: {
+                        "id": "${widget.item.reservationId}",
+                      });
+                },
+                child: Icon(Icons.more_vert),
+              ),
             ),
           ),
         ],

@@ -60,7 +60,7 @@ class _ReservationTabState extends State<ReservationTab>
   Future<void> _requestListTableType() async {
     ResultModel result = await Api.requestTableType();
     if (result.isSuccess) {
-      tableTypes = TableTypeDetailModel.parseListDishItem(result.data);
+      tableTypes = TableTypeDetailModel.parseListItem(result.data);
       if (AppBloc.uiBloc.state.selectedTableType == null) {
         AppBloc.uiBloc.add(
           OnChangeTableType(params: {"tableType": tableTypes[0]}),

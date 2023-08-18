@@ -55,6 +55,7 @@ class Api {
   //reservation
   static String requestCreateReservationUrl = "/reservation/create";
   static String requestAllReservationUrl = "/reservation/get/all";
+  static String requestDetailReservationUrl = "/reservation/get/detail";
 
   //table
   static String requestTableUrl = "/table/get";
@@ -261,7 +262,7 @@ class Api {
     required OrderEnum order,
     String tagRequest = HTTPManager.DEFAULT_CANCEL_TAG,
   }) async {
-     var data = {
+    var data = {
       "status": status,
       "limit": limit,
       "page": page,
@@ -270,6 +271,18 @@ class Api {
     final result = await httpManager.get(
       url: appendBranch(requestAllReservationUrl),
       params: data,
+      cancelTag: tagRequest,
+    );
+    return ResultModel.fromJson(result);
+  }
+
+  static Future<ResultModel> requestDetailReservation({
+    required int reservationId,
+    String tagRequest = HTTPManager.DEFAULT_CANCEL_TAG,
+  }) async {
+   
+    final result = await httpManager.get(
+      url: appendBranch("$requestDetailReservationUrl/$reservationId"),
       cancelTag: tagRequest,
     );
     return ResultModel.fromJson(result);

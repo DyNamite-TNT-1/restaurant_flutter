@@ -630,7 +630,6 @@ class _DishScreenState extends State<DishScreen> {
                       pageTotal: state.maxPage,
                       pageInit: currentPage, // picked number when init page
                       colorPrimary: primaryColor,
-                      // colorSub: Colors.grey,
                     ),
                   ),
                 ],

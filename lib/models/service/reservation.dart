@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:restaurant_flutter/models/service/dish.dart';
+import 'package:restaurant_flutter/models/service/service.dart';
+import 'package:restaurant_flutter/models/service/table.dart';
 import 'package:restaurant_flutter/models/service/user.dart';
 import 'package:restaurant_flutter/utils/parse_type_value.dart';
 
@@ -11,12 +14,17 @@ class ReservationDetailModel {
   final String createAt;
   final String schedule;
   final int preFee;
+  final String preFeeStr;
   final String deadline;
   final UserModel? userModel;
+  final List<DishDetailModel> menus;
+  final List<TableDetailModel> tables;
+  final List<ServiceDetailModel> services;
 
   ReservationDetailModel({
     this.reservationId = 0,
     this.preFee = 0,
+    this.preFeeStr = "",
     this.deadline = "",
     this.countGuest = 0,
     this.note = "",
@@ -25,6 +33,9 @@ class ReservationDetailModel {
     this.createAt = "",
     this.schedule = "",
     this.userModel,
+    this.menus = const [],
+    this.tables = const [],
+    this.services = const [],
   });
 
   String get statusStr {
@@ -65,6 +76,7 @@ class ReservationDetailModel {
     return ReservationDetailModel(
       reservationId: ParseTypeData.ensureInt(json["reservationId"]),
       preFee: ParseTypeData.ensureInt(json["preFee"]),
+      preFeeStr: ParseTypeData.ensureString(json["preFeeSte"]),
       deadline: ParseTypeData.ensureString(json["deadline"]),
       countGuest: ParseTypeData.ensureInt(json["countGuest"]),
       note: ParseTypeData.ensureString(json["note"]),
@@ -74,6 +86,9 @@ class ReservationDetailModel {
       status: ParseTypeData.ensureInt(json["status"]),
       userModel:
           json.containsKey("user") ? UserModel.fromJson(json["user"]) : null,
+      menus: DishDetailModel.parseListItem(json["menus"]),
+      tables: TableDetailModel.parseListItem(json["tables"]),
+      services: ServiceDetailModel.parseListItem(json["services"]),
     );
   }
 

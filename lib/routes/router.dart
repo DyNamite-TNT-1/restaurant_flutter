@@ -14,6 +14,7 @@ import 'package:restaurant_flutter/screens/dish/dish_screen.dart';
 import 'package:restaurant_flutter/screens/drink/detail_drink.dart';
 import 'package:restaurant_flutter/screens/drink/drink_screen.dart';
 import 'package:restaurant_flutter/screens/profile/profile.dart';
+import 'package:restaurant_flutter/screens/reservation/reservation_detail_screen.dart';
 import 'package:restaurant_flutter/screens/reservation/reservation_screen.dart';
 import 'package:restaurant_flutter/screens/service/service_screen.dart';
 import 'package:restaurant_flutter/utils/parse_type_value.dart';
@@ -136,7 +137,21 @@ class AppRouter {
                     child: ReservationScreen(),
                   );
                 },
-                routes: const [],
+                routes: [
+                  GoRoute(
+                    name: RouteConstants.reservationDetail,
+                    path: "reservation/:id",
+                    pageBuilder: (context, state) {
+                      int id =
+                          ParseTypeData.ensureInt(state.pathParameters["id"]);
+                      return MaterialPage(
+                        child: ReservationDetailScreen(
+                          id: id,
+                        ),
+                      );
+                    },
+                  ),
+                ],
               )
             ],
           ),
