@@ -4,15 +4,16 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:go_router/go_router.dart';
 import 'package:number_pagination/number_pagination.dart';
 import 'package:restaurant_flutter/api/api.dart';
+import 'package:restaurant_flutter/blocs/bloc.dart';
 import 'package:restaurant_flutter/blocs/drink/drink_bloc.dart';
 import 'package:restaurant_flutter/configs/configs.dart';
+import 'package:restaurant_flutter/configs/user_repository.dart';
 import 'package:restaurant_flutter/enum/bloc.dart';
 import 'package:restaurant_flutter/enum/order.dart';
 import 'package:restaurant_flutter/models/service/dish.dart';
 import 'package:restaurant_flutter/models/service/dish_type.dart';
 import 'package:restaurant_flutter/models/service/model_result_api.dart';
 import 'package:restaurant_flutter/utils/extension.dart';
-import 'package:restaurant_flutter/widgets/app_dialog_input.dart';
 import 'package:restaurant_flutter/widgets/app_popup_menu_button.dart';
 import 'package:restaurant_flutter/widgets/widgets.dart';
 
@@ -468,6 +469,7 @@ class _DrinkScreenState extends State<DrinkScreen> {
   }
 
   SliverPersistentHeader _makeHeaderFilter(BuildContext context) {
+    var authState = context.select((AuthenticationBloc bloc) => bloc.state);
     return SliverPersistentHeader(
       pinned: true,
       delegate: PinSliverAppBarDelegate(
@@ -485,28 +487,30 @@ class _DrinkScreenState extends State<DrinkScreen> {
               _buildTopFilter(context),
               Row(
                 children: [
-                  Material(
-                    color: Colors.transparent,
-                    child: InkWell(
-                      borderRadius: BorderRadius.circular(kCornerSmall),
-                      onTap: () {
-                        _openDialogAddNewDish();
-                      },
-                      child: Container(
-                        padding: EdgeInsets.symmetric(horizontal: 5),
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(kCornerSmall),
-                          border: Border.all(),
-                        ),
-                        child: Row(
-                          children: const [
-                            Icon(Icons.add),
-                            Text("Thêm đồ uống"),
-                          ],
+                  if (authState is AuthenticationSuccess &&
+                      UserRepository.userModel.isManager)
+                    Material(
+                      color: Colors.transparent,
+                      child: InkWell(
+                        borderRadius: BorderRadius.circular(kCornerSmall),
+                        onTap: () {
+                          _openDialogAddNewDish();
+                        },
+                        child: Container(
+                          padding: EdgeInsets.symmetric(horizontal: 5),
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(kCornerSmall),
+                            border: Border.all(),
+                          ),
+                          child: Row(
+                            children: const [
+                              Icon(Icons.add),
+                              Text("Thêm đồ uống"),
+                            ],
+                          ),
                         ),
                       ),
                     ),
-                  ),
                   SizedBox(
                     width: 5,
                   ),

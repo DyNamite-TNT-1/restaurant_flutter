@@ -11,6 +11,8 @@ class AppInput extends StatefulWidget {
   final Function(String)? onChanged;
   final String? placeHolder;
   final FocusNode focusNode;
+  final TextInputAction? textInputAction;
+  final ValueChanged<String>? onFieldSubmitted;
 
   @override
   State<AppInput> createState() => _AppInputState();
@@ -24,6 +26,8 @@ class AppInput extends StatefulWidget {
     this.onChanged,
     this.placeHolder,
     required this.focusNode,
+    this.textInputAction,
+    this.onFieldSubmitted,
     Key? key,
   }) : super(key: key);
 }
@@ -54,8 +58,10 @@ class _AppInputState extends State<AppInput> {
         onChanged: (value) {
           if (widget.onChanged != null) widget.onChanged!(value);
         },
+        onFieldSubmitted: widget.onFieldSubmitted,
         keyboardType: widget.keyboardType,
         obscureText: isInvisible,
+        textInputAction: widget.textInputAction,
         style: TextStyle(
           color: textColor,
           fontWeight: FontWeight.normal,

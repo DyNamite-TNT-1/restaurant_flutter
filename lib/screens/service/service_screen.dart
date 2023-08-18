@@ -42,8 +42,8 @@ class _ServiceScreenState extends State<ServiceScreen> {
   final TextEditingController _unitController = TextEditingController();
   final FocusNode _unitFocusNode = FocusNode();
 
-  bool isShowAddNewDishValidateText = false;
-  String addNewDishValidateText = "";
+  bool isShowaddNewServiceValidateText = false;
+  String addNewServiceValidateText = "";
 
   @override
   void initState() {
@@ -79,7 +79,7 @@ class _ServiceScreenState extends State<ServiceScreen> {
       );
       if (!isServiceClosed && result.isSuccess) {
         List<ServiceDetailModel> services =
-            ServiceDetailModel.parseListDishItem(result.data["services"]);
+            ServiceDetailModel.parseListItem(result.data["services"]);
         serviceBloc.add(
           OnLoadService(
             params: {
@@ -169,27 +169,24 @@ class _ServiceScreenState extends State<ServiceScreen> {
     await _requestService();
   }
 
-  Future<bool> _addNewDish(DishTypeModel dishType) async {
+  Future<bool> _addNewService() async {
     if (_nameController.text.trim().isEmpty ||
         _unitController.text.trim().isEmpty ||
         _priceController.text.trim().isEmpty) {
-      addNewDishValidateText = "Tên, giá, đơn vị tính là bắt buộc";
+      addNewServiceValidateText = "Tên, giá, đơn vị tính là bắt buộc";
       return true;
     }
-    addNewDishValidateText = "";
-    ResultModel result = await Api.addDish(
-      name: _nameController.text,
-      description: _descriptionController.text,
+    addNewServiceValidateText = "";
+    ResultModel result = await Api.addService(
+      name: _nameController.text.capitalize(),
       image: _imageController.text,
-      isDrink: false,
       unit: _unitController.text.capitalize(),
       price: _priceController.text,
-      dishTypeId: dishType.dishTypeId,
     );
     if (result.isSuccess) {
       if (context.mounted) {
         Fluttertoast.showToast(
-          msg: "Thêm món mới thành công!",
+          msg: "Thêm dịch vụ thành công!",
           toastLength: Toast.LENGTH_SHORT,
           gravity: ToastGravity.CENTER,
           timeInSecForIosWeb: 3,
@@ -201,14 +198,13 @@ class _ServiceScreenState extends State<ServiceScreen> {
         context.pop();
         _onRefresh();
         _nameController.text = "";
-        _descriptionController.text = "";
         _priceController.text = "";
         _imageController.text = "";
         _unitController.text = "";
       }
     } else {
       Fluttertoast.showToast(
-        msg: "Thêm món mới thất bại!",
+        msg: "Thêm dịch vụ thất bại!",
         toastLength: Toast.LENGTH_SHORT,
         gravity: ToastGravity.CENTER,
         timeInSecForIosWeb: 3,
@@ -221,202 +217,136 @@ class _ServiceScreenState extends State<ServiceScreen> {
     return false;
   }
 
-  // void _openDialogAddNewDish() {
-  //   DishTypeModel selectedFilter2 = dishBloc.state.dishTypes.sublist(1)[0];
-  //   bool isShow = false;
-  //   showDialog(
-  //     context: context,
-  //     barrierDismissible: false,
-  //     builder: (BuildContext ct) {
-  //       return StatefulBuilder(builder: (context, newState) {
-  //         return AppDialogInput(
-  //           title: "Thêm món mới",
-  //           buttonDoneTitle: "Tạo",
-  //           buttonCancelTitle: "Thoát",
-  //           onDone: () async {
-  //             isShow = await _addNewDish(selectedFilter2);
-  //             newState(() {});
-  //           },
-  //           onCancel: () {
-  //             context.pop();
-  //           },
-  //           child: Column(
-  //             crossAxisAlignment: CrossAxisAlignment.start,
-  //             children: [
-  //               Padding(
-  //                 padding: const EdgeInsets.only(bottom: 5),
-  //                 child: Text(
-  //                   "Tên món",
-  //                   style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-  //                         fontSize: 16,
-  //                       ),
-  //                 ),
-  //               ),
-  //               AppInput2(
-  //                 name: "name",
-  //                 keyboardType: TextInputType.name,
-  //                 controller: _nameController,
-  //                 placeHolder: "Điền tên món",
-  //                 focusNode: _nameFocusNode,
-  //               ),
-  //               Row(
-  //                 children: [
-  //                   Expanded(
-  //                     child: Column(
-  //                       crossAxisAlignment: CrossAxisAlignment.start,
-  //                       children: [
-  //                         Padding(
-  //                           padding: const EdgeInsets.only(top: 10, bottom: 5),
-  //                           child: Text(
-  //                             "Giá món(VNĐ)",
-  //                             style: Theme.of(context)
-  //                                 .textTheme
-  //                                 .bodyMedium
-  //                                 ?.copyWith(
-  //                                   fontSize: 16,
-  //                                 ),
-  //                           ),
-  //                         ),
-  //                         AppInput2(
-  //                           name: "price",
-  //                           keyboardType: TextInputType.number,
-  //                           controller: _priceController,
-  //                           placeHolder: "Nhập giá món(VNĐ)",
-  //                           focusNode: _priceFocusNode,
-  //                         ),
-  //                       ],
-  //                     ),
-  //                   ),
-  //                   SizedBox(
-  //                     width: kPadding15,
-  //                   ),
-  //                   Expanded(
-  //                     child: Column(
-  //                       crossAxisAlignment: CrossAxisAlignment.start,
-  //                       children: [
-  //                         Padding(
-  //                           padding: const EdgeInsets.only(top: 10, bottom: 5),
-  //                           child: Text(
-  //                             "Đơn vị tính",
-  //                             style: Theme.of(context)
-  //                                 .textTheme
-  //                                 .bodyMedium
-  //                                 ?.copyWith(
-  //                                   fontSize: 16,
-  //                                 ),
-  //                           ),
-  //                         ),
-  //                         AppInput2(
-  //                           name: "price",
-  //                           keyboardType: TextInputType.name,
-  //                           controller: _unitController,
-  //                           placeHolder: "Ex: phần, dĩa, ly...",
-  //                           focusNode: _unitFocusNode,
-  //                         ),
-  //                       ],
-  //                     ),
-  //                   ),
-  //                   SizedBox(
-  //                     width: kPadding10,
-  //                   ),
-  //                   Expanded(
-  //                     child: Column(
-  //                       crossAxisAlignment: CrossAxisAlignment.start,
-  //                       children: [
-  //                         Padding(
-  //                           padding: const EdgeInsets.only(top: 10, bottom: 5),
-  //                           child: Text(
-  //                             "Loại món",
-  //                             style: Theme.of(context)
-  //                                 .textTheme
-  //                                 .bodyMedium
-  //                                 ?.copyWith(
-  //                                   fontSize: 16,
-  //                                 ),
-  //                           ),
-  //                         ),
-  //                         AppPopupMenuButton<DishTypeModel>(
-  //                           height: 45,
-  //                           value: selectedFilter2,
-  //                           onChanged: (value) {
-  //                             newState(() {
-  //                               selectedFilter2 = value;
-  //                             });
-  //                           },
-  //                           items: dishBloc.state.dishTypes.sublist(1),
-  //                           filterItemBuilder: (context, label) {
-  //                             return DropdownMenuItem<DishTypeModel>(
-  //                               value: label,
-  //                               child: Text(label.type),
-  //                             );
-  //                           },
-  //                           child: Text(
-  //                             selectedFilter2.type,
-  //                             style: Theme.of(context)
-  //                                 .textTheme
-  //                                 .bodyMedium
-  //                                 ?.copyWith(
-  //                                   fontSize: 14,
-  //                                   color: Colors.white,
-  //                                 ),
-  //                           ),
-  //                         ),
-  //                       ],
-  //                     ),
-  //                   ),
-  //                 ],
-  //               ),
-  //               Padding(
-  //                 padding: const EdgeInsets.only(top: 10, bottom: 5),
-  //                 child: Text(
-  //                   "Mô tả",
-  //                   style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-  //                         fontSize: 16,
-  //                       ),
-  //                 ),
-  //               ),
-  //               AppInput2(
-  //                 name: "description",
-  //                 keyboardType: TextInputType.name,
-  //                 controller: _descriptionController,
-  //                 placeHolder: "Thêm mô tả(tùy chọn)",
-  //                 focusNode: _descriptionFocusNode,
-  //                 maxLines: 2,
-  //               ),
-  //               Padding(
-  //                 padding: const EdgeInsets.only(top: 10, bottom: 5),
-  //                 child: Text(
-  //                   "Link ảnh",
-  //                   style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-  //                         fontSize: 16,
-  //                       ),
-  //                 ),
-  //               ),
-  //               AppInput2(
-  //                 name: "image",
-  //                 keyboardType: TextInputType.name,
-  //                 controller: _imageController,
-  //                 placeHolder: "Url ảnh(tùy chọn)",
-  //                 focusNode: _imageFocusNode,
-  //               ),
-  //               if (isShow)
-  //                 Padding(
-  //                   padding: const EdgeInsets.only(top: 10, bottom: 5),
-  //                   child: Text(
-  //                     addNewDishValidateText,
-  //                     style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-  //                           fontSize: 14,
-  //                           color: Colors.red,
-  //                         ),
-  //                   ),
-  //                 ),
-  //             ],
-  //           ),
-  //         );
-  //       });
-  //     },
-  //   );
-  // }
+  void _openDialogAddNewService() {
+    bool isShow = false;
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext ct) {
+        return StatefulBuilder(builder: (context, newState) {
+          return AppDialogInput(
+            title: "Thêm dịch vụ mới",
+            buttonDoneTitle: "Tạo",
+            buttonCancelTitle: "Thoát",
+            onDone: () async {
+              isShow = await _addNewService();
+              newState(() {});
+            },
+            onCancel: () {
+              context.pop();
+            },
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Padding(
+                  padding: const EdgeInsets.only(bottom: 5),
+                  child: Text(
+                    "Tên dịch vụ",
+                    style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                          fontSize: 16,
+                        ),
+                  ),
+                ),
+                AppInput2(
+                  name: "name",
+                  keyboardType: TextInputType.name,
+                  controller: _nameController,
+                  placeHolder: "Điền tên dịch vụ",
+                  focusNode: _nameFocusNode,
+                ),
+                Row(
+                  children: [
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.only(top: 10, bottom: 5),
+                            child: Text(
+                              "Giá dịch vụ(VNĐ)",
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .bodyMedium
+                                  ?.copyWith(
+                                    fontSize: 16,
+                                  ),
+                            ),
+                          ),
+                          AppInput2(
+                            name: "price",
+                            keyboardType: TextInputType.number,
+                            controller: _priceController,
+                            placeHolder: "Nhập giá dịch vụ(VNĐ)",
+                            focusNode: _priceFocusNode,
+                          ),
+                        ],
+                      ),
+                    ),
+                    SizedBox(
+                      width: kPadding15,
+                    ),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.only(top: 10, bottom: 5),
+                            child: Text(
+                              "Đơn vị tính",
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .bodyMedium
+                                  ?.copyWith(
+                                    fontSize: 16,
+                                  ),
+                            ),
+                          ),
+                          AppInput2(
+                            name: "price",
+                            keyboardType: TextInputType.name,
+                            controller: _unitController,
+                            placeHolder: "Ex: chiếc, giờ, cái...",
+                            focusNode: _unitFocusNode,
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(top: 10, bottom: 5),
+                  child: Text(
+                    "Link ảnh",
+                    style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                          fontSize: 16,
+                        ),
+                  ),
+                ),
+                AppInput2(
+                  name: "image",
+                  keyboardType: TextInputType.name,
+                  controller: _imageController,
+                  placeHolder: "Url ảnh(tùy chọn)",
+                  focusNode: _imageFocusNode,
+                ),
+                if (isShow)
+                  Padding(
+                    padding: const EdgeInsets.only(top: 10, bottom: 5),
+                    child: Text(
+                      addNewServiceValidateText,
+                      style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                            fontSize: 14,
+                            color: Colors.red,
+                          ),
+                    ),
+                  ),
+              ],
+            ),
+          );
+        });
+      },
+    );
+  }
 
   SliverPersistentHeader _makeHeaderFilter(BuildContext context) {
     var authState = context.select((AuthenticationBloc bloc) => bloc.state);
@@ -432,7 +362,7 @@ class _ServiceScreenState extends State<ServiceScreen> {
           ),
           color: backgroundColor,
           child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            mainAxisAlignment: MainAxisAlignment.end,
             children: [
               // _buildTopFilter(context),
               Row(
@@ -444,7 +374,7 @@ class _ServiceScreenState extends State<ServiceScreen> {
                       child: InkWell(
                         borderRadius: BorderRadius.circular(kCornerSmall),
                         onTap: () {
-                          // _openDialogAddNewDish();
+                          _openDialogAddNewService();
                         },
                         child: Container(
                           padding: EdgeInsets.symmetric(horizontal: 5),
@@ -455,7 +385,7 @@ class _ServiceScreenState extends State<ServiceScreen> {
                           child: Row(
                             children: const [
                               Icon(Icons.add),
-                              Text("Thêm món"),
+                              Text("Thêm dịch vụ"),
                             ],
                           ),
                         ),
@@ -500,18 +430,7 @@ class _ServiceScreenState extends State<ServiceScreen> {
     return BlocProvider(
       create: (context) => serviceBloc,
       child: BlocListener<ServiceBloc, ServiceState>(
-        // listenWhen: (previous, current) {
-        //   if (previous.dishTypeState == BlocState.loading &&
-        //       current.dishTypeState == BlocState.loadCompleted) {
-        //     return true;
-        //   }
-        //   return false;
-        // },
-        listener: (context, state) {
-          // setState(() {
-          //   _selectedFilter = state.dishTypes[0];
-          // });
-        },
+        listener: (context, state) {},
         child: BlocBuilder<ServiceBloc, ServiceState>(
           builder: (context, state) {
             bool isLoading = state.serviceState == BlocState.loading;

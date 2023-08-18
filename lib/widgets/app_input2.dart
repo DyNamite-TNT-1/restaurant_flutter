@@ -84,7 +84,8 @@ class _AppInput2State extends State<AppInput2> {
           ),
           contentPadding: const EdgeInsets.only(
             top: 14,
-            left: 20,
+            left: 10,
+            right: 10,
           ),
           prefixIcon: widget.icon,
           hintText: widget.placeHolder,

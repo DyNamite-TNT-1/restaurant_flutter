@@ -54,6 +54,7 @@ class Api {
 
   //reservation
   static String requestCreateReservationUrl = "/reservation/create";
+  static String requestAllReservationUrl = "/reservation/get/all";
 
   //table
   static String requestTableUrl = "/table/get";
@@ -61,6 +62,7 @@ class Api {
 
   //service
   static String requestAllServiceUrl = "/service/get/all";
+  static String addServiceUrl = "/manager/service/create";
 
   //authorization
   static Future<UserModel> requestLogin({
@@ -79,8 +81,6 @@ class Api {
     );
     return UserModel.fromJson(result);
   }
-
-  // static Future<ResultModel>
 
   static Future<ResultModel> requestSignUp({
     String email = "",
@@ -254,12 +254,55 @@ class Api {
     return ResultModel.fromJson(result);
   }
 
+  static Future<ResultModel> requestAllReservation({
+    required String status,
+    int limit = kLimit,
+    required page,
+    required OrderEnum order,
+    String tagRequest = HTTPManager.DEFAULT_CANCEL_TAG,
+  }) async {
+     var data = {
+      "status": status,
+      "limit": limit,
+      "page": page,
+      "order": order.value,
+    };
+    final result = await httpManager.get(
+      url: appendBranch(requestAllReservationUrl),
+      params: data,
+      cancelTag: tagRequest,
+    );
+    return ResultModel.fromJson(result);
+  }
+
   //service
   static Future<ResultModel> requestListService({
     String tagRequest = HTTPManager.DEFAULT_CANCEL_TAG,
   }) async {
     final result = await httpManager.get(
       url: appendBranch(requestAllServiceUrl),
+      cancelTag: tagRequest,
+    );
+    return ResultModel.fromJson(result);
+  }
+
+  static Future<ResultModel> addService({
+    required String name,
+    required String price,
+    required String image,
+    required String unit,
+    String tagRequest = HTTPManager.DEFAULT_CANCEL_TAG,
+  }) async {
+    String url = addServiceUrl;
+    var data = {
+      "name": name,
+      "price": price,
+      "image": image,
+      "unit": unit,
+    };
+    final result = await httpManager.post(
+      url: appendBranch(url),
+      data: data,
       cancelTag: tagRequest,
     );
     return ResultModel.fromJson(result);

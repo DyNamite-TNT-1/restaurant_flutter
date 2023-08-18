@@ -1,26 +1,37 @@
 part of 'reservation_bloc.dart';
 
 class ReservationState extends Equatable {
-  final List<TableDetailModel> tables;
-  final BlocState tableState;
+  final List<ReservationDetailModel> reservations;
+  final BlocState reservationState;
+  final int currentPage;
+  final int maxPage;
+
   const ReservationState({
-    this.tables = const [],
-    this.tableState = BlocState.init,
+    this.reservations = const [],
+    this.reservationState = BlocState.init,
+    this.currentPage = 1,
+    this.maxPage = 1,
   });
 
   ReservationState copyWith({
-    List<TableDetailModel>? tables,
-    BlocState? tableState,
+    List<ReservationDetailModel>? reservations,
+    BlocState? reservationState,
+    int? currentPage,
+    int? maxPage,
   }) {
     return ReservationState(
-      tables: tables ?? this.tables,
-      tableState: tableState ?? this.tableState,
+      reservations: reservations ?? this.reservations,
+      reservationState: reservationState ?? this.reservationState,
+      currentPage: currentPage ?? this.currentPage,
+      maxPage: maxPage ?? this.maxPage,
     );
   }
 
   @override
   List<Object> get props => [
-        tables,
-        tableState,
+        reservations,
+        reservationState,
+        currentPage,
+        maxPage,
       ];
 }

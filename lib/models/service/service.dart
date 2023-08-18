@@ -29,7 +29,7 @@ class ServiceDetailModel {
     );
   }
 
-  static List<ServiceDetailModel> parseListDishItem(dynamic data) {
+  static List<ServiceDetailModel> parseListItem(dynamic data) {
     List<ServiceDetailModel> list = [];
     if (data is List) {
       for (var item in data) {

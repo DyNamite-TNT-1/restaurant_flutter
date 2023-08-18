@@ -5,7 +5,6 @@ import 'package:restaurant_flutter/app_ceiling.dart';
 import 'package:restaurant_flutter/configs/configs.dart';
 import 'package:restaurant_flutter/screens/reservation_tab/reservation_tab.dart';
 
-
 class ScaffoldWithNestedNavigation extends StatelessWidget {
   const ScaffoldWithNestedNavigation({
     Key? key,
@@ -185,6 +184,17 @@ class _ScaffoldWithNavigationRailState extends State<ScaffoldWithNavigationRail>
                             height: 20,
                             colorFilter: ColorFilter.mode(
                               widget.selectedIndex == 3 ? blueColor : textColor,
+                              BlendMode.srcIn,
+                            ),
+                          ),
+                        ),
+                        NavigationRailDestination(
+                          label: Text('Lịch sử'),
+                          icon: SvgPicture.asset(
+                            Images.icAvailableCalendar,
+                            height: 20,
+                            colorFilter: ColorFilter.mode(
+                              widget.selectedIndex == 4 ? blueColor : textColor,
                               BlendMode.srcIn,
                             ),
                           ),

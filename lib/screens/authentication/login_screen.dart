@@ -122,6 +122,10 @@ class _LoginScreenState extends State<LoginScreen> {
                 focusNode: passwordFocus,
                 placeHolder: "Nhập mật khẩu",
                 isPassword: true,
+                textInputAction: TextInputAction.done,
+                onFieldSubmitted: (_) {
+                  _requestLogin(context);
+                },
               ),
               SizedBox(
                 height: kDefaultPadding,

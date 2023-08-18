@@ -15,10 +15,10 @@ import 'package:restaurant_flutter/models/service/table.dart';
 import 'package:restaurant_flutter/screens/authentication/login_screen.dart';
 import 'package:restaurant_flutter/screens/reservation_tab/widget/service_item.dart';
 import 'package:restaurant_flutter/utils/extension.dart';
-import 'package:restaurant_flutter/utils/parse_type_value.dart';
+import 'package:restaurant_flutter/utils/utils.dart';
 import 'package:restaurant_flutter/widgets/app_popup_menu_button.dart';
 import 'package:restaurant_flutter/widgets/widgets.dart';
-
+import 'dart:js' as js;
 import 'widget/dish_item.dart';
 import 'widget/drink_item.dart';
 
@@ -99,21 +99,27 @@ class _ReservationTabState extends State<ReservationTab>
           ReservationDetailModel.fromJson(result.data);
       _openDialogPayment(
         reservation.preFee,
-        reservation.deadline.toDateTime(),
+        DateFormat('dd/MM/yyyy HH:mm')
+            .format(reservation.deadline.toDateTime()),
+        reservation.reservationId,
       );
-      AppBloc.uiBloc.add(OnReservationSuccess(params: const {}));
+      // AppBloc.uiBloc.add(OnReservationSuccess(params: const {}));
     }
   }
 
   void _openDialogPayment(
     int preFee,
     String deadline,
+    int reservationId,
   ) {
     showDialog(
       context: context,
       builder: (context) {
         return AppDialogText(
           onDone: () {
+            js.context.callMethod('open', [
+              'http://localhost:3005/vnpay/create_payment_url?amount=$preFee&id_order=$reservationId'
+            ]);
             Navigator.pop(context);
           },
           onCancel: () {
@@ -128,7 +134,9 @@ class _ReservationTabState extends State<ReservationTab>
                         Text(
                             "Phí trả trước là ${NumberFormat.simpleCurrency(locale: "vi-VN", name: "VNĐ", decimalDigits: 0).format(preFee)}"),
                         Text(
-                            "Bạn phải thanh toán trước $deadline. Nếu không, hệ thống sẽ xóa yêu cầu đặt bàn này!"),
+                          "Bạn phải thanh toán trước $deadline. Nếu không, hệ thống sẽ xóa yêu cầu đặt bàn này!",
+                          style: Theme.of(context).textTheme.bodyMedium,
+                        ),
                       ],
                     )
                   : SizedBox(),
