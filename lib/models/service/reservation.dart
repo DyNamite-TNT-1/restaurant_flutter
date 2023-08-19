@@ -45,7 +45,7 @@ class ReservationDetailModel {
       case -1:
         return "Từ chối";
       case 0:
-        return "Chờ xử lý";
+        return "Xác nhận đặt bàn";
       case 1:
         return "Đã duyệt";
       case 2:
@@ -76,7 +76,7 @@ class ReservationDetailModel {
     return ReservationDetailModel(
       reservationId: ParseTypeData.ensureInt(json["reservationId"]),
       preFee: ParseTypeData.ensureInt(json["preFee"]),
-      preFeeStr: ParseTypeData.ensureString(json["preFeeSte"]),
+      preFeeStr: ParseTypeData.ensureString(json["preFeeStr"]),
       deadline: ParseTypeData.ensureString(json["deadline"]),
       countGuest: ParseTypeData.ensureInt(json["countGuest"]),
       note: ParseTypeData.ensureString(json["note"]),

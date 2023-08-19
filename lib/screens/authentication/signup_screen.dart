@@ -308,7 +308,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                                       width: 10,
                                     ),
                                     Text(
-                                      DateFormat("yyyy/MM/dd").format(birthDay),
+                                      DateFormat("dd/MM/yyyy").format(birthDay),
                                       style: Theme.of(context)
                                           .textTheme
                                           .bodyMedium

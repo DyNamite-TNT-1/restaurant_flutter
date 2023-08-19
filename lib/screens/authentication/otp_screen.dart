@@ -114,7 +114,12 @@ class _OtpScreenState extends State<OtpScreen> {
                   ],
                 ),
               )
-            : Text("Xác thực thành công, vui lòng trở lại trang chủ!"),
+            : Text(
+                "Xác thực thành công, vui lòng trở lại trang chủ!",
+                style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                      color: Colors.white,
+                    ),
+              ),
       ],
     );
   }

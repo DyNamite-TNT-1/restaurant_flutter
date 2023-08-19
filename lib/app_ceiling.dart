@@ -89,7 +89,10 @@ class _AppCeilingState extends State<AppCeiling> {
                           Icon(
                             Icons.person,
                           ),
-                          Text(UserRepository.userModel.userName),
+                          Text(
+                            UserRepository.userModel.userName,
+                            style: Theme.of(context).textTheme.bodyLarge,
+                          ),
                         ],
                       ),
                     ),

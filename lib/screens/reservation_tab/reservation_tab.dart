@@ -116,10 +116,13 @@ class _ReservationTabState extends State<ReservationTab>
       context: context,
       builder: (context) {
         return AppDialogText(
+          buttonDoneTitle: preFee > 0 ? "Thanh toán" : "OK",
           onDone: () {
-            js.context.callMethod('open', [
-              'http://localhost:3005/vnpay/create_payment_url?amount=$preFee&id_order=$reservationId'
-            ]);
+            if (preFee > 0) {
+              js.context.callMethod('open', [
+                'http://localhost:3005/vnpay/create_payment_url?amount=$preFee&id_order=$reservationId'
+              ]);
+            }
             Navigator.pop(context);
           },
           onCancel: () {

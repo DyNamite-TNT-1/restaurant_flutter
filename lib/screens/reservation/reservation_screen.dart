@@ -94,6 +94,7 @@ class _ReservationScreenState extends State<ReservationScreen> {
       child: Column(
         children: [
           Row(
+            mainAxisAlignment: MainAxisAlignment.end,
             children: [
               Material(
                 color: Colors.transparent,
@@ -214,45 +215,51 @@ class _ReservationScreenState extends State<ReservationScreen> {
                   ? Stack(
                       children: [
                         _buildHeader(context),
-                        Padding(
-                          padding: const EdgeInsets.only(top: 120),
-                          child: Column(
-                            children: [
-                              Expanded(
-                                child: ListView.builder(
-                                  itemCount: _reservationBloc
-                                      .state.reservations.length,
-                                  itemBuilder: (context, index) {
-                                    return ReservationItem(
-                                      item: _reservationBloc
-                                          .state.reservations[index],
-                                    );
-                                  },
+                        state.reservationState != BlocState.noData
+                            ? Padding(
+                                padding: const EdgeInsets.only(top: 120),
+                                child: Column(
+                                  children: [
+                                    Expanded(
+                                      child: ListView.builder(
+                                        itemCount: _reservationBloc
+                                            .state.reservations.length,
+                                        itemBuilder: (context, index) {
+                                          return ReservationItem(
+                                            item: _reservationBloc
+                                                .state.reservations[index],
+                                          );
+                                        },
+                                      ),
+                                    ),
+                                    SizedBox(
+                                      height: 50,
+                                    ),
+                                  ],
                                 ),
+                              )
+                            : Padding(
+                                padding: const EdgeInsets.only(top: 130),
+                                child: NoDataFoundView(),
                               ),
-                              SizedBox(
-                                height: 50,
-                              ),
-                            ],
+                        if (state.reservationState != BlocState.noData)
+                          Positioned(
+                            bottom: 0,
+                            left: 0,
+                            right: 0,
+                            child: NumberPagination(
+                              onPageChanged: (int pageNumber) {
+                                setState(() {
+                                  currentPage = pageNumber;
+                                });
+                                _requestReservationList();
+                              },
+                              pageTotal: state.maxPage,
+                              pageInit:
+                                  currentPage, // picked number when init page
+                              colorPrimary: primaryColor,
+                            ),
                           ),
-                        ),
-                        Positioned(
-                          bottom: 0,
-                          left: 0,
-                          right: 0,
-                          child: NumberPagination(
-                            onPageChanged: (int pageNumber) {
-                              setState(() {
-                                currentPage = pageNumber;
-                              });
-                              _requestReservationList();
-                            },
-                            pageTotal: state.maxPage,
-                            pageInit:
-                                currentPage, // picked number when init page
-                            colorPrimary: primaryColor,
-                          ),
-                        ),
                       ],
                     )
                   : NoDataFoundView(
