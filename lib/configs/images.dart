@@ -21,6 +21,11 @@ class Images {
   static const String icDrink = "assets/images/ic_drink.svg";
   static const String icMicro = "assets/images/ic_micro.svg";
 
+  static const String icSearch = "assets/images/ic_search.svg";
+  static const String icChecked = "assets/images/ic_checked.svg";
+  static const String icClear = "assets/images/ic_clear.svg";
+
+
   ///Singleton factory
   static final Images _instance = Images._internal();
 

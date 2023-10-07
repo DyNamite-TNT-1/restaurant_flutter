@@ -51,7 +51,7 @@ class _AppCeilingState extends State<AppCeiling> {
         Expanded(
           child: Container(
             height: 50,
-            color: Colors.blue,
+            // color: Colors.blue,
           ),
         ),
         IntrinsicHeight(

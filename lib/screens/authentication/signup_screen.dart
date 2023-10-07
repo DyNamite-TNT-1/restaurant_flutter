@@ -112,7 +112,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
       );
       if (context.mounted) {
         context.goNamed(RouteConstants.verifyOTP,
-            extra: {"email": "tdhuaco372001@gmail.com"});
+            extra: {"email": emailController.text});
       }
     } else {
       Fluttertoast.showToast(

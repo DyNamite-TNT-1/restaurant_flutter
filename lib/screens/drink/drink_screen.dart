@@ -468,79 +468,150 @@ class _DrinkScreenState extends State<DrinkScreen> {
     );
   }
 
-  SliverPersistentHeader _makeHeaderFilter(BuildContext context) {
+  // SliverPersistentHeader _makeHeaderFilter(BuildContext context) {
+  //   var authState = context.select((AuthenticationBloc bloc) => bloc.state);
+  //   return SliverPersistentHeader(
+  //     pinned: true,
+  //     delegate: PinSliverAppBarDelegate(
+  //       minHeight: 50.0,
+  //       maxHeight: 50.0,
+  //       child: Container(
+  //         padding: EdgeInsets.symmetric(
+  //           horizontal: kPadding15,
+  //           vertical: kPadding10,
+  //         ),
+  //         color: backgroundColor,
+  //         child: Row(
+  //           mainAxisAlignment: MainAxisAlignment.spaceBetween,
+  //           children: [
+  //             _buildTopFilter(context),
+  //             Row(
+  //               children: [
+  //                 if (authState is AuthenticationSuccess &&
+  //                     UserRepository.userModel.isManager)
+  //                   Material(
+  //                     color: Colors.transparent,
+  //                     child: InkWell(
+  //                       borderRadius: BorderRadius.circular(kCornerSmall),
+  //                       onTap: () {
+  //                         _openDialogAddNewDish();
+  //                       },
+  //                       child: Container(
+  //                         padding: EdgeInsets.symmetric(horizontal: 5),
+  //                         decoration: BoxDecoration(
+  //                           borderRadius: BorderRadius.circular(kCornerSmall),
+  //                           border: Border.all(),
+  //                         ),
+  //                         child: Row(
+  //                           children: const [
+  //                             Icon(Icons.add),
+  //                             Text("Thêm đồ uống"),
+  //                           ],
+  //                         ),
+  //                       ),
+  //                     ),
+  //                   ),
+  //                 SizedBox(
+  //                   width: 5,
+  //                 ),
+  //                 Material(
+  //                   color: Colors.transparent,
+  //                   child: InkWell(
+  //                     borderRadius: BorderRadius.circular(kCornerSmall),
+  //                     onTap: () {
+  //                       _onRefresh();
+  //                     },
+  //                     child: Container(
+  //                       padding: EdgeInsets.symmetric(horizontal: 5),
+  //                       decoration: BoxDecoration(
+  //                         borderRadius: BorderRadius.circular(kCornerSmall),
+  //                         border: Border.all(),
+  //                       ),
+  //                       child: Row(
+  //                         children: const [
+  //                           Icon(Icons.refresh),
+  //                           Text("Làm mới"),
+  //                         ],
+  //                       ),
+  //                     ),
+  //                   ),
+  //                 ),
+  //               ],
+  //             ),
+  //           ],
+  //         ),
+  //       ),
+  //     ),
+  //   );
+  // }
+
+  Widget _makeHeaderFilter(BuildContext context) {
     var authState = context.select((AuthenticationBloc bloc) => bloc.state);
-    return SliverPersistentHeader(
-      pinned: true,
-      delegate: PinSliverAppBarDelegate(
-        minHeight: 50.0,
-        maxHeight: 50.0,
-        child: Container(
-          padding: EdgeInsets.symmetric(
-            horizontal: kPadding15,
-            vertical: kPadding10,
-          ),
-          color: backgroundColor,
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+    return Container(
+      height: 50,
+      padding: EdgeInsets.symmetric(
+        horizontal: kPadding15,
+        vertical: kPadding10,
+      ),
+      color: backgroundColor,
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          _buildTopFilter(context),
+          Row(
             children: [
-              _buildTopFilter(context),
-              Row(
-                children: [
-                  if (authState is AuthenticationSuccess &&
-                      UserRepository.userModel.isManager)
-                    Material(
-                      color: Colors.transparent,
-                      child: InkWell(
+              if (authState is AuthenticationSuccess &&
+                  UserRepository.userModel.isManager)
+                Material(
+                  color: Colors.transparent,
+                  child: InkWell(
+                    borderRadius: BorderRadius.circular(kCornerSmall),
+                    onTap: () {
+                      _openDialogAddNewDish();
+                    },
+                    child: Container(
+                      padding: EdgeInsets.symmetric(horizontal: 5),
+                      decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(kCornerSmall),
-                        onTap: () {
-                          _openDialogAddNewDish();
-                        },
-                        child: Container(
-                          padding: EdgeInsets.symmetric(horizontal: 5),
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(kCornerSmall),
-                            border: Border.all(),
-                          ),
-                          child: Row(
-                            children: const [
-                              Icon(Icons.add),
-                              Text("Thêm đồ uống"),
-                            ],
-                          ),
-                        ),
+                        border: Border.all(),
+                      ),
+                      child: Row(
+                        children: const [
+                          Icon(Icons.add),
+                          Text("Thêm đồ uống"),
+                        ],
                       ),
                     ),
-                  SizedBox(
-                    width: 5,
                   ),
-                  Material(
-                    color: Colors.transparent,
-                    child: InkWell(
+                ),
+              SizedBox(
+                width: 5,
+              ),
+              Material(
+                color: Colors.transparent,
+                child: InkWell(
+                  borderRadius: BorderRadius.circular(kCornerSmall),
+                  onTap: () {
+                    _onRefresh();
+                  },
+                  child: Container(
+                    padding: EdgeInsets.symmetric(horizontal: 5),
+                    decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(kCornerSmall),
-                      onTap: () {
-                        _onRefresh();
-                      },
-                      child: Container(
-                        padding: EdgeInsets.symmetric(horizontal: 5),
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(kCornerSmall),
-                          border: Border.all(),
-                        ),
-                        child: Row(
-                          children: const [
-                            Icon(Icons.refresh),
-                            Text("Làm mới"),
-                          ],
-                        ),
-                      ),
+                      border: Border.all(),
+                    ),
+                    child: Row(
+                      children: const [
+                        Icon(Icons.refresh),
+                        Text("Làm mới"),
+                      ],
                     ),
                   ),
-                ],
+                ),
               ),
             ],
           ),
-        ),
+        ],
       ),
     );
   }
@@ -570,41 +641,44 @@ class _DrinkScreenState extends State<DrinkScreen> {
               backgroundColor: backgroundColor,
               body: Stack(
                 children: [
-                  CustomScrollView(
-                    slivers: [
-                      _makeHeaderFilter(context),
-                      if (state.drinkState == BlocState.loadCompleted ||
-                          state.drinkState == BlocState.loading)
-                        SliverPadding(
-                          padding: EdgeInsets.all(kPadding10),
-                          sliver: SliverGrid.builder(
-                            itemCount: state.drinks.length,
-                            gridDelegate:
-                                const SliverGridDelegateWithMaxCrossAxisExtent(
-                              maxCrossAxisExtent: 300.0,
-                              mainAxisSpacing: 20.0,
-                              crossAxisSpacing: 20.0,
-                              childAspectRatio: 0.7,
+                  _makeHeaderFilter(context),
+                  Padding(
+                    padding: const EdgeInsets.only(top: 50),
+                    child: CustomScrollView(
+                      slivers: [
+                        if (state.drinkState == BlocState.loadCompleted ||
+                            state.drinkState == BlocState.loading)
+                          SliverPadding(
+                            padding: EdgeInsets.all(kPadding10),
+                            sliver: SliverGrid.builder(
+                              itemCount: state.drinks.length,
+                              gridDelegate:
+                                  const SliverGridDelegateWithMaxCrossAxisExtent(
+                                maxCrossAxisExtent: 300.0,
+                                mainAxisSpacing: 20.0,
+                                crossAxisSpacing: 20.0,
+                                childAspectRatio: 0.7,
+                              ),
+                              itemBuilder: (BuildContext context, int index) {
+                                return DrinkItem(
+                                  drink: state.drinks[index],
+                                );
+                              },
                             ),
-                            itemBuilder: (BuildContext context, int index) {
-                              return DrinkItem(
-                                drink: state.drinks[index],
-                              );
-                            },
+                          ),
+                        SliverToBoxAdapter(
+                          child: Visibility(
+                            visible: state.drinkState == BlocState.noData,
+                            child: NoDataFoundView(),
                           ),
                         ),
-                      SliverToBoxAdapter(
-                        child: Visibility(
-                          visible: state.drinkState == BlocState.noData,
-                          child: NoDataFoundView(),
+                        SliverToBoxAdapter(
+                          child: SizedBox(
+                            height: 50,
+                          ),
                         ),
-                      ),
-                      SliverToBoxAdapter(
-                        child: SizedBox(
-                          height: 50,
-                        ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
                   Visibility(
                     visible: isLoading,

@@ -8,7 +8,12 @@ enum ReservationStatus {
   final String name;
   final int value;
   const ReservationStatus(this.name, this.value);
-  static  List<ReservationStatus> get all {
+  static List<ReservationStatus> get all {
     return ReservationStatus.values;
+  }
+
+  static ReservationStatus getEnum(int value) {
+    return ReservationStatus.all
+        .firstWhere((element) => element.value == value);
   }
 }

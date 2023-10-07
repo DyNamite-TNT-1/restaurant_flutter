@@ -3,6 +3,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
 import 'package:restaurant_flutter/app_ceiling.dart';
 import 'package:restaurant_flutter/configs/configs.dart';
+import 'package:restaurant_flutter/screens/messenger/messenger.dart';
 import 'package:restaurant_flutter/screens/reservation_tab/reservation_tab.dart';
 
 class ScaffoldWithNestedNavigation extends StatelessWidget {
@@ -84,11 +85,15 @@ class ScaffoldWithNavigationRail extends StatefulWidget {
 }
 
 class _ScaffoldWithNavigationRailState extends State<ScaffoldWithNavigationRail>
-    with SingleTickerProviderStateMixin {
+    with TickerProviderStateMixin {
   late AnimationController _moveController;
   late Animation<double> _moveAnimation;
   bool isOpenReservationTab = false;
   String tagRequestServices = "";
+
+  late AnimationController _chatController;
+  late Animation<double> _chatAnimation;
+  bool isOpenChat = false;
   @override
   void initState() {
     super.initState();
@@ -107,6 +112,16 @@ class _ScaffoldWithNavigationRailState extends State<ScaffoldWithNavigationRail>
       parent: _moveController,
       curve: Curves.easeInOut,
     );
+
+    _chatController = AnimationController(
+      vsync: this,
+      duration: Duration(milliseconds: 300),
+      reverseDuration: Duration(milliseconds: 300),
+    );
+    _chatAnimation = CurvedAnimation(
+      parent: _chatController,
+      curve: Curves.easeInOut,
+    );
   }
 
   void _runAnimationCheck() {
@@ -117,17 +132,31 @@ class _ScaffoldWithNavigationRailState extends State<ScaffoldWithNavigationRail>
     }
   }
 
+  void _runCheckChatAnimation() {
+    if (isOpenChat) {
+      _chatController.forward();
+    } else {
+      _chatController.reverse();
+    }
+  }
+
   @override
   void dispose() {
     super.dispose();
     _moveController.dispose();
+    _chatController.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       floatingActionButton: FloatingActionButton(
-        onPressed: () {},
+        onPressed: () {
+          setState(() {
+            isOpenChat = !isOpenChat;
+          });
+          _runCheckChatAnimation();
+        },
         child: Icon(Icons.chat),
       ),
       body: Stack(
@@ -225,6 +254,15 @@ class _ScaffoldWithNavigationRailState extends State<ScaffoldWithNavigationRail>
                   }
                 },
               ),
+            ),
+          ),
+          Positioned(
+            bottom: 80,
+            right: 20,
+            child: SizeTransition(
+              axisAlignment: 1.0,
+              sizeFactor: _chatAnimation,
+              child: MessengerScreen(),
             ),
           ),
         ],
