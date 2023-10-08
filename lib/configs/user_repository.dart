@@ -21,12 +21,11 @@ class UserRepository {
 
   static void setUserModel(Map<String, dynamic>? json) {
     _userModel = json == null ? null : UserModel.fromJson(json);
-    print("_userModel?.userName: ${_userModel?.userName}");
   }
 
-  // static bool isMe({required String u_cn, required String u_no}) {
-  //   return userModel.u_cn == u_cn && userModel.u_no == u_no;
-  // }
+  static bool isMe({required int id}) {
+    return userModel.userId == id;
+  }
 
   ///Login
   static Future<UserModel?> login({

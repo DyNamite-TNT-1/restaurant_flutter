@@ -229,6 +229,89 @@ class HTTPManager {
     }
   }
 
+  ///PATCH method
+  Future<dynamic> patch({
+    required String url,
+    Map<String, dynamic>? data,
+    Map<String, dynamic>? params,
+    FormData? formData,
+    Options? options,
+    bool external = false,
+    Function? callBack,
+    String cancelTag = DEFAULT_CANCEL_TAG,
+  }) async {
+    Dio request = dioInternal;
+    if (external) {
+      request = dioExternal;
+    }
+
+    request.options = _optionsCookie();
+    dioInternal.options.method = 'PATCH';
+    dioInternal.options.headers['Content-Type'] =
+        "application/json; charset=UTF-8";
+    final requestUrl = url;
+
+    try {
+      CancelToken cancelToken = CancelToken();
+      cancelTokenMap[cancelTag] = cancelToken;
+
+      UtilLogger.log("====================================");
+      UtilLogger.log('Request PATCH', requestUrl);
+      if (params != null) {
+        UtilLogger.log('PARAMS:', params);
+      } else {
+        UtilLogger.log('BODY:', data);
+      }
+      UtilLogger.log('REQUEST PATCH:', request.options.receiveTimeout);
+
+      final Response<dynamic> response;
+
+      if (formData != null) {
+        response = await request.patch(
+          requestUrl,
+          data: formData,
+          options: options,
+          cancelToken: cancelToken,
+        );
+      } else if (params != null) {
+        response = await request.patch(
+          requestUrl,
+          queryParameters: params,
+          options: options,
+          cancelToken: cancelToken,
+          onSendProgress: (count, total) {
+            if (callBack != null) {
+              callBack(count, total, cancelTag);
+            }
+          },
+        );
+      } else {
+        response = await request.patch(
+          requestUrl,
+          data: data,
+          options: options,
+          cancelToken: cancelToken,
+          onSendProgress: (count, total) {
+            if (callBack != null) {
+              callBack(count, total, cancelTag);
+            }
+          },
+        );
+      }
+
+      cancelTokenMap.remove(cancelTag);
+      UtilLogger.log('RESPONSE ${response.realUri}: \n', response.data);
+      return response.data;
+    } on DioException catch (error) {
+      if (CancelToken.isCancel(error)) {
+        return null;
+      }
+      cancelTokenMap.remove(cancelTag);
+      UtilLogger.log('EXCEPTION PATCH $url: \n', error);
+      return errorHandle(error);
+    }
+  }
+
   ///Get method
   Future<dynamic> get({
     required String url,

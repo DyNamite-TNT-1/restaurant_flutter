@@ -53,24 +53,3 @@ class DishDetailModel {
     return list;
   }
 }
-
-class DishModel {
-  final int total;
-  final int maxPage;
-  final int currentPage;
-  final List<DishDetailModel> dishes;
-  DishModel({
-    this.total = 0,
-    this.maxPage = 0,
-    this.currentPage = 0,
-    this.dishes = const [],
-  });
-  factory DishModel.fromJson(Map<String, dynamic> json) {
-    return DishModel(
-      total: ParseTypeData.ensureInt(json["total"]),
-      maxPage: ParseTypeData.ensureInt(json["maxPage"]),
-      currentPage: ParseTypeData.ensureInt(json["currentPage"]),
-      dishes: DishDetailModel.parseListItem(json["rows"]),
-    );
-  }
-}

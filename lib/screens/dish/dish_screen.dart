@@ -10,7 +10,7 @@ import 'package:restaurant_flutter/configs/configs.dart';
 import 'package:restaurant_flutter/configs/user_repository.dart';
 import 'package:restaurant_flutter/enum/bloc.dart';
 import 'package:restaurant_flutter/enum/order.dart';
-import 'package:restaurant_flutter/models/service/dish.dart';
+import 'package:restaurant_flutter/models/client/client_dish.dart';
 import 'package:restaurant_flutter/models/service/dish_type.dart';
 import 'package:restaurant_flutter/models/service/model_result_api.dart';
 import 'package:restaurant_flutter/utils/extension.dart';
@@ -93,7 +93,7 @@ class _DishScreenState extends State<DishScreen> {
         tagRequest: tagRequestDishes,
       );
       if (!isServiceClosed && result.isSuccess) {
-        DishModel dishModel = DishModel.fromJson(result.data);
+        ClientDishModel dishModel = ClientDishModel.fromJson(result.data);
         dishBloc.add(
           OnLoadDish(
             params: {
@@ -462,7 +462,7 @@ class _DishScreenState extends State<DishScreen> {
       },
     );
   }
-  
+
   Widget _makeHeaderFilter(BuildContext context) {
     var authState = context.select((AuthenticationBloc bloc) => bloc.state);
     return Container(

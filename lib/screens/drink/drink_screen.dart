@@ -10,7 +10,7 @@ import 'package:restaurant_flutter/configs/configs.dart';
 import 'package:restaurant_flutter/configs/user_repository.dart';
 import 'package:restaurant_flutter/enum/bloc.dart';
 import 'package:restaurant_flutter/enum/order.dart';
-import 'package:restaurant_flutter/models/service/dish.dart';
+import 'package:restaurant_flutter/models/client/client_dish.dart';
 import 'package:restaurant_flutter/models/service/dish_type.dart';
 import 'package:restaurant_flutter/models/service/model_result_api.dart';
 import 'package:restaurant_flutter/utils/extension.dart';
@@ -91,7 +91,7 @@ class _DrinkScreenState extends State<DrinkScreen> {
         tagRequest: tagRequestDrinks,
       );
       if (!isServiceClosed && result.isSuccess) {
-        DishModel drinkModel = DishModel.fromJson(result.data);
+        ClientDishModel drinkModel = ClientDishModel.fromJson(result.data);
         drinkBloc.add(
           OnLoadDrink(
             params: {
