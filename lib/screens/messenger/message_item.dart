@@ -67,7 +67,7 @@ class _MessageItemState extends State<MessageItem> {
                 kPadding10,
               ),
               decoration: BoxDecoration(
-                color: Colors.red,
+                color: isMe ? primaryColor : Color(0XFFE4E6EB),
                 borderRadius: BorderRadius.circular(kCornerNormal),
               ),
               child: Column(
@@ -75,7 +75,11 @@ class _MessageItemState extends State<MessageItem> {
                 children: [
                   Text(
                     widget.message.content,
-                    style: Theme.of(context).textTheme.bodyLarge,
+                    style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                          fontSize: 14,
+                          fontWeight: FontWeight.normal,
+                          color: isMe ? Colors.white : Colors.black,
+                        ),
                     textAlign: TextAlign.left,
                   ),
                   SizedBox(

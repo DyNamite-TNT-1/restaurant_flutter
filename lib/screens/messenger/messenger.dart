@@ -46,6 +46,37 @@ class _MessengerScreenState extends State<MessengerScreen> {
     Api.cancelRequest(tag: tagRequestDetailConversation);
   }
 
+  Container _buildTopBarConversation(BuildContext context) {
+    return Container(
+      padding: EdgeInsets.all(kPadding10),
+      child: Row(
+        children: [
+          Container(
+            height: 40,
+            width: 40,
+            decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(50),
+                border: Border.all(
+                  color: Colors.white,
+                  width: 1.5,
+                ),
+                color: Colors.amber),
+            child: Center(
+              child: Text("LĐ"),
+            ),
+          ),
+          SizedBox(
+            width: kPadding10,
+          ),
+          Text(
+            "Lê Mậu Anh Đức",
+            style: Theme.of(context).textTheme.bodyLarge,
+          ),
+        ],
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
@@ -58,15 +89,15 @@ class _MessengerScreenState extends State<MessengerScreen> {
             decoration: BoxDecoration(
               color: Colors.white,
               borderRadius: BorderRadius.circular(kCornerMedium),
-              border: Border.all(),
+              border: Border.all(
+                color: Colors.grey,
+              ),
             ),
             child: IntrinsicHeight(
               child: Row(
                 children: [
                   Container(
                     padding: EdgeInsets.only(
-                      top: kPadding10,
-                      bottom: kPadding10,
                       left: kPadding10,
                     ),
                     width: 300,
@@ -134,19 +165,18 @@ class _MessengerScreenState extends State<MessengerScreen> {
                                     placeHolder: "Nhập tin nhắn",
                                   ),
                                 ),
-                                MaterialButton(
-                                  onPressed: () {},
-                                  minWidth: 50,
-                                  shape: CircleBorder(),
-                                  color: Colors.green,
-                                  child: Padding(
-                                    padding: EdgeInsets.all(
-                                      kPadding10 / 2,
-                                    ),
-                                    child: Icon(
-                                      Icons.send,
-                                      color: Colors.white,
-                                      size: 24,
+                                Material(
+                                  color: Colors.transparent,
+                                  child: InkWell(
+                                    onTap: () {},
+                                    borderRadius: BorderRadius.circular(50),
+                                    child: Padding(
+                                      padding: const EdgeInsets.all(kPadding10),
+                                      child: Icon(
+                                        Icons.send,
+                                        size: 28,
+                                        color: primaryColor,
+                                      ),
                                     ),
                                   ),
                                 ),
@@ -162,37 +192,6 @@ class _MessengerScreenState extends State<MessengerScreen> {
             ),
           );
         },
-      ),
-    );
-  }
-
-  Container _buildTopBarConversation(BuildContext context) {
-    return Container(
-      padding: EdgeInsets.all(kPadding10),
-      child: Row(
-        children: [
-          Container(
-            height: 40,
-            width: 40,
-            decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(50),
-                border: Border.all(
-                  color: Colors.white,
-                  width: 1.5,
-                ),
-                color: Colors.amber),
-            child: Center(
-              child: Text("LĐ"),
-            ),
-          ),
-          SizedBox(
-            width: kPadding10,
-          ),
-          Text(
-            "Lê Mậu Anh Đức",
-            style: Theme.of(context).textTheme.bodyLarge,
-          ),
-        ],
       ),
     );
   }

@@ -146,7 +146,6 @@ class AppInputMultiLine extends StatefulWidget {
   final FocusNode focusNode;
   final TextInputAction? textInputAction;
   final ValueChanged<String>? onFieldSubmitted;
-  final bool isMultiLine;
 
   @override
   State<AppInputMultiLine> createState() => _AppInputMultiLineState();
@@ -160,7 +159,6 @@ class AppInputMultiLine extends StatefulWidget {
     required this.focusNode,
     this.textInputAction,
     this.onFieldSubmitted,
-    this.isMultiLine = false,
     Key? key,
   }) : super(key: key);
 }
@@ -174,7 +172,6 @@ class _AppInputMultiLineState extends State<AppInputMultiLine> {
         borderRadius: BorderRadius.circular(kCornerNormal),
       ),
       child: TextFormField(
-        // expands: true,
         controller: widget.controller,
         focusNode: widget.focusNode,
         inputFormatters: widget.keyboardType == TextInputType.number ||
@@ -191,7 +188,7 @@ class _AppInputMultiLineState extends State<AppInputMultiLine> {
           color: textColor,
           fontWeight: FontWeight.normal,
         ),
-        maxLines: widget.isMultiLine ? 1 : null,
+        maxLines: null,
         decoration: InputDecoration(
           fillColor: inputBackgroundColor,
           filled: true,
