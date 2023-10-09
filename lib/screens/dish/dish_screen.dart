@@ -610,6 +610,7 @@ class _DishScreenState extends State<DishScreen> {
                       ),
                     ),
                   ),
+                  if (state.maxPage != 0)
                   Positioned(
                     bottom: 0,
                     left: 0,

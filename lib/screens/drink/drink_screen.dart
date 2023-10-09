@@ -691,25 +691,26 @@ class _DrinkScreenState extends State<DrinkScreen> {
                       ),
                     ),
                   ),
-                  Positioned(
-                    bottom: 0,
-                    left: 0,
-                    right: 0,
-                    child: NumberPagination(
-                      onPageChanged: (int pageNumber) {
-                        setState(() {
-                          currentPage = pageNumber;
-                        });
-                        _requestDrink(
-                          type: _selectedFilter.dishTypeId,
-                          priceOrder: _selectedPriceOrder,
-                        );
-                      },
-                      pageTotal: state.maxPage,
-                      pageInit: currentPage, // picked number when init page
-                      colorPrimary: primaryColor,
+                  if (state.maxPage != 0)
+                    Positioned(
+                      bottom: 0,
+                      left: 0,
+                      right: 0,
+                      child: NumberPagination(
+                        onPageChanged: (int pageNumber) {
+                          setState(() {
+                            currentPage = pageNumber;
+                          });
+                          _requestDrink(
+                            type: _selectedFilter.dishTypeId,
+                            priceOrder: _selectedPriceOrder,
+                          );
+                        },
+                        pageTotal: state.maxPage,
+                        pageInit: currentPage, // picked number when init page
+                        colorPrimary: primaryColor,
+                      ),
                     ),
-                  ),
                 ],
               ),
             );

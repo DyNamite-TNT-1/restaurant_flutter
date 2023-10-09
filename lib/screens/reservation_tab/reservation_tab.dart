@@ -14,7 +14,6 @@ import 'package:restaurant_flutter/models/service/reservation.dart';
 import 'package:restaurant_flutter/models/service/table.dart';
 import 'package:restaurant_flutter/screens/authentication/login_screen.dart';
 import 'package:restaurant_flutter/screens/reservation_tab/widget/service_item.dart';
-import 'package:restaurant_flutter/utils/extension.dart';
 import 'package:restaurant_flutter/utils/utils.dart';
 import 'package:restaurant_flutter/widgets/app_popup_menu_button.dart';
 import 'package:restaurant_flutter/widgets/widgets.dart';
@@ -61,7 +60,8 @@ class _ReservationTabState extends State<ReservationTab>
     ResultModel result = await Api.requestTableType();
     if (result.isSuccess) {
       tableTypes = TableTypeDetailModel.parseListItem(result.data);
-      if (AppBloc.uiBloc.state.selectedTableType == null) {
+      if (AppBloc.uiBloc.state.selectedTableType == null &&
+          tableTypes.isNotEmpty) {
         AppBloc.uiBloc.add(
           OnChangeTableType(params: {"tableType": tableTypes[0]}),
         );
