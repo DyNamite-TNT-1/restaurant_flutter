@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:restaurant_flutter/configs/configs.dart';
+import 'package:restaurant_flutter/models/client/client_conversation.dart';
 
 class ConversationItem extends StatefulWidget {
-  const ConversationItem({super.key});
+  const ConversationItem({super.key, required this.item});
+  final ClientConversationModel item;
 
   @override
   State<ConversationItem> createState() => _ConversationItemState();
@@ -49,7 +51,7 @@ class _ConversationItemState extends State<ConversationItem> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text(
-                        "Lê Mậu Anh Đức",
+                        widget.item.user!.userName,
                         style: Theme.of(context).textTheme.bodyLarge,
                       ),
                       Text(

@@ -1,17 +1,17 @@
 import 'package:restaurant_flutter/models/service/message.dart';
 import 'package:restaurant_flutter/utils/utils.dart';
 
-class ClientConversationModel {
+class ClientMessageModel {
   final List<MessageDetailModel> messages;
   final bool isSuccess;
 
-  ClientConversationModel({
+  ClientMessageModel({
     this.messages = const [],
     this.isSuccess = false,
   });
 
-  factory ClientConversationModel.fromJson(Map<String, dynamic> json) {
-    return ClientConversationModel(
+  factory ClientMessageModel.fromJson(Map<String, dynamic> json) {
+    return ClientMessageModel(
       messages: MessageDetailModel.parseListItem(json["allMessage"]),
       isSuccess: ParseTypeData.ensureBool(json["isSuccess"]),
     );

@@ -65,8 +65,9 @@ class Api {
   static String requestAllServiceUrl = "/service/get/all";
   static String addServiceUrl = "/manager/service/create";
 
-  //message
+  //chat
   static String requestDetailConversationUrl = "/conversation";
+  static String requestListConversationUrl = "/conversation";
 
   //authorization
   static Future<UserModel> requestLogin({
@@ -326,9 +327,19 @@ class Api {
   static Future<ResultModel> requestDetailConversation({
     required int conversationId,
     String tagRequest = HTTPManager.DEFAULT_CANCEL_TAG,
-  }) async{
-     final result = await httpManager.get(
+  }) async {
+    final result = await httpManager.get(
       url: appendBranch("$requestDetailConversationUrl/$conversationId"),
+      cancelTag: tagRequest,
+    );
+    return ResultModel.fromJson(result);
+  }
+
+  static Future<ResultModel> requestListConversation({
+    String tagRequest = HTTPManager.DEFAULT_CANCEL_TAG,
+  }) async {
+    final result = await httpManager.get(
+      url: appendBranch(requestDetailConversationUrl),
       cancelTag: tagRequest,
     );
     return ResultModel.fromJson(result);
