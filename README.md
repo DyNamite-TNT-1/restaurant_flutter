@@ -1,16 +1,12 @@
 # restaurant_flutter
+This is a Frontend source code to help develop a restaurant reservation website - an academic project of the subject "Object-oriented programming techniques" - taught by lecturer Huynh Trung Tru.
 
-A new Flutter project.
-
-## Getting Started
-
-This project is a starting point for a Flutter application.
-
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+Made by:
+  * Le Mau Anh Duc - N19DCCN038
+  * Tran Thu Dat - N19DCCN036
+## Related Source
+  * [Backend](https://github.com/DyNamite-TNT-1/nodejs_be_restaurant)
+  * [Document](https://github.com/DyNamite-TNT-1/doc-restaurant-project)
+## Techniques
+  * Language: Dart
+  * Framework: Flutter
