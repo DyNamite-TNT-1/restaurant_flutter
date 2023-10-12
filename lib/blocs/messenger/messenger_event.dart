@@ -8,6 +8,11 @@ abstract class MessengerEvent extends Equatable {
   List<Object> get props => [params];
 }
 
+class OnSelectConversation extends MessengerEvent {
+  const OnSelectConversation({required Map<String, dynamic> params})
+      : super(params: params);
+}
+
 class OnLoadMessage extends MessengerEvent {
   const OnLoadMessage({required Map<String, dynamic> params})
       : super(params: params);
@@ -15,5 +20,10 @@ class OnLoadMessage extends MessengerEvent {
 
 class OnLoadConversation extends MessengerEvent {
   const OnLoadConversation({required Map<String, dynamic> params})
+      : super(params: params);
+}
+
+class OnAcceptConversation extends MessengerEvent {
+  const OnAcceptConversation({required Map<String, dynamic> params})
       : super(params: params);
 }

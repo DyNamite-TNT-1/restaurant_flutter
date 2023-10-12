@@ -26,7 +26,6 @@ class _MessengerScreenState extends State<MessengerScreen> {
   final FocusNode messageFocus = FocusNode();
 
   String tagRequestDetailConversation = "";
-  ClientConversationModel seletedConversation = ClientConversationModel();
 
   @override
   void initState() {
@@ -52,8 +51,8 @@ class _MessengerScreenState extends State<MessengerScreen> {
 
   Container _buildTopBarConversation(
     BuildContext context,
-    String receivedUserName,
   ) {
+    MessengerState state = messengerBloc.state;
     return Container(
       padding: EdgeInsets.all(kPadding10),
       child: Row(
@@ -79,12 +78,13 @@ class _MessengerScreenState extends State<MessengerScreen> {
                 width: kPadding10,
               ),
               Text(
-                receivedUserName,
+                state.selectedConversation?.user?.userName ?? "User Name",
                 style: Theme.of(context).textTheme.bodyLarge,
               ),
             ],
           ),
-          if (!(seletedConversation.conversation?.acceptManager ?? false))
+          if (!(state.selectedConversation?.conversation?.acceptManager ??
+              false))
             Row(
               children: [
                 Text("Chấp nhận tin nhắn?"),
@@ -97,8 +97,8 @@ class _MessengerScreenState extends State<MessengerScreen> {
                     onTap: () {
                       messengerBloc.add(OnLoadMessage(
                         params: {
-                          "conversationId":
-                              seletedConversation.conversation!.conversationId,
+                          "conversationId": state.selectedConversation!
+                              .conversation!.conversationId,
                         },
                       ));
                     },
@@ -171,8 +171,11 @@ class _MessengerScreenState extends State<MessengerScreen> {
                                             borderRadius: BorderRadius.circular(
                                                 kCornerMedium),
                                             onTap: () {
-                                              seletedConversation =
-                                                  conversation;
+                                              messengerBloc.add(
+                                                  OnSelectConversation(params: {
+                                                "selectedConversation":
+                                                    conversation,
+                                              }));
                                               if (conversation.conversation!
                                                   .acceptManager) {
                                                 messengerBloc.add(OnLoadMessage(
@@ -215,11 +218,7 @@ class _MessengerScreenState extends State<MessengerScreen> {
                                       crossAxisAlignment:
                                           CrossAxisAlignment.start,
                                       children: [
-                                        _buildTopBarConversation(
-                                          context,
-                                          seletedConversation.user?.userName ??
-                                              "",
-                                        ),
+                                        _buildTopBarConversation(context),
                                         Divider(
                                           height: 0,
                                           color: Colors.grey,
