@@ -1,3 +1,5 @@
+import 'dart:js';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -17,6 +19,7 @@ import 'package:restaurant_flutter/screens/profile/profile.dart';
 import 'package:restaurant_flutter/screens/reservation/reservation_detail_screen.dart';
 import 'package:restaurant_flutter/screens/reservation/reservation_screen.dart';
 import 'package:restaurant_flutter/screens/service/service_screen.dart';
+import 'package:restaurant_flutter/screens/setting/setting_change_language_screen.dart';
 import 'package:restaurant_flutter/utils/parse_type_value.dart';
 
 final _rootNavigatorKey = GlobalKey<NavigatorState>();
@@ -188,6 +191,17 @@ class AppRouter {
           );
         },
       ),
+      GoRoute(
+          name: RouteConstants.settingLanguage,
+          path: "/setting-language",
+          pageBuilder: (context, state) {
+            final params = state.extra as Map<String, dynamic>;
+            final String initLangCode =
+                ParseTypeData.ensureString(params["initLangCode"]);
+            return NoTransitionPage(
+              child: SettingChangeLanguageScreen(initLangCode: initLangCode),
+            );
+          }),
     ],
     redirect: (context, state) {
       // var authState = context.watch<AuthenticationBloc>().state;

@@ -14,6 +14,7 @@ import 'package:restaurant_flutter/models/service/reservation.dart';
 import 'package:restaurant_flutter/models/service/table.dart';
 import 'package:restaurant_flutter/screens/authentication/login_screen.dart';
 import 'package:restaurant_flutter/screens/reservation_tab/widget/service_item.dart';
+import 'package:restaurant_flutter/utils/translate.dart';
 import 'package:restaurant_flutter/utils/utils.dart';
 import 'package:restaurant_flutter/widgets/app_popup_menu_button.dart';
 import 'package:restaurant_flutter/widgets/widgets.dart';
@@ -242,8 +243,21 @@ class _ReservationTabState extends State<ReservationTab>
             buttonDoneTitle: "Đồng ý",
             buttonCancelTitle: "Thoát",
             onDone: () {
-              setState(() {});
-              Navigator.pop(context);
+              if (peopleController.text.isEmpty) {
+                Fluttertoast.showToast(
+                  msg: Translate.of(context).translate("VALIDATE_PEOPLE_E001"),
+                  toastLength: Toast.LENGTH_SHORT,
+                  gravity: ToastGravity.CENTER,
+                  timeInSecForIosWeb: 1,
+                  backgroundColor: primaryColor,
+                  textColor: Colors.white,
+                  fontSize: 16.0,
+                  webBgColor: dangerColorToast,
+                );
+              } else {
+                setState(() {});
+                Navigator.pop(context);
+              }
             },
             onCancel: () {
               Navigator.pop(context);

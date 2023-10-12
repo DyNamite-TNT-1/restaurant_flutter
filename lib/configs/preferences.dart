@@ -7,6 +7,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 class Preferences {
   static SharedPreferences? instance;
 
+  static const String language = 'language';  
   static const String token = 'token';
   static const String userModel = 'userModel';
   static const String userLogin = "userLogin";
@@ -28,6 +29,14 @@ class Preferences {
 
 class UserPreferences {
   UserPreferences._();
+
+    static Future<bool> setLanguage(String langName) {
+    return UtilPreferences.setString(Preferences.language, langName);
+  }
+
+  static String? getLanguage() {
+    return UtilPreferences.getString(Preferences.language);
+  }
 
   static Future<bool> setSecurePassword(String password) async {
     // String enPass = encryptPassword(password);

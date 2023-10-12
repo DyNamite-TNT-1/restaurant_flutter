@@ -17,4 +17,6 @@ class RouteConstants {
   //đặt bàn
   static String reservation = "reservation";
   static String reservationDetail = "reservationDetail";
+  //setting
+  static String settingLanguage = "settingLanguage";
 }
