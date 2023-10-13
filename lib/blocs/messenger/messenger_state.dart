@@ -6,6 +6,7 @@ class MessengerState extends Equatable {
   final BlocState conversationState;
   final ClientMessageModel? clientMessageModel;
   final BlocState messageState;
+  final BlocState acceptMessageSate;
   final String msg;
 
   const MessengerState({
@@ -14,6 +15,7 @@ class MessengerState extends Equatable {
     this.conversationState = BlocState.init,
     this.clientMessageModel,
     this.messageState = BlocState.init,
+    this.acceptMessageSate = BlocState.init,
     this.msg = "",
   });
 
@@ -23,6 +25,7 @@ class MessengerState extends Equatable {
     BlocState? conversationState,
     ClientMessageModel? clientMessageModel,
     BlocState? messageState,
+    BlocState? acceptMessageSate,
     String? msg,
   }) {
     return MessengerState(
@@ -32,6 +35,7 @@ class MessengerState extends Equatable {
       conversationState: conversationState ?? this.conversationState,
       clientMessageModel: clientMessageModel ?? this.clientMessageModel,
       messageState: messageState ?? this.messageState,
+      acceptMessageSate: acceptMessageSate ?? this.acceptMessageSate,
       msg: msg ?? this.msg,
     );
   }
@@ -41,6 +45,7 @@ class MessengerState extends Equatable {
         clientConversationModel,
         conversationState,
         messageState,
+        acceptMessageSate,
         msg,
       ];
 }

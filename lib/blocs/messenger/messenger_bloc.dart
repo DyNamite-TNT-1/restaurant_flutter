@@ -35,10 +35,29 @@ class MessengerBloc extends Bloc<MessengerEvent, MessengerState> {
       emit(state.copyWith(
         messageState: BlocState.loading,
       ));
-      emit(state.copyWith(
-        messageState: BlocState.loadCompleted,
-        selectedConversation: selectedConversation,
-      ));
+      if (selectedConversation.user == null ||
+          selectedConversation.conversation == null) {
+        emit(state.copyWith(
+          messageState: BlocState.loadFailed,
+          selectedConversation: selectedConversation,
+        ));
+      } else {
+        emit(state.copyWith(
+          messageState: BlocState.loadCompleted,
+          selectedConversation: selectedConversation,
+        ));
+        if (selectedConversation.conversation!.acceptManager) {
+          add(OnLoadMessage(params: {
+            "conversationId": selectedConversation.conversation!.conversationId
+          }));
+        } else {
+          emit(state.copyWith(
+            messageState: BlocState.noData,
+            selectedConversation: selectedConversation,
+            clientMessageModel: ClientMessageModel(),
+          ));
+        }
+      }
     }
   }
 
@@ -112,23 +131,27 @@ class MessengerBloc extends Bloc<MessengerEvent, MessengerState> {
       OnAcceptConversation event, Emitter emit) async {
     if (!isClosed) {
       emit(state.copyWith(
-        conversationState: BlocState.loading,
+        acceptMessageSate: BlocState.loading,
+        messageState: BlocState.loading,
       ));
-      ResultModel result = await Api.requestListConversation(
-        tagRequest: tagRequestMessages,
+      ResultModel result = await Api.requestAcceptConversation(
+        conversationId:
+            state.selectedConversation!.conversation!.conversationId,
+        tagRequest: tagRequestAcceptConversation,
       );
       if (result.isSuccess) {
-        List<ClientConversationModel> clientConversationModel =
-            ClientConversationModel.parseListItem(result.data["conversations"]);
         emit(state.copyWith(
-          clientConversationModel: clientConversationModel,
-          conversationState: clientConversationModel.isEmpty
-              ? BlocState.noData
-              : BlocState.loadCompleted,
+          acceptMessageSate: BlocState.loadCompleted,
+          msg: result.message,
         ));
+        add(OnLoadMessage(params: {
+          "conversationId":
+              state.selectedConversation!.conversation!.conversationId
+        }));
       } else {
         emit(state.copyWith(
           conversationState: BlocState.loadFailed,
+          msg: result.message,
         ));
       }
     }
@@ -139,5 +162,6 @@ class MessengerBloc extends Bloc<MessengerEvent, MessengerState> {
     super.close();
     Api.cancelRequest(tag: tagRequestMessages);
     Api.cancelRequest(tag: tagRequestConversations);
+    Api.cancelRequest(tag: tagRequestAcceptConversation);
   }
 }
