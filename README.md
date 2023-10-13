@@ -10,3 +10,4 @@ Made by:
 ## Techniques
   * Language: Dart
   * Framework: Flutter
+  * State Management: BLoC
