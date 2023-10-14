@@ -67,6 +67,8 @@ class Api {
 
   //chat
   static String requestConversationUrl = "/conversation";
+  static String requestMessageUrl = "/message";
+  static String requestListMessageUrl = "/conversation/client/message";
 
   //authorization
   static Future<UserModel> requestLogin({
@@ -354,4 +356,21 @@ class Api {
     );
     return ResultModel.fromJson(result);
   }
+
+  static Future<ResultModel> requestCreateMessage({
+    required int conversationId,
+    required String content,
+    String tagRequest = HTTPManager.DEFAULT_CANCEL_TAG,
+  }) async {
+    var data = {
+      "conversationId": conversationId,
+      "content": content,
+    };
+    final result = await httpManager.post(
+      url: appendBranch(requestMessageUrl),
+      data: data,
+    );
+    return ResultModel.fromJson(result);
+  }
+
 }

@@ -2,20 +2,22 @@ part of 'messenger_bloc.dart';
 
 class MessengerState extends Equatable {
   final ClientConversationModel? selectedConversation;
-  final List<ClientConversationModel> clientConversationModel;
+  final List<ClientConversationModel> conversations; // conversation list
   final BlocState conversationState;
-  final ClientMessageModel? clientMessageModel;
+  final ClientMessageModel? messages; // message list of selectedConversation
   final BlocState messageState;
   final BlocState acceptMessageSate;
+  final BlocState sendMessageState;
   final String msg;
 
   const MessengerState({
     this.selectedConversation,
-    this.clientConversationModel = const [],
+    this.conversations = const [],
     this.conversationState = BlocState.init,
-    this.clientMessageModel,
+    this.messages,
     this.messageState = BlocState.init,
     this.acceptMessageSate = BlocState.init,
+    this.sendMessageState = BlocState.init,
     this.msg = "",
   });
 
@@ -26,26 +28,28 @@ class MessengerState extends Equatable {
     ClientMessageModel? clientMessageModel,
     BlocState? messageState,
     BlocState? acceptMessageSate,
+    BlocState? sendMessageState,
     String? msg,
   }) {
     return MessengerState(
       selectedConversation: selectedConversation ?? this.selectedConversation,
-      clientConversationModel:
-          clientConversationModel ?? this.clientConversationModel,
+      conversations: clientConversationModel ?? this.conversations,
       conversationState: conversationState ?? this.conversationState,
-      clientMessageModel: clientMessageModel ?? this.clientMessageModel,
+      messages: clientMessageModel ?? this.messages,
       messageState: messageState ?? this.messageState,
       acceptMessageSate: acceptMessageSate ?? this.acceptMessageSate,
+      sendMessageState: sendMessageState ?? this.sendMessageState,
       msg: msg ?? this.msg,
     );
   }
 
   @override
   List<Object> get props => [
-        clientConversationModel,
+        conversations,
         conversationState,
         messageState,
         acceptMessageSate,
+        sendMessageState,
         msg,
       ];
 }

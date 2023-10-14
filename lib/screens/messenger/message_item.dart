@@ -18,17 +18,14 @@ class MessageItem extends StatefulWidget {
 }
 
 class _MessageItemState extends State<MessageItem> {
-  bool isMe = false;
   @override
   void initState() {
     super.initState();
-    if (UserRepository.isMe(id: widget.message.userId)) {
-      isMe = true;
-    }
   }
 
   @override
   Widget build(BuildContext context) {
+    var isMe = UserRepository.isMe(id: widget.message.userId) ? true : false;
     return Padding(
       padding: const EdgeInsets.only(
         right: kPadding10,

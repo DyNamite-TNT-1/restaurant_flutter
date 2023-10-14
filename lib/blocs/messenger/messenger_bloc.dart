@@ -17,12 +17,15 @@ class MessengerBloc extends Bloc<MessengerEvent, MessengerState> {
       Api.buildIncreaseTagRequestWithID("messengerBloc_conversations");
   static final String tagRequestAcceptConversation =
       Api.buildIncreaseTagRequestWithID("messengerBloc_acceptConversation");
+  static final String tagRequestSendMessage =
+      Api.buildIncreaseTagRequestWithID("messengerBloc_sendMessage");
 
   MessengerBloc(MessengerState state) : super(state) {
     on<OnSelectConversation>(_onSelectConversation);
     on<OnLoadMessage>(_onLoadMessages);
     on<OnLoadConversation>(_onLoadConversations);
     on<OnAcceptConversation>(_onAcceptConversation);
+    on<OnSendMessage>(_onSendMessage);
   }
 
   Future<void> _onSelectConversation(
@@ -65,6 +68,7 @@ class MessengerBloc extends Bloc<MessengerEvent, MessengerState> {
     int conversationId = event.params.containsKey("conversationId")
         ? event.params["conversationId"]
         : 0;
+    BlocState? messageState = event.params["messageState"];
     if (conversationId == 0) {
       if (!isClosed) {
         emit(state.copyWith(
@@ -75,7 +79,7 @@ class MessengerBloc extends Bloc<MessengerEvent, MessengerState> {
     } else {
       if (!isClosed) {
         emit(state.copyWith(
-          messageState: BlocState.loading,
+          messageState: messageState ?? BlocState.loading,
         ));
         ResultModel result = await Api.requestDetailConversation(
           conversationId: conversationId,
@@ -157,11 +161,44 @@ class MessengerBloc extends Bloc<MessengerEvent, MessengerState> {
     }
   }
 
+  Future<void> _onSendMessage(OnSendMessage event, Emitter emit) async {
+    if (!isClosed) {
+      String content =
+          event.params.containsKey("content") ? event.params["content"] : "";
+      emit(state.copyWith(
+        sendMessageState: BlocState.loading,
+      ));
+      ResultModel result = await Api.requestCreateMessage(
+        conversationId:
+            state.selectedConversation!.conversation!.conversationId,
+        content: content,
+        tagRequest: tagRequestSendMessage,
+      );
+      if (result.isSuccess) {
+        emit(state.copyWith(
+          sendMessageState: BlocState.loadCompleted,
+          msg: result.message,
+        ));
+        add(OnLoadMessage(params: {
+          "conversationId":
+              state.selectedConversation!.conversation!.conversationId,
+          "messageState": BlocState.loadingSilent,
+        }));
+      } else {
+        emit(state.copyWith(
+          sendMessageState: BlocState.loadFailed,
+          msg: result.message,
+        ));
+      }
+    }
+  }
+
   @override
   Future<void> close() async {
     super.close();
     Api.cancelRequest(tag: tagRequestMessages);
     Api.cancelRequest(tag: tagRequestConversations);
     Api.cancelRequest(tag: tagRequestAcceptConversation);
+    Api.cancelRequest(tag: tagRequestSendMessage);
   }
 }

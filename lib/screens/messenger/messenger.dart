@@ -23,7 +23,6 @@ class MessengerScreen extends StatefulWidget {
 class _MessengerScreenState extends State<MessengerScreen> {
   final MessengerBloc messengerBloc = MessengerBloc(MessengerState());
 
-  final double widthOfMessengerTab = 800;
   final TextEditingController messageController = TextEditingController();
   final FocusNode messageFocus = FocusNode();
 
@@ -47,7 +46,11 @@ class _MessengerScreenState extends State<MessengerScreen> {
 
   Future<void> _onRefresh() async {
     if (!isServiceClosed) {
-      messengerBloc.add(OnLoadConversation(params: const {}));
+      if (UserRepository.userModel.isManager) {
+        messengerBloc.add(OnLoadConversation(params: const {}));
+      } else {
+        
+      }
     }
   }
 
@@ -118,6 +121,8 @@ class _MessengerScreenState extends State<MessengerScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final double widthOfMessengerTab =
+        UserRepository.userModel.isManager ? 800 : 500;
     var authState = context.select((AuthenticationBloc bloc) => bloc.state);
     return BlocListener<AuthenticationBloc, AuthenticationState>(
       listenWhen: (previous, current) {
@@ -181,50 +186,50 @@ class _MessengerScreenState extends State<MessengerScreen> {
                     ? IntrinsicHeight(
                         child: Row(
                           children: [
-                            Container(
-                              padding: EdgeInsets.only(
-                                left: kPadding10,
-                              ),
-                              width: 300,
-                              child: Column(
-                                children: [
-                                  Expanded(
-                                    child: ListView.builder(
-                                        itemCount: state
-                                            .clientConversationModel.length,
-                                        itemBuilder: (context, index) {
-                                          final ClientConversationModel
-                                              conversation =
-                                              state.clientConversationModel[
-                                                  index];
-                                          return Material(
-                                            color: Colors.transparent,
-                                            child: InkWell(
-                                              borderRadius:
-                                                  BorderRadius.circular(
-                                                      kCornerMedium),
-                                              onTap: () {
-                                                messengerBloc.add(
-                                                    OnSelectConversation(
-                                                        params: {
-                                                      "selectedConversation":
-                                                          conversation,
-                                                    }));
-                                              },
-                                              child: ConversationItem(
-                                                item: conversation,
+                            if (UserRepository.userModel.isManager)
+                              Container(
+                                padding: EdgeInsets.only(
+                                  left: kPadding10,
+                                ),
+                                width: 300,
+                                child: Column(
+                                  children: [
+                                    Expanded(
+                                      child: ListView.builder(
+                                          itemCount: state.conversations.length,
+                                          itemBuilder: (context, index) {
+                                            final ClientConversationModel
+                                                conversation =
+                                                state.conversations[index];
+                                            return Material(
+                                              color: Colors.transparent,
+                                              child: InkWell(
+                                                borderRadius:
+                                                    BorderRadius.circular(
+                                                        kCornerMedium),
+                                                onTap: () {
+                                                  messengerBloc.add(
+                                                      OnSelectConversation(
+                                                          params: {
+                                                        "selectedConversation":
+                                                            conversation,
+                                                      }));
+                                                },
+                                                child: ConversationItem(
+                                                  item: conversation,
+                                                ),
                                               ),
-                                            ),
-                                          );
-                                        }),
-                                  ),
-                                ],
+                                            );
+                                          }),
+                                    ),
+                                  ],
+                                ),
                               ),
-                            ),
-                            VerticalDivider(
-                              width: 0,
-                              color: Colors.grey,
-                            ),
+                            if (UserRepository.userModel.isManager)
+                              VerticalDivider(
+                                width: 0,
+                                color: Colors.grey,
+                              ),
                             Expanded(
                               child: Container(
                                 clipBehavior: Clip.hardEdge,
@@ -238,7 +243,9 @@ class _MessengerScreenState extends State<MessengerScreen> {
                                       visible: state.messageState ==
                                               BlocState.loadCompleted ||
                                           state.messageState ==
-                                              BlocState.noData,
+                                              BlocState.noData ||
+                                          state.messageState ==
+                                              BlocState.loadingSilent,
                                       child: Column(
                                         crossAxisAlignment:
                                             CrossAxisAlignment.start,
@@ -260,16 +267,14 @@ class _MessengerScreenState extends State<MessengerScreen> {
                                                 : ListView.builder(
                                                     reverse: true,
                                                     shrinkWrap: true,
-                                                    itemCount: state
-                                                            .clientMessageModel
-                                                            ?.messages
-                                                            .length ??
+                                                    itemCount: state.messages
+                                                            ?.messages.length ??
                                                         0,
                                                     itemBuilder:
                                                         (context, index) {
                                                       final MessageDetailModel
                                                           message = state
-                                                              .clientMessageModel!
+                                                              .messages!
                                                               .messages
                                                               .reversed
                                                               .toList()[index];
@@ -296,7 +301,21 @@ class _MessengerScreenState extends State<MessengerScreen> {
                                                 Material(
                                                   color: Colors.transparent,
                                                   child: InkWell(
-                                                    onTap: () {},
+                                                    onTap: () {
+                                                      if (messageController.text
+                                                          .trim()
+                                                          .isNotEmpty) {
+                                                        messengerBloc.add(
+                                                            OnSendMessage(
+                                                                params: {
+                                                              "content":
+                                                                  messageController
+                                                                      .text
+                                                            }));
+                                                        messageController.text =
+                                                            "";
+                                                      }
+                                                    },
                                                     borderRadius:
                                                         BorderRadius.circular(
                                                             50),

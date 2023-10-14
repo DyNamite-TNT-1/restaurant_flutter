@@ -27,3 +27,8 @@ class OnAcceptConversation extends MessengerEvent {
   const OnAcceptConversation({required Map<String, dynamic> params})
       : super(params: params);
 }
+
+class OnSendMessage extends MessengerEvent {
+  const OnSendMessage({required Map<String, dynamic> params})
+      : super(params: params);
+}
