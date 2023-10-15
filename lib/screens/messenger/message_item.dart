@@ -26,6 +26,21 @@ class _MessageItemState extends State<MessageItem> {
   @override
   Widget build(BuildContext context) {
     var isMe = UserRepository.isMe(id: widget.message.userId) ? true : false;
+    final String name = UserRepository.userModel.isManager
+        ? widget.message.user?.userName ?? "User Name"
+        : "Firestaurant";
+    final Widget avatar = UserRepository.userModel.isManager
+        ? Text(
+            "LĐ",
+            style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                // fontSize: 16,
+                ),
+          )
+        : Image.asset(
+            Images.logoAppNoBg,
+            width: 50,
+            height: 50,
+          );
     return Padding(
       padding: const EdgeInsets.only(
         right: kPadding10,
@@ -39,17 +54,18 @@ class _MessageItemState extends State<MessageItem> {
         children: [
           if (!isMe)
             Container(
-              height: 30,
-              width: 30,
+              height: 50,
+              width: 50,
               decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(50),
                   border: Border.all(
-                    color: Colors.white,
+                    color: primaryColor,
                     width: 1.5,
                   ),
-                  color: Colors.amber),
+                  color:
+                      UserRepository.userModel.isClient ? null : Colors.amber),
               child: Center(
-                child: Text("LĐ"),
+                child: avatar,
               ),
             ),
           SizedBox(

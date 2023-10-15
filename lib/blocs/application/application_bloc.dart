@@ -6,14 +6,16 @@ import 'package:restaurant_flutter/configs/configs.dart';
 
 class ApplicationBloc extends Bloc<ApplicationEvent, ApplicationState> {
   Application? application; // = Application();
+  SocketClient? socketClient;
   ApplicationBloc() : super(InitialApplicationState()) {
     application = Application();
-
+    socketClient = SocketClient();
     on<OnSetupApplication>(_onSetup);
     // on<OnCompletedIntro>(_onCompleteIntro);
   }
 
   Future<void> _onSetup(OnSetupApplication event, Emitter emit) async {
+    SocketClient.connectSocket();
     // await UtilDevice.loadDeviceInfo();
 
     ///Setup SharedPreferences

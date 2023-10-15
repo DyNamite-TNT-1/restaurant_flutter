@@ -1,8 +1,12 @@
+import 'dart:convert';
+
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:restaurant_flutter/api/api.dart';
+import 'package:restaurant_flutter/configs/configs.dart';
 import 'package:restaurant_flutter/enum/bloc.dart';
 import 'package:restaurant_flutter/models/client/client_conversation.dart';
+import 'package:restaurant_flutter/models/service/message.dart';
 import 'package:restaurant_flutter/models/service/model_result_api.dart';
 
 import '../../models/client/client_message.dart';
@@ -20,12 +24,15 @@ class MessengerBloc extends Bloc<MessengerEvent, MessengerState> {
   static final String tagRequestSendMessage =
       Api.buildIncreaseTagRequestWithID("messengerBloc_sendMessage");
 
+  static bool isClientJoinedToSocket = false;
+
   MessengerBloc(MessengerState state) : super(state) {
     on<OnSelectConversation>(_onSelectConversation);
     on<OnLoadMessage>(_onLoadMessages);
     on<OnLoadConversation>(_onLoadConversations);
     on<OnAcceptConversation>(_onAcceptConversation);
     on<OnSendMessage>(_onSendMessage);
+    on<OnReceiveMessageFromSocket>(_onReceiveMessageFromSocket);
   }
 
   Future<void> _onSelectConversation(
@@ -35,6 +42,11 @@ class MessengerBloc extends Bloc<MessengerEvent, MessengerState> {
             ? event.params["selectedConversation"]
             : ClientConversationModel();
     if (!isClosed) {
+      SocketClient.socket!.emit("join", {
+        jsonEncode({
+          "conversationId": selectedConversation.conversation!.conversationId,
+        })
+      });
       emit(state.copyWith(
         messageState: BlocState.loading,
       ));
@@ -57,7 +69,7 @@ class MessengerBloc extends Bloc<MessengerEvent, MessengerState> {
           emit(state.copyWith(
             messageState: BlocState.noData,
             selectedConversation: selectedConversation,
-            clientMessageModel: ClientMessageModel(),
+            messages: [],
           ));
         }
       }
@@ -65,34 +77,70 @@ class MessengerBloc extends Bloc<MessengerEvent, MessengerState> {
   }
 
   Future<void> _onLoadMessages(OnLoadMessage event, Emitter emit) async {
-    int conversationId = event.params.containsKey("conversationId")
-        ? event.params["conversationId"]
-        : 0;
-    BlocState? messageState = event.params["messageState"];
-    if (conversationId == 0) {
-      if (!isClosed) {
-        emit(state.copyWith(
-          messageState: BlocState.loadFailed,
-          msg: "CONVERSATION_NOT_FOUND",
-        ));
+    if (UserRepository.userModel.isManager) {
+      int conversationId = event.params.containsKey("conversationId")
+          ? event.params["conversationId"]
+          : 0;
+      BlocState? messageState = event.params["messageState"];
+      if (conversationId == 0) {
+        if (!isClosed) {
+          emit(state.copyWith(
+            messageState: BlocState.loadFailed,
+            msg: "CONVERSATION_NOT_FOUND",
+          ));
+        }
+      } else {
+        if (!isClosed) {
+          emit(state.copyWith(
+            messageState: messageState ?? BlocState.loading,
+          ));
+          ResultModel result = await Api.requestDetailConversation(
+            conversationId: conversationId,
+            tagRequest: tagRequestMessages,
+          );
+          if (result.isSuccess) {
+            ClientMessageModel clientMessageModel =
+                ClientMessageModel.fromJson(result.data);
+            emit(state.copyWith(
+              messages:
+                  MessageDetailModel.parseListItem(result.data["allMessage"]),
+              messageState: clientMessageModel.messages.isEmpty
+                  ? BlocState.noData
+                  : BlocState.loadCompleted,
+            ));
+          } else {
+            emit(state.copyWith(
+              messageState: BlocState.loadFailed,
+              msg: result.message,
+            ));
+          }
+        }
       }
-    } else {
+    } else if (UserRepository.userModel.isClient) {
+      BlocState? messageState = event.params["messageState"];
       if (!isClosed) {
         emit(state.copyWith(
           messageState: messageState ?? BlocState.loading,
         ));
-        ResultModel result = await Api.requestDetailConversation(
-          conversationId: conversationId,
+        ResultModel result = await Api.requestClientMessage(
           tagRequest: tagRequestMessages,
         );
         if (result.isSuccess) {
-          ClientMessageModel clientMessageModel =
-              ClientMessageModel.fromJson(result.data);
+          List<MessageDetailModel> messages =
+              MessageDetailModel.parseListItem(result.data["allMessage"]);
+          if (!isClientJoinedToSocket) {
+            isClientJoinedToSocket = true;
+            SocketClient.socket!.emit("join", {
+              jsonEncode({
+                "conversationId": messages.first.conversationId,
+              })
+            });
+          }
+
           emit(state.copyWith(
-            clientMessageModel: clientMessageModel,
-            messageState: clientMessageModel.messages.isEmpty
-                ? BlocState.noData
-                : BlocState.loadCompleted,
+            messages: messages,
+            messageState:
+                messages.isEmpty ? BlocState.noData : BlocState.loadCompleted,
           ));
         } else {
           emit(state.copyWith(
@@ -117,7 +165,7 @@ class MessengerBloc extends Bloc<MessengerEvent, MessengerState> {
         List<ClientConversationModel> clientConversationModel =
             ClientConversationModel.parseListItem(result.data["conversations"]);
         emit(state.copyWith(
-          clientConversationModel: clientConversationModel,
+          conversations: clientConversationModel,
           conversationState: clientConversationModel.isEmpty
               ? BlocState.noData
               : BlocState.loadCompleted,
@@ -169,19 +217,30 @@ class MessengerBloc extends Bloc<MessengerEvent, MessengerState> {
         sendMessageState: BlocState.loading,
       ));
       ResultModel result = await Api.requestCreateMessage(
-        conversationId:
-            state.selectedConversation!.conversation!.conversationId,
+        conversationId: UserRepository.userModel.isClient
+            ? state.messages.first.conversationId
+            : state.selectedConversation!.conversation!.conversationId,
         content: content,
         tagRequest: tagRequestSendMessage,
       );
       if (result.isSuccess) {
+        SocketClient.socket!.emit('send-message', {
+          jsonEncode({
+            "conversationId": UserRepository.userModel.isClient
+                ? state.messages.first.conversationId
+                : state.selectedConversation!.conversation!.conversationId,
+            "senderId": UserRepository.userModel.userId,
+            "message": content,
+          })
+        });
         emit(state.copyWith(
           sendMessageState: BlocState.loadCompleted,
           msg: result.message,
         ));
         add(OnLoadMessage(params: {
-          "conversationId":
-              state.selectedConversation!.conversation!.conversationId,
+          "conversationId": UserRepository.userModel.isClient
+              ? state.messages.first.conversationId
+              : state.selectedConversation!.conversation!.conversationId,
           "messageState": BlocState.loadingSilent,
         }));
       } else {
@@ -190,6 +249,20 @@ class MessengerBloc extends Bloc<MessengerEvent, MessengerState> {
           msg: result.message,
         ));
       }
+    }
+  }
+
+  void _onReceiveMessageFromSocket(
+      OnReceiveMessageFromSocket event, Emitter emit) {
+    if (!isClosed) {
+      emit(state.copyWith(messageState: BlocState.loadingSilent));
+      MessageDetailModel message = event.params.containsKey("message")
+          ? event.params["message"]
+          : MessageDetailModel();
+      emit(state.copyWith(
+        messageState: BlocState.loadCompleted,
+        messages: [...state.messages, message],
+      ));
     }
   }
 

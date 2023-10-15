@@ -4,7 +4,8 @@ class MessengerState extends Equatable {
   final ClientConversationModel? selectedConversation;
   final List<ClientConversationModel> conversations; // conversation list
   final BlocState conversationState;
-  final ClientMessageModel? messages; // message list of selectedConversation
+  final List<MessageDetailModel>
+      messages; // message list of selectedConversation
   final BlocState messageState;
   final BlocState acceptMessageSate;
   final BlocState sendMessageState;
@@ -14,7 +15,7 @@ class MessengerState extends Equatable {
     this.selectedConversation,
     this.conversations = const [],
     this.conversationState = BlocState.init,
-    this.messages,
+    this.messages = const [],
     this.messageState = BlocState.init,
     this.acceptMessageSate = BlocState.init,
     this.sendMessageState = BlocState.init,
@@ -23,9 +24,9 @@ class MessengerState extends Equatable {
 
   MessengerState copyWith({
     ClientConversationModel? selectedConversation,
-    List<ClientConversationModel>? clientConversationModel,
+    List<ClientConversationModel>? conversations,
     BlocState? conversationState,
-    ClientMessageModel? clientMessageModel,
+    List<MessageDetailModel>? messages,
     BlocState? messageState,
     BlocState? acceptMessageSate,
     BlocState? sendMessageState,
@@ -33,9 +34,9 @@ class MessengerState extends Equatable {
   }) {
     return MessengerState(
       selectedConversation: selectedConversation ?? this.selectedConversation,
-      conversations: clientConversationModel ?? this.conversations,
+      conversations: conversations ?? this.conversations,
       conversationState: conversationState ?? this.conversationState,
-      messages: clientMessageModel ?? this.messages,
+      messages: messages ?? this.messages,
       messageState: messageState ?? this.messageState,
       acceptMessageSate: acceptMessageSate ?? this.acceptMessageSate,
       sendMessageState: sendMessageState ?? this.sendMessageState,

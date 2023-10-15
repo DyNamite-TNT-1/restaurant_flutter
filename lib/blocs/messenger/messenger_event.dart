@@ -32,3 +32,8 @@ class OnSendMessage extends MessengerEvent {
   const OnSendMessage({required Map<String, dynamic> params})
       : super(params: params);
 }
+
+class OnReceiveMessageFromSocket extends MessengerEvent {
+  const OnReceiveMessageFromSocket({required Map<String, dynamic> params})
+      : super(params: params);
+}

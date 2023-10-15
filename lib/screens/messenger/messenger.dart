@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -30,12 +32,21 @@ class _MessengerScreenState extends State<MessengerScreen> {
 
   @override
   void initState() {
+    _addSocketListener();
     _onRefresh();
     super.initState();
   }
 
   bool get isServiceClosed {
     return !mounted || messengerBloc.isClosed;
+  }
+
+  _addSocketListener() {
+    SocketClient.socket!.on('receiver-message', (data) {
+      Map<String, dynamic> messageData = data as Map<String, dynamic>;
+      messengerBloc.add(OnReceiveMessageFromSocket(
+          params: {"message": MessageDetailModel.fromJson(messageData)}));
+    });
   }
 
   @override
@@ -48,8 +59,8 @@ class _MessengerScreenState extends State<MessengerScreen> {
     if (!isServiceClosed) {
       if (UserRepository.userModel.isManager) {
         messengerBloc.add(OnLoadConversation(params: const {}));
-      } else {
-        
+      } else if (UserRepository.userModel.isClient) {
+        messengerBloc.add(OnLoadMessage(params: const {}));
       }
     }
   }
@@ -58,6 +69,21 @@ class _MessengerScreenState extends State<MessengerScreen> {
     BuildContext context,
   ) {
     MessengerState state = messengerBloc.state;
+    final String name = UserRepository.userModel.isManager
+        ? state.selectedConversation?.user?.userName ?? "User Name"
+        : "Firestaurant";
+    final Widget avatar = UserRepository.userModel.isManager
+        ? Text(
+            "LĐ",
+            style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                // fontSize: 16,
+                ),
+          )
+        : Image.asset(
+            Images.logoAppNoBg,
+            width: 50,
+            height: 50,
+          );
     return Container(
       padding: EdgeInsets.all(kPadding10),
       child: Row(
@@ -66,30 +92,33 @@ class _MessengerScreenState extends State<MessengerScreen> {
           Row(
             children: [
               Container(
-                height: 40,
-                width: 40,
+                height: 50,
+                width: 50,
                 decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(50),
                     border: Border.all(
-                      color: Colors.white,
+                      color: primaryColor,
                       width: 1.5,
                     ),
-                    color: Colors.amber),
+                    color: UserRepository.userModel.isClient
+                        ? null
+                        : Colors.amber),
                 child: Center(
-                  child: Text("LĐ"),
+                  child: avatar,
                 ),
               ),
               SizedBox(
                 width: kPadding10,
               ),
               Text(
-                state.selectedConversation?.user?.userName ?? "User Name",
+                name,
                 style: Theme.of(context).textTheme.bodyLarge,
               ),
             ],
           ),
-          if (!(state.selectedConversation?.conversation?.acceptManager ??
-              false))
+          if (UserRepository.userModel.isManager &&
+              !(state.selectedConversation?.conversation?.acceptManager ??
+                  false))
             Row(
               children: [
                 Text("Chấp nhận tin nhắn?"),
@@ -267,16 +296,13 @@ class _MessengerScreenState extends State<MessengerScreen> {
                                                 : ListView.builder(
                                                     reverse: true,
                                                     shrinkWrap: true,
-                                                    itemCount: state.messages
-                                                            ?.messages.length ??
-                                                        0,
+                                                    itemCount:
+                                                        state.messages.length,
                                                     itemBuilder:
                                                         (context, index) {
                                                       final MessageDetailModel
                                                           message = state
-                                                              .messages!
-                                                              .messages
-                                                              .reversed
+                                                              .messages.reversed
                                                               .toList()[index];
                                                       return MessageItem(
                                                           message: message);

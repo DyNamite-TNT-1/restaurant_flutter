@@ -30,8 +30,9 @@ class MessageDetailModel {
       content: ParseTypeData.ensureString(json["content"]),
       createdAt: ParseTypeData.ensureString(json["createdAt"]),
       updatedAt: ParseTypeData.ensureString(json["updatedAt"]),
-      user: UserModel.fromJson(json["User"]),
-      conversation: ConversationDetailModel.fromJson(json["Conversation"]),
+      user: UserModel.fromJson(json["User"] ?? {}),
+      conversation:
+          ConversationDetailModel.fromJson(json["Conversation"] ?? {}),
     );
   }
 
