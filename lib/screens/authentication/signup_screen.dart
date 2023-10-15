@@ -196,7 +196,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
             height: double.infinity,
             width: double.infinity,
             child: Image.asset(
-              Images.backgroundLogin,
+              AssetImages.backgroundLogin,
               fit: BoxFit.cover,
             ),
           ),
@@ -205,7 +205,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
             top: 80,
             bottom: 80,
             child: Image.asset(
-              Images.logoAppDarkMode,
+              AssetImages.logoAppDarkMode,
               height: 300,
               width: 300,
             ),

@@ -47,7 +47,7 @@ class _SearchComponentState extends State<SearchComponent> {
       decoration: InputDecoration(
         contentPadding: const EdgeInsets.symmetric(vertical: 0),
         prefixIcon: SvgPicture.asset(
-          Images.icSearch,
+          AssetImages.icSearch,
           width: 30,
           height: 30,
           fit: BoxFit.scaleDown,
@@ -66,7 +66,7 @@ class _SearchComponentState extends State<SearchComponent> {
               child: IconButton(
                 splashRadius: 24,
                 icon: SvgPicture.asset(
-                  Images.icClear,
+                  AssetImages.icClear,
                   width: 24,
                   height: 24,
                   fit: BoxFit.scaleDown,
@@ -88,7 +88,7 @@ class _SearchComponentState extends State<SearchComponent> {
               child: IconButton(
                 splashRadius: 24,
                 icon: SvgPicture.asset(
-                  Images.icChecked,
+                  AssetImages.icChecked,
                   width: 24,
                   height: 24,
                   fit: BoxFit.scaleDown,

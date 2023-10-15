@@ -71,7 +71,7 @@ class _LoginScreenState extends State<LoginScreen> {
       children: [
         Expanded(
           child: Image.asset(
-            Images.logoAppNoBg,
+            AssetImages.logoAppNoBg,
           ),
         ),
         SizedBox(

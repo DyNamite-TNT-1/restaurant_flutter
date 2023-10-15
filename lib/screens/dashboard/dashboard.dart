@@ -11,10 +11,10 @@ class Dashboard extends StatefulWidget {
 
 class _DashboardState extends State<Dashboard> {
   List<String> images = [
-    Images.logoApp,
-    Images.slider1,
-    Images.logoAppDarkMode,
-    Images.slider2,
+    AssetImages.logoApp,
+    AssetImages.slider1,
+    AssetImages.logoAppDarkMode,
+    AssetImages.slider2,
   ];
 
   @override

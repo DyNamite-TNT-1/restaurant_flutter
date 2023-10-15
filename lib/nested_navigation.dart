@@ -187,7 +187,7 @@ class _ScaffoldWithNavigationRailState extends State<ScaffoldWithNavigationRail>
                         NavigationRailDestination(
                           label: Text('Món ăn'),
                           icon: SvgPicture.asset(
-                            Images.icForkKnife,
+                            AssetImages.icForkKnife,
                             height: 20,
                             colorFilter: ColorFilter.mode(
                               widget.selectedIndex == 1 ? blueColor : textColor,
@@ -198,7 +198,7 @@ class _ScaffoldWithNavigationRailState extends State<ScaffoldWithNavigationRail>
                         NavigationRailDestination(
                           label: Text('Đồ uống'),
                           icon: SvgPicture.asset(
-                            Images.icDrink,
+                            AssetImages.icDrink,
                             height: 20,
                             colorFilter: ColorFilter.mode(
                               widget.selectedIndex == 2 ? blueColor : textColor,
@@ -209,7 +209,7 @@ class _ScaffoldWithNavigationRailState extends State<ScaffoldWithNavigationRail>
                         NavigationRailDestination(
                           label: Text('Dịch vụ'),
                           icon: SvgPicture.asset(
-                            Images.icMicro,
+                            AssetImages.icMicro,
                             height: 20,
                             colorFilter: ColorFilter.mode(
                               widget.selectedIndex == 3 ? blueColor : textColor,
@@ -220,7 +220,7 @@ class _ScaffoldWithNavigationRailState extends State<ScaffoldWithNavigationRail>
                         NavigationRailDestination(
                           label: Text('Lịch sử'),
                           icon: SvgPicture.asset(
-                            Images.icAvailableCalendar,
+                            AssetImages.icAvailableCalendar,
                             height: 20,
                             colorFilter: ColorFilter.mode(
                               widget.selectedIndex == 4 ? blueColor : textColor,

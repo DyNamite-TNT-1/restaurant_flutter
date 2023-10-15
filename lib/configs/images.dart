@@ -1,4 +1,4 @@
-class Images {
+class AssetImages {
   static const String logoApp = "assets/images/logo_website.png";
   static const String logoAppNoBg = "assets/images/logo_website_nobg.png";
   static const String miniLogoApp = "assets/images/mini_logo_website_nobg.png";
@@ -24,14 +24,14 @@ class Images {
   static const String icSearch = "assets/images/ic_search.svg";
   static const String icChecked = "assets/images/ic_checked.svg";
   static const String icClear = "assets/images/ic_clear.svg";
-
+  static const String noAvatarUser = "assets/images/no_avatar_user.svg";
 
   ///Singleton factory
-  static final Images _instance = Images._internal();
+  static final AssetImages _instance = AssetImages._internal();
 
-  factory Images() {
+  factory AssetImages() {
     return _instance;
   }
 
-  Images._internal();
+  AssetImages._internal();
 }

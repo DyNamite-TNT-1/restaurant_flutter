@@ -9,17 +9,14 @@ class NoDataFoundView extends StatelessWidget {
   Widget build(BuildContext context) {
     return SizedBox(
       width: double.infinity,
-      height: 300,
+      height: 250,
       child: Center(
         child: Column(
           children: [
             Image.asset(
-              Images.noDataFound,
+              AssetImages.noDataFound,
               height: 200,
               width: 200,
-            ),
-            SizedBox(
-              height: kDefaultPadding,
             ),
             Text(
               message,

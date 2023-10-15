@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -76,13 +77,12 @@ class _MessengerScreenState extends State<MessengerScreen> {
         ? Text(
             "LĐ",
             style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                // fontSize: 16,
+                  color: Colors.white,
                 ),
           )
         : Image.asset(
-            Images.logoAppNoBg,
-            width: 50,
-            height: 50,
+            AssetImages.logoAppNoBg,
+            fit: BoxFit.fill,
           );
     return Container(
       padding: EdgeInsets.all(kPadding10),
@@ -95,14 +95,21 @@ class _MessengerScreenState extends State<MessengerScreen> {
                 height: 50,
                 width: 50,
                 decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(50),
-                    border: Border.all(
-                      color: primaryColor,
-                      width: 1.5,
-                    ),
-                    color: UserRepository.userModel.isClient
-                        ? null
-                        : Colors.amber),
+                  borderRadius: BorderRadius.circular(50),
+                  // border: Border.all(
+                  //   color: primaryColor,
+                  //   width: 1.5,
+                  // ),
+                  gradient: UserRepository.userModel.isClient
+                      ? null
+                      : LinearGradient(
+                          begin: Alignment.topLeft,
+                          colors: <Color>[
+                            ...gradients[Random().nextInt(gradients.length)],
+                          ],
+                          tileMode: TileMode.mirror,
+                        ),
+                ),
                 child: Center(
                   child: avatar,
                 ),
@@ -290,7 +297,8 @@ class _MessengerScreenState extends State<MessengerScreen> {
                                                 ? Padding(
                                                     padding:
                                                         const EdgeInsets.all(
-                                                            kDefaultPadding),
+                                                            kDefaultPadding /
+                                                                2),
                                                     child: NoDataFoundView(),
                                                   )
                                                 : ListView.builder(

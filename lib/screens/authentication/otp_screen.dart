@@ -133,7 +133,7 @@ class _OtpScreenState extends State<OtpScreen> {
             height: double.infinity,
             width: double.infinity,
             child: Image.asset(
-              Images.backgroundLogin,
+              AssetImages.backgroundLogin,
               fit: BoxFit.cover,
             ),
           ),
@@ -147,7 +147,7 @@ class _OtpScreenState extends State<OtpScreen> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Image.asset(
-                  Images.logoAppDarkModeNoBg,
+                  AssetImages.logoAppDarkModeNoBg,
                   height: 400,
                   width: 400,
                 ),

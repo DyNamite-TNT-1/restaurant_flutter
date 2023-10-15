@@ -43,7 +43,7 @@ class _AppCeilingState extends State<AppCeiling> {
           width: kDefaultPadding,
         ),
         Image.asset(
-          Images.miniLogoAppNoBg,
+          AssetImages.miniLogoAppNoBg,
           height: 80,
           width: 100,
         ),

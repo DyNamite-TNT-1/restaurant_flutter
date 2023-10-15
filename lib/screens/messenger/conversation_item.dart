@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:restaurant_flutter/configs/configs.dart';
 import 'package:restaurant_flutter/models/client/client_conversation.dart';
@@ -26,14 +28,24 @@ class _ConversationItemState extends State<ConversationItem> {
             height: 40,
             width: 40,
             decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(50),
-                border: Border.all(
-                  color: Colors.white,
-                  width: 1.5,
-                ),
-                color: Colors.amber),
+              borderRadius: BorderRadius.circular(50),
+              gradient: UserRepository.userModel.isClient
+                  ? null
+                  : LinearGradient(
+                      begin: Alignment.topCenter,
+                      colors: <Color>[
+                        ...gradients[Random().nextInt(gradients.length)]
+                      ],
+                      tileMode: TileMode.mirror,
+                    ),
+            ),
             child: Center(
-              child: Text("LĐ"),
+              child: Text(
+                "LĐ",
+                style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                      color: Colors.white,
+                    ),
+              ),
             ),
           ),
           Expanded(

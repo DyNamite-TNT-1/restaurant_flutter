@@ -1,7 +1,8 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:restaurant_flutter/configs/configs.dart';
-import 'package:restaurant_flutter/configs/user_repository.dart';
 import 'package:restaurant_flutter/models/service/message.dart';
 import 'package:restaurant_flutter/utils/utils.dart';
 
@@ -32,14 +33,14 @@ class _MessageItemState extends State<MessageItem> {
     final Widget avatar = UserRepository.userModel.isManager
         ? Text(
             "LĐ",
-            style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                // fontSize: 16,
+            textAlign: TextAlign.center,
+            style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                  color: Colors.white,
                 ),
           )
         : Image.asset(
-            Images.logoAppNoBg,
-            width: 50,
-            height: 50,
+            AssetImages.logoAppNoBg,
+            fit: BoxFit.fill,
           );
     return Padding(
       padding: const EdgeInsets.only(
@@ -54,16 +55,20 @@ class _MessageItemState extends State<MessageItem> {
         children: [
           if (!isMe)
             Container(
-              height: 50,
-              width: 50,
+              height: 30,
+              width: 30,
               decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(50),
-                  border: Border.all(
-                    color: primaryColor,
-                    width: 1.5,
-                  ),
-                  color:
-                      UserRepository.userModel.isClient ? null : Colors.amber),
+                borderRadius: BorderRadius.circular(50),
+                gradient: UserRepository.userModel.isClient
+                    ? null
+                    : LinearGradient(
+                        begin: Alignment.topLeft,
+                        colors: <Color>[
+                          ...gradients[Random().nextInt(gradients.length)],
+                        ],
+                        tileMode: TileMode.mirror,
+                      ),
+              ),
               child: Center(
                 child: avatar,
               ),
