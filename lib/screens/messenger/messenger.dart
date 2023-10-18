@@ -34,7 +34,6 @@ class _MessengerScreenState extends State<MessengerScreen> {
   @override
   void initState() {
     _addSocketListener();
-    _onRefresh();
     super.initState();
   }
 

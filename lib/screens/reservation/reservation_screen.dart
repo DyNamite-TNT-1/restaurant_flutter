@@ -27,7 +27,6 @@ class _ReservationScreenState extends State<ReservationScreen> {
   @override
   void initState() {
     super.initState();
-    _requestReservationList();
   }
 
   @override
