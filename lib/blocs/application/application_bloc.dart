@@ -1,7 +1,8 @@
+import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:restaurant_flutter/blocs/app_bloc.dart';
 import 'package:restaurant_flutter/blocs/bloc.dart';
-import 'package:restaurant_flutter/configs/application.dart';
+import 'package:restaurant_flutter/blocs/language/language_bloc.dart';
 import 'package:restaurant_flutter/configs/configs.dart';
 
 class ApplicationBloc extends Bloc<ApplicationEvent, ApplicationState> {
@@ -24,16 +25,16 @@ class ApplicationBloc extends Bloc<ApplicationEvent, ApplicationState> {
     ///Get old Theme & Font & Language
     // final oldTheme = UserPreferences.getTheme() ?? AppTheme.currentTheme;
     // final oldFont = UserPreferences.getFont() ?? AppTheme.currentFont;
-    // final oldLanguage = UserPreferences.getLanguage();
+    final oldLanguage = UserPreferences.getLanguage();
     // final oldDarkOption =
     //     UserPreferences.getDarkOptions() ?? DarkOption.alwaysOff;
 
-    ///Setup Language
-    // if (oldLanguage != null) {
-    //   AppBloc.languageBloc.add(
-    //     OnChangeLanguage(Locale(oldLanguage)),
-    //   );
-    // }
+    // Setup Language
+    if (oldLanguage != null) {
+      AppBloc.languageBloc.add(
+        OnChangeLanguage(Locale(oldLanguage)),
+      );
+    }
 
     // DarkOption darkOption;
 

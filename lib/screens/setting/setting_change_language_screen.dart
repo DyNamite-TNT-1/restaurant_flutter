@@ -3,7 +3,6 @@ import 'package:flutter/services.dart';
 import 'package:restaurant_flutter/blocs/app_bloc.dart';
 import 'package:restaurant_flutter/blocs/language/language_bloc.dart';
 import 'package:restaurant_flutter/configs/configs.dart';
-import 'package:restaurant_flutter/utils/translate.dart';
 import 'package:restaurant_flutter/utils/utils.dart';
 
 import '../../widgets/widgets.dart';

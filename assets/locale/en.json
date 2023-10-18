@@ -10,5 +10,16 @@
   "LOGIN_E001": "Account does not exist",
   "VALIDATE_DATE_E001": "Do not select date in the past",
   "VALIDATE_TIME_E001": "Do not choose a time in the past",
-  "MENU_EMPTY_E001": "Your menu is empty"
+  "MENU_EMPTY_E001": "Your menu is empty",
+
+  "booking": "Booking",
+  "sign_in": "Sign In",
+  "dashboard": "Dashboard",
+  "dish": "Dish",
+  "drink": "Drink",
+  "service": "Service",
+  "history": "History",
+
+  "Change Language": "Change Language",
+  "Apply": "Apply"
 }

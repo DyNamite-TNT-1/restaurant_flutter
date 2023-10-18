@@ -10,5 +10,16 @@
   "LOGIN_E001": "Tài khoản không tồn tại",
   "VALIDATE_DATE_E001": "Không được chọn ngày trong quá khứ",
   "VALIDATE_TIME_E001": "Không được chọn thời gian trong quá khứ",
-  "MENU_EMPTY_E001": "Menu của bạn đang trống"
+  "MENU_EMPTY_E001": "Menu của bạn đang trống",
+
+  "booking": "Đặt bàn",
+  "sign_in": "Đăng nhập",
+  "dashboard": "Trang chủ",
+  "dish": "Món ăn",
+  "drink": "Đồ uống",
+  "service": "Dịch vụ",
+  "history": "Lịch sử",
+
+  "Change Language": "Thay đổi ngôn ngữ",
+  "Apply": "Áp dụng"
 }

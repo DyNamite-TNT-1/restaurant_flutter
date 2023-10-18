@@ -5,6 +5,7 @@ import 'package:restaurant_flutter/app_ceiling.dart';
 import 'package:restaurant_flutter/configs/configs.dart';
 import 'package:restaurant_flutter/screens/messenger/messenger.dart';
 import 'package:restaurant_flutter/screens/reservation_tab/reservation_tab.dart';
+import 'package:restaurant_flutter/utils/utils.dart';
 
 class ScaffoldWithNestedNavigation extends StatelessWidget {
   const ScaffoldWithNestedNavigation({
@@ -181,11 +182,11 @@ class _ScaffoldWithNavigationRailState extends State<ScaffoldWithNavigationRail>
                       backgroundColor: backgroundColor,
                       destinations: <NavigationRailDestination>[
                         NavigationRailDestination(
-                          label: Text('Trang chủ'),
+                          label: Text(Translate.of(context).translate("dashboard")),
                           icon: Icon(Icons.home),
                         ),
                         NavigationRailDestination(
-                          label: Text('Món ăn'),
+                          label: Text(Translate.of(context).translate("dish")),
                           icon: SvgPicture.asset(
                             AssetImages.icForkKnife,
                             height: 20,
@@ -196,7 +197,7 @@ class _ScaffoldWithNavigationRailState extends State<ScaffoldWithNavigationRail>
                           ),
                         ),
                         NavigationRailDestination(
-                          label: Text('Đồ uống'),
+                          label: Text(Translate.of(context).translate("drink")),
                           icon: SvgPicture.asset(
                             AssetImages.icDrink,
                             height: 20,
@@ -207,7 +208,7 @@ class _ScaffoldWithNavigationRailState extends State<ScaffoldWithNavigationRail>
                           ),
                         ),
                         NavigationRailDestination(
-                          label: Text('Dịch vụ'),
+                          label: Text(Translate.of(context).translate("service")),
                           icon: SvgPicture.asset(
                             AssetImages.icMicro,
                             height: 20,
@@ -218,7 +219,7 @@ class _ScaffoldWithNavigationRailState extends State<ScaffoldWithNavigationRail>
                           ),
                         ),
                         NavigationRailDestination(
-                          label: Text('Lịch sử'),
+                          label: Text(Translate.of(context).translate("history")),
                           icon: SvgPicture.asset(
                             AssetImages.icAvailableCalendar,
                             height: 20,

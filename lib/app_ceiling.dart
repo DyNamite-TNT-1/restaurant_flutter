@@ -3,9 +3,9 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:restaurant_flutter/blocs/bloc.dart';
 import 'package:restaurant_flutter/configs/configs.dart';
-import 'package:restaurant_flutter/configs/user_repository.dart';
 import 'package:restaurant_flutter/routes/route_constants.dart';
 import 'package:restaurant_flutter/screens/authentication/login_screen.dart';
+import 'package:restaurant_flutter/utils/utils.dart';
 import 'package:restaurant_flutter/widgets/app_button.dart';
 
 class AppCeiling extends StatefulWidget {
@@ -59,13 +59,14 @@ class _AppCeilingState extends State<AppCeiling> {
         IntrinsicHeight(
           child: Row(
             children: [
-              AppButton(
-                "Đặt bàn",
-                type: ButtonType.normal,
-                onPressed: () {
-                  widget.onTapReservation();
-                },
-              ),
+              if (!UserRepository.userModel.isManager)
+                AppButton(
+                  Translate.of(context).translate("booking"),
+                  type: ButtonType.normal,
+                  onPressed: () {
+                    widget.onTapReservation();
+                  },
+                ),
               VerticalDivider(
                 width: 20,
                 thickness: 1,
@@ -75,7 +76,7 @@ class _AppCeilingState extends State<AppCeiling> {
               ),
               (authState is! AuthenticationSuccess)
                   ? AppButton(
-                      "Đăng nhập",
+                      Translate.of(context).translate("sign_in"),
                       type: ButtonType.outline,
                       onPressed: () {
                         _openLoginDialog();

@@ -79,39 +79,55 @@ class _LoginScreenState extends State<LoginScreen> {
   }
 
   Widget _buildError(BuildContext context) {
-    return Stack(
-      children: [
-        Container(
-          margin: EdgeInsets.symmetric(
-              vertical: kPadding10, horizontal: kDefaultPadding),
-          padding: EdgeInsets.all(kPadding10),
-          decoration: BoxDecoration(
-            color: Color(0XFFFF4444).withOpacity(0.8),
-            borderRadius: BorderRadius.circular(kCornerNormal),
-            border: Border.all(
-              color: Color(0XFFFF4444),
+    return Container(
+      margin: EdgeInsets.symmetric(
+        vertical: kPadding10,
+      ),
+      padding: EdgeInsets.symmetric(
+        horizontal: kPadding10,
+      ),
+      decoration: BoxDecoration(
+        color: Color(0XFFFF4444).withOpacity(0.8),
+        borderRadius: BorderRadius.circular(kCornerNormal),
+        border: Border.all(
+          color: Color(0XFFFF4444),
+        ),
+      ),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          Expanded(
+            child: Center(
+              child: Text(
+                errorText,
+                maxLines: 2,
+                style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                      color: Colors.white,
+                    ),
+              ),
             ),
           ),
-          child: Center(
-            child: Text(
-              errorText,
-              maxLines: 2,
-              style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                    color: Colors.white,
-                  ),
+          Material(
+            color: Colors.transparent,
+            child: InkWell(
+              borderRadius: BorderRadius.circular(kCornerLarge),
+              onTap: () {
+                setState(() {
+                  showErrorText = false;
+                  errorText = "";
+                });
+              },
+              child: Padding(
+                padding: const EdgeInsets.all(kPadding10 / 2),
+                child: Icon(
+                  Icons.close,
+                  color: Colors.white,
+                ),
+              ),
             ),
           ),
-        ),
-        IconButton(
-          onPressed: () {
-            setState(() {
-              showErrorText = false;
-              errorText = "";
-            });
-          },
-          icon: Icon(Icons.close),
-        ),
-      ],
+        ],
+      ),
     );
   }
 
