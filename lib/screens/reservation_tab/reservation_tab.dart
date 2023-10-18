@@ -73,7 +73,7 @@ class _ReservationTabState extends State<ReservationTab>
   Future<void> _requestMakeReservation(BuildContext context) async {
     if (!AppBloc.uiBloc.state.canMakeReservation()) {
       Fluttertoast.showToast(
-        msg: "Bạn chưa chọn món!",
+        msg: Translate.of(context).translate("MENU_EMPTY_E001"),
         toastLength: Toast.LENGTH_SHORT,
         gravity: ToastGravity.CENTER,
         timeInSecForIosWeb: 1,
@@ -105,6 +105,18 @@ class _ReservationTabState extends State<ReservationTab>
         reservation.reservationId,
       );
       // AppBloc.uiBloc.add(OnReservationSuccess(params: const {}));
+    } else if (mounted) {
+      Fluttertoast.showToast(
+        msg: result.message,
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.CENTER,
+        timeInSecForIosWeb: 1,
+        backgroundColor: primaryColor,
+        textColor: Colors.white,
+        fontSize: 16.0,
+        webBgColor: dangerColorToast,
+      );
+      return;
     }
   }
 
@@ -211,6 +223,17 @@ class _ReservationTabState extends State<ReservationTab>
       confirmText: 'Xác nhận',
       cancelText: 'Thoát',
     );
+    if (mounted && picked != null && picked.isBefore(scheduleDate)) {
+      Fluttertoast.showToast(
+        msg: Translate.of(context).translate("VALIDATE_DATE_E001"),
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.CENTER,
+        timeInSecForIosWeb: 1,
+        webBgColor: dangerColorToast,
+        webShowClose: true,
+      );
+      return;
+    }
     if (picked != null && picked != scheduleDate) {
       setState(() {
         scheduleDate = picked;
@@ -226,10 +249,26 @@ class _ReservationTabState extends State<ReservationTab>
       confirmText: "Xác nhận",
       helpText: "Chọn giờ",
     );
-    if (picked != null && picked != scheduleHour) {
-      setState(() {
-        scheduleHour = picked;
-      });
+    if (mounted && picked != null) {
+      if (scheduleDate.isSameDate(DateTime.now())) {
+        if (picked.hour + picked.minute / 60.0 <
+            DateTime.now().hour + DateTime.now().minute / 60.0) {
+          Fluttertoast.showToast(
+            msg: Translate.of(context).translate("VALIDATE_TIME_E001"),
+            toastLength: Toast.LENGTH_SHORT,
+            gravity: ToastGravity.CENTER,
+            timeInSecForIosWeb: 1,
+            webBgColor: dangerColorToast,
+            webShowClose: true,
+          );
+          return;
+        }
+      }
+      if (picked != scheduleHour) {
+        setState(() {
+          scheduleHour = picked;
+        });
+      }
     }
   }
 

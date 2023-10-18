@@ -7,5 +7,8 @@
   "VALIDATE_PEOPLE_E002": "Số người >= 0",
   "VALIDATE_NUMBER_E001": "Chỉ được nhập số",
   "LOGIN_SUCCESS": "Đăng nhập thành công",
-  "LOGIN_E001": "Tài khoản không tồn tại"
+  "LOGIN_E001": "Tài khoản không tồn tại",
+  "VALIDATE_DATE_E001": "Không được chọn ngày trong quá khứ",
+  "VALIDATE_TIME_E001": "Không được chọn thời gian trong quá khứ",
+  "MENU_EMPTY_E001": "Menu của bạn đang trống"
 }
