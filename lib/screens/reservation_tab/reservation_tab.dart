@@ -71,20 +71,6 @@ class _ReservationTabState extends State<ReservationTab>
   }
 
   Future<void> _requestMakeReservation(BuildContext context) async {
-    if (!AppBloc.uiBloc.state.canMakeReservation()) {
-      Fluttertoast.showToast(
-        msg: Translate.of(context).translate("MENU_EMPTY_E001"),
-        toastLength: Toast.LENGTH_SHORT,
-        gravity: ToastGravity.CENTER,
-        timeInSecForIosWeb: 1,
-        backgroundColor: primaryColor,
-        textColor: Colors.white,
-        fontSize: 16.0,
-        webBgColor: dangerColorToast,
-      );
-      return;
-    }
-
     ResultModel result = await Api.requestCreateReservation(
       dishes: AppBloc.uiBloc.state.dishes,
       drinks: AppBloc.uiBloc.state.drinks,
@@ -590,14 +576,6 @@ class _ReservationTabState extends State<ReservationTab>
                     "Đồ uống",
                     style: Theme.of(context).textTheme.bodyLarge,
                   ),
-                  // Tooltip(
-                  //   message: "Thay đổi thứ tự dọn món bằng cách di chuyển món.",
-                  //   child: Icon(
-                  //     Icons.info_outline,
-                  //     size: 16,
-                  //     color: primaryColor,
-                  //   ),
-                  // ),
                 ],
               ),
               Row(
@@ -606,14 +584,6 @@ class _ReservationTabState extends State<ReservationTab>
                   Text(
                     "Dịch vụ",
                     style: Theme.of(context).textTheme.bodyLarge,
-                  ),
-                  Tooltip(
-                    message: "Chọn dịch vụ bạn muốn.",
-                    child: Icon(
-                      Icons.info_outline,
-                      size: 16,
-                      color: primaryColor,
-                    ),
                   ),
                 ],
               ),
@@ -737,6 +707,19 @@ class _ReservationTabState extends State<ReservationTab>
           AppButton(
             "Xác nhận đặt bàn",
             onPressed: () {
+              if (!AppBloc.uiBloc.state.canMakeReservation()) {
+                Fluttertoast.showToast(
+                  msg: Translate.of(context).translate("MENU_EMPTY_E001"),
+                  toastLength: Toast.LENGTH_SHORT,
+                  gravity: ToastGravity.CENTER,
+                  timeInSecForIosWeb: 1,
+                  backgroundColor: primaryColor,
+                  textColor: Colors.white,
+                  fontSize: 16.0,
+                  webBgColor: dangerColorToast,
+                );
+                return;
+              }
               if (AppBloc.authenticationBloc.state is AuthenticationSuccess) {
                 _openDialogConfirmReservation();
               } else {

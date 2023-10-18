@@ -47,11 +47,11 @@ class _LoginScreenState extends State<LoginScreen> {
       errorText = "";
       showErrorText = false;
     });
-    if (loginController.text.isEmpty) {
+    if (loginController.text.trim().isEmpty) {
       errorText = Translate.of(context).translate("VALIDATE_LOGIN_E001");
-    } else if (passwordController.text.isEmpty) {
+    } else if (passwordController.text.trim().isEmpty) {
       errorText = Translate.of(context).translate("VALIDATE_PASSWORD_E001");
-    } else if (!RegExp(r"^(?:\d{10}|\w+@\w+\.\w{2,3})$")
+    } else if (!RegExp(r"^(?:\d{10}|[\w-\.]+@([\w-]+\.)+[\w-]{2,4})$")
         .hasMatch(loginController.text)) {
       errorText = Translate.of(context).translate("VALIDATE_LOGIN_E002");
     } else if (!RegExp(r"^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z]).{6,}$")

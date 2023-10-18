@@ -4,7 +4,6 @@ import 'package:go_router/go_router.dart';
 import 'package:restaurant_flutter/api/api.dart';
 import 'package:restaurant_flutter/blocs/reservation_detail/reservation_detail_bloc.dart';
 import 'package:restaurant_flutter/configs/configs.dart';
-import 'package:restaurant_flutter/configs/user_repository.dart';
 import 'package:restaurant_flutter/enum/enum.dart';
 import 'package:restaurant_flutter/models/service/model_result_api.dart';
 import 'package:restaurant_flutter/models/service/reservation.dart';
@@ -91,9 +90,13 @@ class _ReservationDetailScreenState extends State<ReservationDetailScreen> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         _buildTopBar(context),
-                        Text(
-                          "Mã đặt bàn: #${state.reservationDetailModel!.reservationId}",
-                          style: Theme.of(context).textTheme.bodyLarge,
+                        Padding(
+                          padding:
+                              const EdgeInsets.symmetric(vertical: kPadding10),
+                          child: Text(
+                            "Mã đặt bàn: #${state.reservationDetailModel!.reservationId}",
+                            style: Theme.of(context).textTheme.bodyLarge,
+                          ),
                         ),
                         Row(
                           crossAxisAlignment: CrossAxisAlignment.start,
@@ -102,9 +105,10 @@ class _ReservationDetailScreenState extends State<ReservationDetailScreen> {
                               flex: 2,
                               child: Container(
                                 height: isOpenMenu
-                                    ? (32.0 *
-                                        state.reservationDetailModel!.menus
-                                            .length)
+                                    ? (40 +
+                                        32.0 *
+                                            state.reservationDetailModel!.menus
+                                                .length)
                                     : 40,
                                 decoration: BoxDecoration(
                                   borderRadius:
