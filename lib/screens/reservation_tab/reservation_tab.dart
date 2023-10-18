@@ -243,9 +243,23 @@ class _ReservationTabState extends State<ReservationTab>
             buttonDoneTitle: "Đồng ý",
             buttonCancelTitle: "Thoát",
             onDone: () {
+              String errorText = "";
               if (peopleController.text.isEmpty) {
+                errorText =
+                    Translate.of(context).translate("VALIDATE_PEOPLE_E001");
+              } else if (ParseTypeData.ensureInt(
+                      peopleController.text.trim()) ==
+                  0) {
+                errorText =
+                    Translate.of(context).translate("VALIDATE_PEOPLE_E002");
+              } else if (!RegExp(r"^[0-9]*$")
+                  .hasMatch(peopleController.text.trim())) {
+                errorText =
+                    Translate.of(context).translate("VALIDATE_NUMBER_E001");
+              }
+              if (errorText.isNotEmpty) {
                 Fluttertoast.showToast(
-                  msg: Translate.of(context).translate("VALIDATE_PEOPLE_E001"),
+                  msg: errorText,
                   toastLength: Toast.LENGTH_SHORT,
                   gravity: ToastGravity.CENTER,
                   timeInSecForIosWeb: 1,

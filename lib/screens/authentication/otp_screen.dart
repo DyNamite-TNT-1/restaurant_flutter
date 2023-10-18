@@ -39,6 +39,7 @@ class _OtpScreenState extends State<OtpScreen> {
         backgroundColor: primaryColor,
         textColor: Colors.white,
         fontSize: 16.0,
+        webShowClose: true,
         webBgColor: dangerColorToast,
       );
       return;
@@ -54,10 +55,11 @@ class _OtpScreenState extends State<OtpScreen> {
           msg: result.message,
           toastLength: Toast.LENGTH_SHORT,
           gravity: ToastGravity.CENTER,
-          timeInSecForIosWeb: 5,
+          timeInSecForIosWeb: 1,
           backgroundColor: primaryColor,
           textColor: Colors.white,
           fontSize: 16.0,
+          webShowClose: true,
           webBgColor: successColorToast,
         );
         setState(() {
@@ -69,10 +71,11 @@ class _OtpScreenState extends State<OtpScreen> {
         msg: result.message,
         toastLength: Toast.LENGTH_SHORT,
         gravity: ToastGravity.CENTER,
-        timeInSecForIosWeb: 5,
+        timeInSecForIosWeb: 1,
         backgroundColor: primaryColor,
         textColor: Colors.white,
         fontSize: 16.0,
+        webShowClose: true,
         webBgColor: dangerColorToast,
       );
     }

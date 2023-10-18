@@ -96,10 +96,6 @@ class _MessengerScreenState extends State<MessengerScreen> {
                 width: 50,
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(50),
-                  // border: Border.all(
-                  //   color: primaryColor,
-                  //   width: 1.5,
-                  // ),
                   gradient: UserRepository.userModel.isClient
                       ? null
                       : LinearGradient(

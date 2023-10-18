@@ -2,7 +2,10 @@ abstract class AuthenticationState {}
 
 class InitialAuthenticationState extends AuthenticationState {}
 
-class AuthenticationSuccess extends AuthenticationState {}
+class AuthenticationSuccess extends AuthenticationState {
+  final String messageSuccess;
+  AuthenticationSuccess({required this.messageSuccess});
+}
 
 class Authenticating extends AuthenticationState {}
 

@@ -1,3 +1,11 @@
 {
-    "VALIDATE_PEOPLE_E001": "Vui lòng nhập số người!"
+  "VALIDATE_LOGIN_E001": "Vui lòng nhập email hoặc số điện thoại",
+  "VALIDATE_LOGIN_E002": "Email hoặc số điện thoại không đúng định dạng",
+  "VALIDATE_PASSWORD_E001": "Vui lòng nhập mật khẩu",
+  "VALIDATE_PASSWORD_E002": "Mật khẩu tối thiểu 6 kí tự, có chứa chữ hoa, chữ thường và kí tự số",
+  "VALIDATE_PEOPLE_E001": "Vui lòng nhập số người!",
+  "VALIDATE_PEOPLE_E002": "Số người >= 0",
+  "VALIDATE_NUMBER_E001": "Chỉ được nhập số",
+  "LOGIN_SUCCESS": "Đăng nhập thành công",
+  "LOGIN_E001": "Tài khoản không tồn tại"
 }

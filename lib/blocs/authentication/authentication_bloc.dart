@@ -3,7 +3,7 @@ import 'dart:convert';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:restaurant_flutter/configs/configs.dart';
-import 'package:restaurant_flutter/configs/user_repository.dart';
+import 'package:restaurant_flutter/utils/translate.dart';
 
 import 'bloc.dart';
 
@@ -33,9 +33,8 @@ class AuthenticationBloc
 
       if (result != null) {
         if (result.isSuccess) {
-          emit(AuthenticationSuccess());
+          emit(AuthenticationSuccess(messageSuccess: result.msg));
         } else {
-          print(result.msg);
           emit(AuthenticationFail(messageError: result.msg));
         }
       } else {
@@ -51,7 +50,7 @@ class AuthenticationBloc
         Map<String, dynamic> json = jsonDecode(userString);
         UserRepository.setUserModel(json);
       }
-      emit(AuthenticationSuccess());
+      emit(AuthenticationSuccess(messageSuccess: "LOGIN_SUCCESS"));
     } else {
       emit(AuthenticationFail(messageError: ''));
     }

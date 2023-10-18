@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -5,6 +7,7 @@ import 'package:go_router/go_router.dart';
 import 'package:restaurant_flutter/blocs/bloc.dart';
 import 'package:restaurant_flutter/configs/configs.dart';
 import 'package:restaurant_flutter/routes/route_constants.dart';
+import 'package:restaurant_flutter/utils/utils.dart';
 import 'package:restaurant_flutter/widgets/widgets.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -22,6 +25,8 @@ class _LoginScreenState extends State<LoginScreen> {
   final TextEditingController passwordController = TextEditingController();
   final FocusNode loginFocus = FocusNode();
   final FocusNode passwordFocus = FocusNode();
+  bool showErrorText = false;
+  String errorText = "";
 
   @override
   void initState() {
@@ -38,17 +43,25 @@ class _LoginScreenState extends State<LoginScreen> {
   }
 
   Future<void> _requestLogin(BuildContext context) async {
-    if (loginController.text.isEmpty || passwordController.text.isEmpty) {
-      Fluttertoast.showToast(
-        msg: "Vui lòng nhập hết trường dữ liệu",
-        toastLength: Toast.LENGTH_SHORT,
-        gravity: ToastGravity.CENTER,
-        timeInSecForIosWeb: 5,
-        backgroundColor: primaryColor,
-        textColor: Colors.white,
-        fontSize: 16.0,
-        webBgColor: dangerColorToast,
-      );
+    setState(() {
+      errorText = "";
+      showErrorText = false;
+    });
+    if (loginController.text.isEmpty) {
+      errorText = Translate.of(context).translate("VALIDATE_LOGIN_E001");
+    } else if (passwordController.text.isEmpty) {
+      errorText = Translate.of(context).translate("VALIDATE_PASSWORD_E001");
+    } else if (!RegExp(r"^(?:\d{10}|\w+@\w+\.\w{2,3})$")
+        .hasMatch(loginController.text)) {
+      errorText = Translate.of(context).translate("VALIDATE_LOGIN_E002");
+    } else if (!RegExp(r"^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z]).{6,}$")
+        .hasMatch(passwordController.text)) {
+      errorText = Translate.of(context).translate("VALIDATE_PASSWORD_E002");
+    }
+    if (errorText.isNotEmpty) {
+      setState(() {
+        showErrorText = true;
+      });
     } else {
       Map<String, String> map = {
         "login": loginController.text,
@@ -63,6 +76,43 @@ class _LoginScreenState extends State<LoginScreen> {
     return Text("Đăng nhập",
         style: Theme.of(context).textTheme.titleLarge,
         textAlign: TextAlign.center);
+  }
+
+  Widget _buildError(BuildContext context) {
+    return Stack(
+      children: [
+        Container(
+          margin: EdgeInsets.symmetric(
+              vertical: kPadding10, horizontal: kDefaultPadding),
+          padding: EdgeInsets.all(kPadding10),
+          decoration: BoxDecoration(
+            color: Color(0XFFFF4444).withOpacity(0.8),
+            borderRadius: BorderRadius.circular(kCornerNormal),
+            border: Border.all(
+              color: Color(0XFFFF4444),
+            ),
+          ),
+          child: Center(
+            child: Text(
+              errorText,
+              maxLines: 2,
+              style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                    color: Colors.white,
+                  ),
+            ),
+          ),
+        ),
+        IconButton(
+          onPressed: () {
+            setState(() {
+              showErrorText = false;
+              errorText = "";
+            });
+          },
+          icon: Icon(Icons.close),
+        ),
+      ],
+    );
   }
 
   Widget _buildBody(BuildContext context) {
@@ -97,9 +147,10 @@ class _LoginScreenState extends State<LoginScreen> {
                 ],
               ),
               SizedBox(
-                height: kDefaultPadding * 2,
+                height: kDefaultPadding,
               ),
               buildTitle(context),
+              if (showErrorText) _buildError(context),
               SizedBox(
                 height: kDefaultPadding,
               ),
@@ -201,7 +252,9 @@ class _LoginScreenState extends State<LoginScreen> {
           String errorMessage = "";
           errorMessage = state.messageError.trim();
           Fluttertoast.showToast(
-            msg: errorMessage.isNotEmpty ? errorMessage : "Đăng nhập thất bại!",
+            msg: errorMessage.trim().isNotEmpty
+                ? errorMessage
+                : Translate.of(context).translate("LOGIN_E001"),
             toastLength: Toast.LENGTH_SHORT,
             gravity: ToastGravity.CENTER,
             timeInSecForIosWeb: 1,
@@ -211,7 +264,7 @@ class _LoginScreenState extends State<LoginScreen> {
         } else if (state is AuthenticationSuccess) {
           Navigator.pop(context);
           Fluttertoast.showToast(
-            msg: "Đăng nhập thành công!",
+            msg: Translate.of(context).translate(state.messageSuccess),
             toastLength: Toast.LENGTH_SHORT,
             gravity: ToastGravity.CENTER,
             timeInSecForIosWeb: 1,

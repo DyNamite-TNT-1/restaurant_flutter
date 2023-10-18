@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:restaurant_flutter/configs/configs.dart';
+import 'package:restaurant_flutter/utils/translate.dart';
 
 class AppInput extends StatefulWidget {
   final String name;
@@ -42,12 +43,8 @@ class _AppInputState extends State<AppInput> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      alignment: Alignment.centerLeft,
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(kCornerNormal),
-      ),
-      height: 40,
+    return SizedBox(
+      height: 45,
       child: TextFormField(
         controller: widget.controller,
         focusNode: widget.focusNode,
@@ -66,6 +63,7 @@ class _AppInputState extends State<AppInput> {
           color: textColor,
           fontWeight: FontWeight.normal,
         ),
+        autovalidateMode: AutovalidateMode.onUserInteraction,
         decoration: InputDecoration(
           fillColor: inputBackgroundColor,
           filled: true,
@@ -108,24 +106,20 @@ class _AppInputState extends State<AppInput> {
               : null,
         ),
         validator: (String? value) {
-          // if (value!.isEmpty) {
-          //   return "${widget.placeHolder} không được rỗng";
-          // }
           // switch (widget.name) {
           //   case "password":
           //   case "repeat_password":
-          //     if (value.length < 6 || value.length > 16) {
-          //       return "Mật khẩu tối thiểu 6 ký tự, tối đa 16";
+          //     if (value!.isEmpty) {
+          //       return Translate.of(context)
+          //           .translate("VALIDATE_PASSWORD_E001");
           //     }
           //     break;
-          //   case "phone":
-          //     if (value.length != 10) {
-          //       return "Số điện thoại phải có 10 chữ số";
+          //   case "login":
+          //     if (value!.isEmpty) {
+          //       return Translate.of(context).translate("VALIDATE_LOGIN_E001");
           //     }
-          //     if (!RegExp(
-          //             r"^(0?)(3[2-9]|5[6|8|9]|7[0|6-9]|8[0-6|8|9]|9[0-4|6-9])[0-9]{7}$")
-          //         .hasMatch(value)) {
-          //       return "Số điện thoại không phù hợp";
+          //     if (!RegExp(r"^(?:\d{10}|\w+@\w+\.\w{2,3})$").hasMatch(value)) {
+          //       return Translate.of(context).translate("VALIDATE_LOGIN_E002");
           //     }
           //     break;
           //   default:

@@ -1,3 +1,11 @@
 {
-  "VALIDATE_PEOPLE_E001": "Please input count people!"
+  "VALIDATE_LOGIN_E001": "Please input email or phone number",
+  "VALIDATE_LOGIN_E002": "Email or phone number is not in the correct format",
+  "VALIDATE_PASSWORD_E001": "Please input password",
+  "VALIDATE_PASSWORD_E002": "Password must be at least 6 characters, containing uppercase letters, lowercase letters and numbers",
+  "VALIDATE_PEOPLE_E001": "Please input count people!",
+  "VALIDATE_PEOPLE_E002": "Count number >= 0",
+  "VALIDATE_NUMBER_E001": "Only enter numbers",
+  "LOGIN_SUCCESS": "Logged in successfully",
+  "LOGIN_E001": "Account does not exist"
 }
