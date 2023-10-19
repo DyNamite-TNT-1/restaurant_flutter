@@ -8,6 +8,7 @@ import 'package:restaurant_flutter/enum/enum.dart';
 import 'package:restaurant_flutter/enum/gender.dart';
 import 'package:restaurant_flutter/models/service/model_result_api.dart';
 import 'package:restaurant_flutter/routes/route_constants.dart';
+import 'package:restaurant_flutter/utils/utils.dart';
 import 'package:restaurant_flutter/widgets/app_popup_menu_button.dart';
 import 'package:restaurant_flutter/widgets/widgets.dart';
 
@@ -23,11 +24,14 @@ class _SignUpScreenState extends State<SignUpScreen> {
   final TextEditingController emailController = TextEditingController();
   final TextEditingController phoneController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
+  final TextEditingController confirmPasswordController =
+      TextEditingController();
   final TextEditingController userNameController = TextEditingController();
   final TextEditingController addressController = TextEditingController();
   final FocusNode emailNode = FocusNode();
   final FocusNode phoneNode = FocusNode();
   final FocusNode passwordNode = FocusNode();
+  final FocusNode confirmPasswordNode = FocusNode();
   final FocusNode userNameNode = FocusNode();
   final FocusNode addressNode = FocusNode();
   DateTime birthDay = DateTime.now();
@@ -35,6 +39,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
   GenderEnum _selectedGender = GenderEnum.male;
   String signUpValidateText = "";
   bool isShowValidateText = false;
+  bool showErrorText = false;
+  String errorText = "";
 
   @override
   void initState() {
@@ -69,24 +75,42 @@ class _SignUpScreenState extends State<SignUpScreen> {
   }
 
   Future<void> _requestSignUp(BuildContext context) async {
-    if (emailController.text.trim().isEmpty ||
-        phoneController.text.trim().isEmpty ||
-        passwordController.text.trim().isEmpty ||
-        userNameController.text.trim().isEmpty ||
-        addressController.text.trim().isEmpty) {
-      Fluttertoast.showToast(
-        msg: "Các trường nhập là bắt buộc",
-        toastLength: Toast.LENGTH_SHORT,
-        gravity: ToastGravity.CENTER,
-        timeInSecForIosWeb: 1,
-        backgroundColor: primaryColor,
-        textColor: Colors.white,
-        fontSize: 16.0,
-        webBgColor: dangerColorToast,
-      );
+    setState(() {
+      errorText = "";
+      showErrorText = false;
+    });
+    if (userNameController.text.trim().isEmpty) {
+      errorText = Translate.of(context).translate("VALIDATE_USERNAME_E001");
+    } else if (emailController.text.trim().isEmpty) {
+      errorText = Translate.of(context).translate("VALIDATE_EMAIL_E001");
+    } else if (phoneController.text.trim().isEmpty) {
+      errorText = Translate.of(context).translate("VALIDATE_PHONE_E001");
+    } else if (passwordController.text.trim().isEmpty) {
+      errorText = Translate.of(context).translate("VALIDATE_PASSWORD_E001");
+    } else if (confirmPasswordController.text.trim().isEmpty) {
+      errorText =
+          Translate.of(context).translate("VALIDATE_CONFIRMPASSWORD_E001");
+    } else if (addressController.text.trim().isEmpty) {
+      errorText = Translate.of(context).translate("VALIDATE_ADDRESS_E001");
+    } else if (!RegExp(r"^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$")
+        .hasMatch(emailController.text)) {
+      errorText = Translate.of(context).translate("VALIDATE_EMAIL_E002");
+    } else if (!RegExp(r"^\d{10}$").hasMatch(phoneController.text)) {
+      errorText = Translate.of(context).translate("VALIDATE_PHONE_E002");
+    } else if (!RegExp(r"^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z]).{6,}$")
+        .hasMatch(passwordController.text)) {
+      errorText = Translate.of(context).translate("VALIDATE_PASSWORD_E002");
+    } else if (passwordController.text.trim() !=
+        confirmPasswordController.text.trim()) {
+      errorText =
+          Translate.of(context).translate("VALIDATE_CONFIRMPASSWORD_E002");
+    }
+    if (errorText.isNotEmpty) {
+      setState(() {
+        showErrorText = true;
+      });
       return;
     }
-    signUpValidateText = "";
     setState(() {
       isSigning = true;
     });
@@ -104,11 +128,12 @@ class _SignUpScreenState extends State<SignUpScreen> {
         msg: result.message,
         toastLength: Toast.LENGTH_SHORT,
         gravity: ToastGravity.CENTER,
-        timeInSecForIosWeb: 1,
+        timeInSecForIosWeb: 3,
         backgroundColor: primaryColor,
         textColor: Colors.white,
         fontSize: 16.0,
         webBgColor: successColorToast,
+        webShowClose: true,
       );
       if (context.mounted) {
         context.goNamed(RouteConstants.verifyOTP,
@@ -129,6 +154,59 @@ class _SignUpScreenState extends State<SignUpScreen> {
     setState(() {
       isSigning = false;
     });
+  }
+
+  Widget _buildError(BuildContext context) {
+    return Container(
+      margin: EdgeInsets.symmetric(
+        vertical: kPadding10 / 2,
+      ),
+      padding: EdgeInsets.symmetric(
+        horizontal: kPadding10,
+      ),
+      decoration: BoxDecoration(
+        color: Color(0XFFFF4444).withOpacity(0.8),
+        borderRadius: BorderRadius.circular(kCornerNormal),
+        border: Border.all(
+          color: Color(0XFFFF4444),
+        ),
+      ),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          Expanded(
+            child: Center(
+              child: Text(
+                errorText,
+                maxLines: 2,
+                style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                      color: Colors.white,
+                    ),
+              ),
+            ),
+          ),
+          Material(
+            color: Colors.transparent,
+            child: InkWell(
+              borderRadius: BorderRadius.circular(kCornerLarge),
+              onTap: () {
+                setState(() {
+                  showErrorText = false;
+                  errorText = "";
+                });
+              },
+              child: Padding(
+                padding: const EdgeInsets.all(kPadding10 / 2),
+                child: Icon(
+                  Icons.close,
+                  color: Colors.white,
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
   }
 
   Widget buildTitle(BuildContext context) {
@@ -218,7 +296,10 @@ class _SignUpScreenState extends State<SignUpScreen> {
               decoration: BoxDecoration(
                 color: Colors.black.withOpacity(0.7),
               ),
-              padding: EdgeInsets.all(kDefaultPadding),
+              padding: EdgeInsets.symmetric(
+                horizontal: kDefaultPadding,
+                vertical: kPadding10,
+              ),
               height: double.infinity,
               width: 500,
               child: Column(
@@ -226,6 +307,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   buildTitle(context),
+                  if (showErrorText) _buildError(context),
                   buildTitleTextField(context, "Họ và tên"),
                   AppInput(
                     name: "name",
@@ -260,6 +342,16 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     icon: Icons.lock,
                     controller: passwordController,
                     focusNode: passwordNode,
+                    // placeHolder: "Nhập mật khẩu",
+                    isPassword: true,
+                  ),
+                  buildTitleTextField(context, "Xác nhận mật khẩu"),
+                  AppInput(
+                    name: "confirmPassword",
+                    keyboardType: TextInputType.name,
+                    icon: Icons.lock_reset,
+                    controller: confirmPasswordController,
+                    focusNode: confirmPasswordNode,
                     // placeHolder: "Nhập mật khẩu",
                     isPassword: true,
                   ),
@@ -374,7 +466,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     ],
                   ),
                   Container(
-                    margin: EdgeInsets.only(top: kDefaultPadding * 2),
+                    margin: EdgeInsets.only(top: kPadding10),
                     child: AppButton(
                       "Đăng ký",
                       loading: isSigning,
