@@ -7,7 +7,6 @@ import 'package:restaurant_flutter/api/api.dart';
 import 'package:restaurant_flutter/blocs/authentication/bloc.dart';
 import 'package:restaurant_flutter/blocs/dish/dish_bloc.dart';
 import 'package:restaurant_flutter/configs/configs.dart';
-import 'package:restaurant_flutter/configs/user_repository.dart';
 import 'package:restaurant_flutter/enum/bloc.dart';
 import 'package:restaurant_flutter/enum/order.dart';
 import 'package:restaurant_flutter/models/client/client_dish.dart';
@@ -55,7 +54,7 @@ class _DishScreenState extends State<DishScreen> {
   void initState() {
     super.initState();
     _requestDishType();
-    _requestDish(type: 0, priceOrder: OrderEnum.desc);
+    _requestDish(type: 0, priceOrder: _selectedPriceOrder);
   }
 
   @override
@@ -611,25 +610,25 @@ class _DishScreenState extends State<DishScreen> {
                     ),
                   ),
                   if (state.maxPage != 0)
-                  Positioned(
-                    bottom: 0,
-                    left: 0,
-                    right: 0,
-                    child: NumberPagination(
-                      onPageChanged: (int pageNumber) {
-                        setState(() {
-                          currentPage = pageNumber;
-                        });
-                        _requestDish(
-                          type: _selectedFilter.dishTypeId,
-                          priceOrder: _selectedPriceOrder,
-                        );
-                      },
-                      pageTotal: state.maxPage,
-                      pageInit: currentPage, // picked number when init page
-                      colorPrimary: primaryColor,
+                    Positioned(
+                      bottom: 0,
+                      left: 0,
+                      right: 0,
+                      child: NumberPagination(
+                        onPageChanged: (int pageNumber) {
+                          setState(() {
+                            currentPage = pageNumber;
+                          });
+                          _requestDish(
+                            type: _selectedFilter.dishTypeId,
+                            priceOrder: _selectedPriceOrder,
+                          );
+                        },
+                        pageTotal: state.maxPage,
+                        pageInit: currentPage, // picked number when init page
+                        colorPrimary: primaryColor,
+                      ),
                     ),
-                  ),
                 ],
               ),
             );

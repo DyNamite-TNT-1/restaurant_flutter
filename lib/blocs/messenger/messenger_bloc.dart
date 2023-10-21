@@ -255,10 +255,12 @@ class MessengerBloc extends Bloc<MessengerEvent, MessengerState> {
   void _onReceiveMessageFromSocket(
       OnReceiveMessageFromSocket event, Emitter emit) {
     if (!isClosed) {
+      print("receivedMSG${UserRepository.userModel.userName}");
       emit(state.copyWith(messageState: BlocState.loadingSilent));
       MessageDetailModel message = event.params.containsKey("message")
           ? event.params["message"]
           : MessageDetailModel();
+      print("receivedMSG${message.content}");
       emit(state.copyWith(
         messageState: BlocState.loadCompleted,
         messages: [...state.messages, message],

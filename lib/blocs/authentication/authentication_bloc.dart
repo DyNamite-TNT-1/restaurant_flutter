@@ -3,7 +3,6 @@ import 'dart:convert';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:restaurant_flutter/configs/configs.dart';
-import 'package:restaurant_flutter/utils/translate.dart';
 
 import 'bloc.dart';
 
@@ -45,6 +44,8 @@ class AuthenticationBloc
 
   Future<void> _onCheck(OnAuthenticationCheck event, Emitter emit) async {
     if (UserPreferences.isExistAuthenticateSession()) {
+      print("checking");
+      emit(Authenticating());
       String? userString = UserPreferences.getUserLoggedInfo();
       if (userString != null) {
         Map<String, dynamic> json = jsonDecode(userString);

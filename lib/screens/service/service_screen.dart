@@ -2,16 +2,20 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:go_router/go_router.dart';
+import 'package:number_pagination/number_pagination.dart';
 import 'package:restaurant_flutter/api/api.dart';
 import 'package:restaurant_flutter/blocs/authentication/bloc.dart';
 import 'package:restaurant_flutter/blocs/service/service_bloc.dart';
 import 'package:restaurant_flutter/configs/configs.dart';
 import 'package:restaurant_flutter/configs/user_repository.dart';
 import 'package:restaurant_flutter/enum/bloc.dart';
+import 'package:restaurant_flutter/enum/enum.dart';
+import 'package:restaurant_flutter/models/client/client_service.dart';
 import 'package:restaurant_flutter/models/service/model_result_api.dart';
 import 'package:restaurant_flutter/models/service/service.dart';
 import 'package:restaurant_flutter/screens/service/widget/service_item.dart';
 import 'package:restaurant_flutter/utils/extension.dart';
+import 'package:restaurant_flutter/widgets/app_popup_menu_button.dart';
 import 'package:restaurant_flutter/widgets/widgets.dart';
 
 class ServiceScreen extends StatefulWidget {
@@ -25,13 +29,13 @@ class _ServiceScreenState extends State<ServiceScreen> {
   ServiceBloc serviceBloc = ServiceBloc(ServiceState());
 
   String tagRequestServices = "";
+  OrderEnum _selectedPriceOrder = OrderEnum.desc;
+  int currentPage = 1;
 
   final TextEditingController _nameController = TextEditingController();
   final FocusNode _nameFocusNode = FocusNode();
   final TextEditingController _priceController = TextEditingController();
   final FocusNode _priceFocusNode = FocusNode();
-  final TextEditingController _descriptionController = TextEditingController();
-  final FocusNode _descriptionFocusNode = FocusNode();
   final TextEditingController _imageController = TextEditingController();
   final FocusNode _imageFocusNode = FocusNode();
   final TextEditingController _unitController = TextEditingController();
@@ -43,7 +47,7 @@ class _ServiceScreenState extends State<ServiceScreen> {
   @override
   void initState() {
     super.initState();
-    _requestService();
+    _requestService(priceOrder: _selectedPriceOrder);
   }
 
   @override
@@ -51,7 +55,6 @@ class _ServiceScreenState extends State<ServiceScreen> {
     super.dispose();
     _nameController.clear();
     _priceController.clear();
-    _descriptionController.clear();
     _imageController.clear();
     _unitController.clear();
     Api.cancelRequest(tag: tagRequestServices);
@@ -61,7 +64,9 @@ class _ServiceScreenState extends State<ServiceScreen> {
     return !mounted || serviceBloc.isClosed;
   }
 
-  Future<void> _requestService() async {
+  Future<void> _requestService({
+    required OrderEnum priceOrder,
+  }) async {
     if (!isServiceClosed) {
       serviceBloc.add(
         OnUpdateState(
@@ -70,15 +75,19 @@ class _ServiceScreenState extends State<ServiceScreen> {
       );
       tagRequestServices = Api.buildIncreaseTagRequestWithID("services");
       ResultModel result = await Api.requestListService(
+        order: priceOrder,
+        page: currentPage,
         tagRequest: tagRequestServices,
       );
       if (!isServiceClosed && result.isSuccess) {
-        List<ServiceDetailModel> services =
-            ServiceDetailModel.parseListItem(result.data["services"]);
+        ClientServiceModel serviceModel =
+            ClientServiceModel.fromJson(result.data);
         serviceBloc.add(
           OnLoadService(
             params: {
-              "services": services,
+              "services": serviceModel.services,
+              "currentPage": serviceModel.currentPage,
+              "maxPage": serviceModel.maxPage,
             },
           ),
         );
@@ -86,82 +95,47 @@ class _ServiceScreenState extends State<ServiceScreen> {
     }
   }
 
-  // Widget _buildTopFilter(BuildContext context) {
-  //   return Row(
-  //     children: [
-  //       Text(
-  //         "Loại: ",
-  //         style: Theme.of(context).textTheme.bodyLarge,
-  //       ),
-  //       if (dishBloc.state.dishTypes.isNotEmpty &&
-  //           dishBloc.state.dishTypeState == BlocState.loadCompleted)
-  //         AppPopupMenuButton<DishTypeModel>(
-  //           onChanged: (value) {
-  //             setState(() {
-  //               _selectedFilter = value;
-  //               currentPage = 1;
-  //             });
-  //             _requestService(
-  //               type: _selectedFilter.dishTypeId,
-  //               priceOrder: _selectedPriceOrder,
-  //             );
-  //           },
-  //           filterItemBuilder: (context, e) {
-  //             return DropdownMenuItem<DishTypeModel>(
-  //               value: e,
-  //               child: Text(e.type),
-  //             );
-  //           },
-  //           items: dishBloc.state.dishTypes,
-  //           value: _selectedFilter,
-  //           child: Text(
-  //             _selectedFilter.type,
-  //             style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-  //                   fontSize: 14,
-  //                   color: Colors.white,
-  //                 ),
-  //           ),
-  //         ),
-  //       SizedBox(
-  //         width: kDefaultPadding,
-  //       ),
-  //       Text(
-  //         "Giá: ",
-  //         style: Theme.of(context).textTheme.bodyLarge,
-  //       ),
-  //       AppPopupMenuButton<OrderEnum>(
-  //         onChanged: (value) {
-  //           setState(() {
-  //             _selectedPriceOrder = value;
-  //             currentPage = 1;
-  //           });
-  //           _requestService(
-  //             type: _selectedFilter.dishTypeId,
-  //             priceOrder: _selectedPriceOrder,
-  //           );
-  //         },
-  //         filterItemBuilder: (context, e) {
-  //           return DropdownMenuItem<OrderEnum>(
-  //             value: e,
-  //             child: Text(e.name),
-  //           );
-  //         },
-  //         items: OrderEnum.allOrderEnum(),
-  //         value: _selectedPriceOrder,
-  //         child: Text(
-  //           _selectedPriceOrder.name,
-  //           style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-  //                 fontSize: 14,
-  //                 color: Colors.white,
-  //               ),
-  //         ),
-  //       ),
-  //     ],
-  //   );
-  // }
+  Widget _buildTopFilter(BuildContext context) {
+    return Row(
+      children: [
+        Text(
+          "Giá: ",
+          style: Theme.of(context).textTheme.bodyLarge,
+        ),
+        AppPopupMenuButton<OrderEnum>(
+          onChanged: (value) {
+            setState(() {
+              _selectedPriceOrder = value;
+              currentPage = 1;
+            });
+            _requestService(
+              priceOrder: _selectedPriceOrder,
+            );
+          },
+          filterItemBuilder: (context, e) {
+            return DropdownMenuItem<OrderEnum>(
+              value: e,
+              child: Text(e.name),
+            );
+          },
+          items: OrderEnum.allOrderEnum(),
+          value: _selectedPriceOrder,
+          child: Text(
+            _selectedPriceOrder.name,
+            style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                  fontSize: 14,
+                  color: Colors.white,
+                ),
+          ),
+        ),
+      ],
+    );
+  }
 
   Future<void> _onRefresh() async {
-    await _requestService();
+    await _requestService(
+      priceOrder: _selectedPriceOrder,
+    );
   }
 
   Future<bool> _addNewService() async {
@@ -353,9 +327,9 @@ class _ServiceScreenState extends State<ServiceScreen> {
       ),
       color: backgroundColor,
       child: Row(
-        mainAxisAlignment: MainAxisAlignment.end,
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          // _buildTopFilter(context),
+          _buildTopFilter(context),
           Row(
             children: [
               if (authState is AuthenticationSuccess &&
@@ -423,6 +397,7 @@ class _ServiceScreenState extends State<ServiceScreen> {
         child: BlocBuilder<ServiceBloc, ServiceState>(
           builder: (context, state) {
             bool isLoading = state.serviceState == BlocState.loading;
+            currentPage = state.currentPage;
             return Scaffold(
               backgroundColor: backgroundColor,
               body: Stack(
@@ -477,6 +452,25 @@ class _ServiceScreenState extends State<ServiceScreen> {
                       ),
                     ),
                   ),
+                  if (state.maxPage != 0)
+                    Positioned(
+                      bottom: 0,
+                      left: 0,
+                      right: 0,
+                      child: NumberPagination(
+                        onPageChanged: (int pageNumber) {
+                          setState(() {
+                            currentPage = pageNumber;
+                          });
+                          _requestService(
+                            priceOrder: _selectedPriceOrder,
+                          );
+                        },
+                        pageTotal: state.maxPage,
+                        pageInit: currentPage, // picked number when init page
+                        colorPrimary: primaryColor,
+                      ),
+                    ),
                 ],
               ),
             );

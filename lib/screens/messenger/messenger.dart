@@ -1,4 +1,3 @@
-import 'dart:convert';
 import 'dart:math';
 
 import 'package:flutter/material.dart';
@@ -24,7 +23,7 @@ class MessengerScreen extends StatefulWidget {
 }
 
 class _MessengerScreenState extends State<MessengerScreen> {
-  final MessengerBloc messengerBloc = MessengerBloc(MessengerState());
+  late MessengerBloc messengerBloc;
 
   final TextEditingController messageController = TextEditingController();
   final FocusNode messageFocus = FocusNode();
@@ -33,6 +32,8 @@ class _MessengerScreenState extends State<MessengerScreen> {
 
   @override
   void initState() {
+    print("initState");
+    messengerBloc = MessengerBloc(MessengerState());
     _addSocketListener();
     super.initState();
   }
@@ -43,9 +44,11 @@ class _MessengerScreenState extends State<MessengerScreen> {
 
   _addSocketListener() {
     SocketClient.socket!.on('receiver-message', (data) {
-      Map<String, dynamic> messageData = data as Map<String, dynamic>;
-      messengerBloc.add(OnReceiveMessageFromSocket(
-          params: {"message": MessageDetailModel.fromJson(messageData)}));
+      if (isServiceClosed) {
+        Map<String, dynamic> messageData = data as Map<String, dynamic>;
+        messengerBloc.add(OnReceiveMessageFromSocket(
+            params: {"message": MessageDetailModel.fromJson(messageData)}));
+      }
     });
   }
 
@@ -53,6 +56,7 @@ class _MessengerScreenState extends State<MessengerScreen> {
   void dispose() {
     super.dispose();
     Api.cancelRequest(tag: tagRequestDetailConversation);
+    messengerBloc.close();
   }
 
   Future<void> _onRefresh() async {
@@ -155,8 +159,10 @@ class _MessengerScreenState extends State<MessengerScreen> {
     final double widthOfMessengerTab =
         UserRepository.userModel.isManager ? 800 : 500;
     var authState = context.select((AuthenticationBloc bloc) => bloc.state);
+    print("authState ${authState}");
     return BlocListener<AuthenticationBloc, AuthenticationState>(
       listenWhen: (previous, current) {
+        print("currentState $current, previous $previous");
         if (previous is Authenticating && current is AuthenticationSuccess) {
           return true;
         }
@@ -226,32 +232,71 @@ class _MessengerScreenState extends State<MessengerScreen> {
                                 child: Column(
                                   children: [
                                     Expanded(
-                                      child: ListView.builder(
-                                          itemCount: state.conversations.length,
-                                          itemBuilder: (context, index) {
-                                            final ClientConversationModel
-                                                conversation =
-                                                state.conversations[index];
-                                            return Material(
-                                              color: Colors.transparent,
-                                              child: InkWell(
-                                                borderRadius:
-                                                    BorderRadius.circular(
-                                                        kCornerMedium),
-                                                onTap: () {
-                                                  messengerBloc.add(
-                                                      OnSelectConversation(
-                                                          params: {
-                                                        "selectedConversation":
-                                                            conversation,
-                                                      }));
+                                      child: Stack(
+                                        children: [
+                                          Visibility(
+                                            visible: state.conversationState ==
+                                                    BlocState.loadCompleted ||
+                                                state.conversationState ==
+                                                    BlocState.noData ||
+                                                state.conversationState ==
+                                                    BlocState.loadingSilent,
+                                            child: ListView.builder(
+                                                itemCount:
+                                                    state.conversations.length,
+                                                itemBuilder: (context, index) {
+                                                  final ClientConversationModel
+                                                      conversation = state
+                                                          .conversations[index];
+                                                  return Material(
+                                                    color: Colors.transparent,
+                                                    child: InkWell(
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              kCornerMedium),
+                                                      onTap: () {
+                                                        messengerBloc.add(
+                                                            OnSelectConversation(
+                                                                params: {
+                                                              "selectedConversation":
+                                                                  conversation,
+                                                            }));
+                                                      },
+                                                      child: ConversationItem(
+                                                        item: conversation,
+                                                      ),
+                                                    ),
+                                                  );
+                                                }),
+                                          ),
+                                          Visibility(
+                                            visible: state.conversationState ==
+                                                BlocState.loading,
+                                            child: Center(
+                                              child:
+                                                  CircularProgressIndicator(),
+                                            ),
+                                          ),
+                                          Visibility(
+                                            visible: UserRepository
+                                                    .userModel.isManager &&
+                                                state.conversationState !=
+                                                    BlocState.loading &&
+                                                state.conversations.isEmpty,
+                                            child: Center(
+                                              child: IconButton(
+                                                onPressed: () {
+                                                  _onRefresh();
                                                 },
-                                                child: ConversationItem(
-                                                  item: conversation,
+                                                icon: Icon(
+                                                  Icons.refresh,
+                                                  size: 36,
                                                 ),
                                               ),
-                                            );
-                                          }),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
                                     ),
                                   ],
                                 ),
@@ -371,6 +416,22 @@ class _MessengerScreenState extends State<MessengerScreen> {
                                           BlocState.loading,
                                       child: Center(
                                         child: CircularProgressIndicator(),
+                                      ),
+                                    ),
+                                    Visibility(
+                                      visible: UserRepository.userModel.isClient && state.messageState !=
+                                              BlocState.loading &&
+                                          state.messages.isEmpty,
+                                      child: Center(
+                                        child: IconButton(
+                                          onPressed: () {
+                                            _onRefresh();
+                                          },
+                                          icon: Icon(
+                                            Icons.refresh,
+                                            size: 36,
+                                          ),
+                                        ),
                                       ),
                                     ),
                                   ],

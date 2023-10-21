@@ -1,5 +1,5 @@
-import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:restaurant_flutter/enum/enum.dart';
 import 'package:restaurant_flutter/models/service/service.dart';
 
@@ -17,7 +17,12 @@ class ServiceBloc extends Bloc<ServiceEvent, ServiceState> {
     BlocState loading = event.params.containsKey("serviceState")
         ? event.params["serviceState"]
         : BlocState.init;
-   
+    int currentPage = event.params.containsKey("currentPage")
+        ? event.params["currentPage"]
+        : state.currentPage;
+    int maxPage = event.params.containsKey("maxPage")
+        ? event.params["maxPage"]
+        : state.maxPage;
     BlocState status;
     if (loading == BlocState.loading) {
       status = BlocState.loading;
@@ -28,10 +33,11 @@ class ServiceBloc extends Bloc<ServiceEvent, ServiceState> {
       state.copyWith(
         services: services,
         serviceState: status,
+        currentPage: currentPage,
+        maxPage: maxPage,
       ),
     );
   }
-
 
   Future<void> _onUpdateState(OnUpdateState event, Emitter emit) async {
     BlocState serviceState = event.params.containsKey('serviceState')

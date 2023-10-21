@@ -62,7 +62,7 @@ class Api {
   static String requestTableTypeUrl = "/table/get/type/all";
 
   //service
-  static String requestAllServiceUrl = "/service/get/all";
+  static String requestServiceUrl = "/service/get";
   static String addServiceUrl = "/manager/service/create";
 
   //chat
@@ -294,10 +294,18 @@ class Api {
 
   //service
   static Future<ResultModel> requestListService({
+    int limit = kLimit,
+    required page,
+    required OrderEnum order,
     String tagRequest = HTTPManager.DEFAULT_CANCEL_TAG,
   }) async {
     final result = await httpManager.get(
-      url: appendBranch(requestAllServiceUrl),
+      url: appendBranch(requestServiceUrl),
+      params: {
+        "limit": limit,
+        "page": page,
+        "order": order.value,
+      },
       cancelTag: tagRequest,
     );
     return ResultModel.fromJson(result);
