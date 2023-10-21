@@ -7,12 +7,9 @@ import 'package:restaurant_flutter/api/api.dart';
 import 'package:restaurant_flutter/blocs/authentication/bloc.dart';
 import 'package:restaurant_flutter/blocs/service/service_bloc.dart';
 import 'package:restaurant_flutter/configs/configs.dart';
-import 'package:restaurant_flutter/configs/user_repository.dart';
-import 'package:restaurant_flutter/enum/bloc.dart';
 import 'package:restaurant_flutter/enum/enum.dart';
 import 'package:restaurant_flutter/models/client/client_service.dart';
 import 'package:restaurant_flutter/models/service/model_result_api.dart';
-import 'package:restaurant_flutter/models/service/service.dart';
 import 'package:restaurant_flutter/screens/service/widget/service_item.dart';
 import 'package:restaurant_flutter/utils/extension.dart';
 import 'package:restaurant_flutter/widgets/app_popup_menu_button.dart';
@@ -155,7 +152,7 @@ class _ServiceScreenState extends State<ServiceScreen> {
     if (result.isSuccess) {
       if (context.mounted) {
         Fluttertoast.showToast(
-          msg: "Thêm dịch vụ thành công!",
+          msg: result.message,
           toastLength: Toast.LENGTH_SHORT,
           gravity: ToastGravity.CENTER,
           timeInSecForIosWeb: 3,
@@ -173,7 +170,7 @@ class _ServiceScreenState extends State<ServiceScreen> {
       }
     } else {
       Fluttertoast.showToast(
-        msg: "Thêm dịch vụ thất bại!",
+        msg: result.message,
         toastLength: Toast.LENGTH_SHORT,
         gravity: ToastGravity.CENTER,
         timeInSecForIosWeb: 3,
@@ -195,7 +192,7 @@ class _ServiceScreenState extends State<ServiceScreen> {
         return StatefulBuilder(builder: (context, newState) {
           return AppDialogInput(
             title: "Thêm dịch vụ mới",
-            buttonDoneTitle: "Tạo",
+            buttonDoneTitle: "Thêm",
             buttonCancelTitle: "Thoát",
             onDone: () async {
               isShow = await _addNewService();

@@ -233,7 +233,7 @@ class _DishScreenState extends State<DishScreen> {
     if (result.isSuccess) {
       if (context.mounted) {
         Fluttertoast.showToast(
-          msg: "Thêm món mới thành công!",
+          msg: result.message,
           toastLength: Toast.LENGTH_SHORT,
           gravity: ToastGravity.CENTER,
           timeInSecForIosWeb: 1,
@@ -252,7 +252,7 @@ class _DishScreenState extends State<DishScreen> {
       }
     } else {
       Fluttertoast.showToast(
-        msg: "Thêm món mới thất bại!",
+        msg: result.message,
         toastLength: Toast.LENGTH_SHORT,
         gravity: ToastGravity.CENTER,
         timeInSecForIosWeb: 1,
@@ -275,7 +275,7 @@ class _DishScreenState extends State<DishScreen> {
         return StatefulBuilder(builder: (context, newState) {
           return AppDialogInput(
             title: "Thêm món mới",
-            buttonDoneTitle: "Tạo",
+            buttonDoneTitle: "Thêm",
             buttonCancelTitle: "Thoát",
             onDone: () async {
               isShow = await _addNewDish(selectedFilter2);

@@ -13,13 +13,7 @@ class Application {
       '1.0.2'; // Change this version if application have new function and would like to introduce
   static bool useShimmerLoading = true;
 
-  // static List<CommonSettingModel> commonSettings = [];
-
   // static UserInfo userInfo = UserInfo.empty();
-
-  // static SettingInitModel settingInit = SettingInitModel.empty();
-
-  static Map<String, dynamic> recent_activity_setting = {};
 
   ///Singleton factory
   static final Application _instance = Application._internal();

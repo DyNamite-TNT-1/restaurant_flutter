@@ -7,7 +7,6 @@ import 'package:restaurant_flutter/api/api.dart';
 import 'package:restaurant_flutter/blocs/bloc.dart';
 import 'package:restaurant_flutter/blocs/drink/drink_bloc.dart';
 import 'package:restaurant_flutter/configs/configs.dart';
-import 'package:restaurant_flutter/configs/user_repository.dart';
 import 'package:restaurant_flutter/enum/bloc.dart';
 import 'package:restaurant_flutter/enum/order.dart';
 import 'package:restaurant_flutter/models/client/client_dish.dart';
@@ -250,7 +249,7 @@ class _DrinkScreenState extends State<DrinkScreen> {
     if (result.isSuccess) {
       if (context.mounted) {
         Fluttertoast.showToast(
-          msg: "Thêm món mới thành công!",
+          msg: result.message,
           toastLength: Toast.LENGTH_SHORT,
           gravity: ToastGravity.CENTER,
           timeInSecForIosWeb: 1,
@@ -269,7 +268,7 @@ class _DrinkScreenState extends State<DrinkScreen> {
       }
     } else {
       Fluttertoast.showToast(
-        msg: "Thêm món mới thất bại!",
+        msg: result.message,
         toastLength: Toast.LENGTH_SHORT,
         gravity: ToastGravity.CENTER,
         timeInSecForIosWeb: 1,
@@ -290,7 +289,7 @@ class _DrinkScreenState extends State<DrinkScreen> {
         return StatefulBuilder(builder: (context, newState) {
           return AppDialogInput(
             title: "Thêm đồ uống mới",
-            buttonDoneTitle: "Tạo",
+            buttonDoneTitle: "Thêm",
             buttonCancelTitle: "Thoát",
             onDone: () {
               _addNewDrink(selectedFilter2);

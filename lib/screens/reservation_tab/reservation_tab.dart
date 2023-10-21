@@ -14,7 +14,6 @@ import 'package:restaurant_flutter/models/service/reservation.dart';
 import 'package:restaurant_flutter/models/service/table.dart';
 import 'package:restaurant_flutter/screens/authentication/login_screen.dart';
 import 'package:restaurant_flutter/screens/reservation_tab/widget/service_item.dart';
-import 'package:restaurant_flutter/utils/translate.dart';
 import 'package:restaurant_flutter/utils/utils.dart';
 import 'package:restaurant_flutter/widgets/app_popup_menu_button.dart';
 import 'package:restaurant_flutter/widgets/widgets.dart';

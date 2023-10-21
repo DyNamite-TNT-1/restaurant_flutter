@@ -159,10 +159,8 @@ class _MessengerScreenState extends State<MessengerScreen> {
     final double widthOfMessengerTab =
         UserRepository.userModel.isManager ? 800 : 500;
     var authState = context.select((AuthenticationBloc bloc) => bloc.state);
-    print("authState ${authState}");
     return BlocListener<AuthenticationBloc, AuthenticationState>(
       listenWhen: (previous, current) {
-        print("currentState $current, previous $previous");
         if (previous is Authenticating && current is AuthenticationSuccess) {
           return true;
         }

@@ -44,7 +44,6 @@ class AuthenticationBloc
 
   Future<void> _onCheck(OnAuthenticationCheck event, Emitter emit) async {
     if (UserPreferences.isExistAuthenticateSession()) {
-      print("checking");
       emit(Authenticating());
       String? userString = UserPreferences.getUserLoggedInfo();
       if (userString != null) {

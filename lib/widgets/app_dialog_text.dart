@@ -11,7 +11,7 @@ class AppDialogText extends StatelessWidget {
   final Color? buttonDoneColor;
   final Color? buttonCancelColor;
 
-  AppDialogText({
+  const AppDialogText({
     Key? key,
     required this.child,
     required this.onDone,
