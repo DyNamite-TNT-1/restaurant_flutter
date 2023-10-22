@@ -263,11 +263,10 @@ class _LoginScreenState extends State<LoginScreen> {
     return BlocListener<AuthenticationBloc, AuthenticationState>(
       listener: (context, state) {
         if (state is AuthenticationFail) {
-          String errorMessage = "";
-          errorMessage = state.messageError.trim();
+          String errorMessage = state.messageError.trim();
           Fluttertoast.showToast(
             msg: errorMessage.trim().isNotEmpty
-                ? errorMessage
+                ? Translate.of(context).translate(errorMessage)
                 : Translate.of(context).translate("LOGIN_E001"),
             toastLength: Toast.LENGTH_SHORT,
             gravity: ToastGravity.CENTER,

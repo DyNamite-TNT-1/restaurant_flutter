@@ -19,6 +19,7 @@
   "VALIDATE_PHONE_E002": "Phone numbers contain only 10 digits",
   "VALIDATE_USERNAME_E001": "Please enter name",
   "VALIDATE_ADDRESS_E001": "Please enter address",
+  "cannot_connect_server": "Cannot connect to server",
 
   "booking": "Booking",
   "sign_in": "Sign In",

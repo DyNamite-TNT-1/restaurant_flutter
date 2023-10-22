@@ -19,6 +19,7 @@
   "VALIDATE_PHONE_E002": "Số điện thoại chỉ chứa 10 chữ số",
   "VALIDATE_USERNAME_E001": "Vui lòng nhập họ và tên",
   "VALIDATE_ADDRESS_E001": "Vui lòng nhập địa chỉ",
+  "cannot_connect_server": "Không thể kết nối tới máy chủ",
 
   "booking": "Đặt bàn",
   "sign_in": "Đăng nhập",
