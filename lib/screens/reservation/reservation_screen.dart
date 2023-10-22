@@ -8,7 +8,9 @@ import 'package:restaurant_flutter/configs/configs.dart';
 import 'package:restaurant_flutter/enum/enum.dart';
 import 'package:restaurant_flutter/models/service/model_result_api.dart';
 import 'package:restaurant_flutter/models/service/reservation.dart';
+import 'package:restaurant_flutter/models/client/client_reservation_status.dart';
 import 'package:restaurant_flutter/screens/reservation/widget/reservation_item.dart';
+import 'package:restaurant_flutter/widgets/app_popup_menu_button.dart';
 import 'package:restaurant_flutter/widgets/widgets.dart';
 
 class ReservationScreen extends StatefulWidget {
@@ -22,9 +24,13 @@ class _ReservationScreenState extends State<ReservationScreen> {
   final ReservationBloc _reservationBloc = ReservationBloc(ReservationState());
   String tagRequestReservations = "";
   int currentPage = 1;
+  OrderEnum _selectedDateOccurOrder = OrderEnum.desc;
+  late ClientReservationStatusModel _selectedFilter;
 
   @override
   void initState() {
+    _selectedFilter = Application.reservationStatusList.first;
+    _requestReservationList();
     super.initState();
   }
 
@@ -53,8 +59,10 @@ class _ReservationScreenState extends State<ReservationScreen> {
       tagRequestReservations =
           Api.buildIncreaseTagRequestWithID("reservations");
       ResultModel result = await Api.requestAllReservation(
-        status: "",
-        order: OrderEnum.desc,
+        status: _selectedFilter.status == 100
+            ? ""
+            : _selectedFilter.status.toString(),
+        order: _selectedDateOccurOrder,
         page: currentPage,
         limit: 15,
         tagRequest: tagRequestReservations,
@@ -92,8 +100,9 @@ class _ReservationScreenState extends State<ReservationScreen> {
       child: Column(
         children: [
           Row(
-            mainAxisAlignment: MainAxisAlignment.end,
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
+              _buildTopFilter(context),
               Material(
                 color: Colors.transparent,
                 child: InkWell(
@@ -191,6 +200,72 @@ class _ReservationScreenState extends State<ReservationScreen> {
     );
   }
 
+  Widget _buildTopFilter(BuildContext context) {
+    return Row(
+      children: [
+        Text(
+          "Loại: ",
+          style: Theme.of(context).textTheme.bodyLarge,
+        ),
+        AppPopupMenuButton<ClientReservationStatusModel>(
+          onChanged: (value) {
+            setState(() {
+              _selectedFilter = value;
+              currentPage = 1;
+            });
+            _requestReservationList();
+          },
+          filterItemBuilder: (context, e) {
+            return DropdownMenuItem<ClientReservationStatusModel>(
+              value: e,
+              child: Text(e.type),
+            );
+          },
+          items: Application.reservationStatusList,
+          value: _selectedFilter,
+          child: Text(
+            _selectedFilter.type,
+            style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                  fontSize: 14,
+                  color: Colors.white,
+                ),
+          ),
+        ),
+        SizedBox(
+          width: kDefaultPadding,
+        ),
+        Text(
+          "Ngày tạo yêu cầu: ",
+          style: Theme.of(context).textTheme.bodyLarge,
+        ),
+        AppPopupMenuButton<OrderEnum>(
+          onChanged: (value) {
+            setState(() {
+              _selectedDateOccurOrder = value;
+              currentPage = 1;
+            });
+            _requestReservationList();
+          },
+          filterItemBuilder: (context, e) {
+            return DropdownMenuItem<OrderEnum>(
+              value: e,
+              child: Text(e.name),
+            );
+          },
+          items: OrderEnum.allOrderEnum(),
+          value: _selectedDateOccurOrder,
+          child: Text(
+            _selectedDateOccurOrder.name,
+            style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                  fontSize: 14,
+                  color: Colors.white,
+                ),
+          ),
+        ),
+      ],
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     var authState = context.select((AuthenticationBloc bloc) => bloc.state);
@@ -213,9 +288,13 @@ class _ReservationScreenState extends State<ReservationScreen> {
                   ? Stack(
                       children: [
                         _buildHeader(context),
-                        state.reservationState != BlocState.noData
-                            ? Padding(
-                                padding: const EdgeInsets.only(top: 120),
+                        Padding(
+                          padding: const EdgeInsets.only(top: 120),
+                          child: Stack(
+                            children: [
+                              Visibility(
+                                visible: state.reservationState ==
+                                    BlocState.loadCompleted,
                                 child: Column(
                                   children: [
                                     Expanded(
@@ -235,11 +314,33 @@ class _ReservationScreenState extends State<ReservationScreen> {
                                     ),
                                   ],
                                 ),
-                              )
-                            : Padding(
-                                padding: const EdgeInsets.only(top: 130),
-                                child: NoDataFoundView(),
                               ),
+                              Visibility(
+                                visible:
+                                    state.reservationState == BlocState.noData,
+                                child: Padding(
+                                  padding: const EdgeInsets.only(top: 130),
+                                  child: NoDataFoundView(),
+                                ),
+                              ),
+                              Visibility(
+                                visible:
+                                    state.reservationState == BlocState.loading,
+                                child: Container(
+                                  height: double.infinity,
+                                  width: double.infinity,
+                                  color: Colors.grey.withOpacity(0.2),
+                                  child: Center(
+                                    child: Padding(
+                                      padding: const EdgeInsets.only(top: 130),
+                                      child: CircularProgressIndicator(),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
                         if (state.reservationState != BlocState.noData)
                           Positioned(
                             bottom: 0,

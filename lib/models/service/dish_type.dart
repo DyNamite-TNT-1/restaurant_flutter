@@ -31,16 +31,13 @@ class DishTypeModel {
 }
 
 class DishTypeFilterModel {
-  final bool isSuccess;
   final List<DishTypeModel> dishTypes;
   DishTypeFilterModel({
-    this.isSuccess = false,
     this.dishTypes = const [],
   });
 
   factory DishTypeFilterModel.fromJson(Map<String, dynamic> json) {
     return DishTypeFilterModel(
-      isSuccess: ParseTypeData.ensureBool(json["isSuccess"]),
       dishTypes: DishTypeModel.parseListDishTypeItem(json["dishTypes"]),
     );
   }

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:restaurant_flutter/enum/enum.dart';
 import 'package:restaurant_flutter/models/service/dish.dart';
 import 'package:restaurant_flutter/models/service/service.dart';
 import 'package:restaurant_flutter/models/service/table.dart';
@@ -39,37 +40,14 @@ class ReservationDetailModel {
   });
 
   String get statusStr {
-    switch (status) {
-      case -2:
-        return "Chưa đặt cọc";
-      case -1:
-        return "Từ chối";
-      case 0:
-        return "Xác nhận đặt bàn";
-      case 1:
-        return "Đã duyệt";
-      case 2:
-        return "Kết thúc";
-      default:
-        return "Không xác định";
-    }
+    return ReservationStatus.all
+        .firstWhere((element) => element.value == status)
+        .name;
   }
 
   Color get statusColor {
-    switch (status) {
-      case -2:
-        return Color(0XFF8392A5);
-      case -1:
-        return Color(0XFFBE2020);
-      case 0:
-        return Color(0XFF10B759);
-      case 1:
-        return Color(0XFF5B47FB);
-      case 2:
-        return Color(0XFF8B008B);
-      default:
-        return Color(0XFFFFFFFF);
-    }
+    return ReservationStatus.all
+        .firstWhere((element) => element.value == status).color;
   }
 
   factory ReservationDetailModel.fromJson(Map<String, dynamic> json) {

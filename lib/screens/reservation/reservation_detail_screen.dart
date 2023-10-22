@@ -67,129 +67,71 @@ class _ReservationDetailScreenState extends State<ReservationDetailScreen> {
     }
   }
 
-  @override
-  Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (context) => _reservationDetailBloc,
-      child: BlocBuilder<ReservationDetailBloc, ReservationDetailState>(
-        builder: (context, state) {
-          bool isShowData = state.reservationState == BlocState.loadCompleted;
-          return Scaffold(
-            body: isShowData
-                ? Container(
-                    margin: const EdgeInsets.symmetric(
-                      vertical: kPadding10,
-                      horizontal: kDefaultPadding,
-                    ),
-                    padding: EdgeInsets.all(kPadding10),
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(kCornerMedium),
-                    ),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        _buildTopBar(context),
-                        Padding(
-                          padding:
-                              const EdgeInsets.symmetric(vertical: kPadding10),
-                          child: Text(
-                            "Mã đặt bàn: #${state.reservationDetailModel!.reservationId}",
-                            style: Theme.of(context).textTheme.bodyLarge,
-                          ),
-                        ),
-                        Row(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Expanded(
-                              flex: 2,
-                              child: Container(
-                                height: isOpenMenu
-                                    ? (40 +
-                                        32.0 *
-                                            state.reservationDetailModel!.menus
-                                                .length)
-                                    : 40,
-                                decoration: BoxDecoration(
-                                  borderRadius:
-                                      BorderRadius.circular(kCornerSmall),
-                                  border: Border.all(color: Colors.black),
-                                ),
-                                child: Column(
-                                  children: [
-                                    Container(
-                                      padding:
-                                          EdgeInsets.only(top: kPadding10 / 2),
-                                      margin: EdgeInsets.symmetric(
-                                          horizontal: kPadding10),
-                                      child: Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.spaceBetween,
-                                        children: [
-                                          Text(
-                                            "Danh sách món ăn:",
-                                            style: Theme.of(context)
-                                                .textTheme
-                                                .bodyLarge,
-                                          ),
-                                          Material(
-                                            color: Colors.transparent,
-                                            child: InkWell(
-                                              onTap: () {
-                                                setState(() {
-                                                  isOpenMenu = !isOpenMenu;
-                                                });
-                                              },
-                                              borderRadius:
-                                                  BorderRadius.circular(50),
-                                              child: Icon(isOpenMenu
-                                                  ? Icons.arrow_drop_down
-                                                  : Icons.arrow_right),
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                    if (isOpenMenu)
-                                      Divider(
-                                        color: Colors.black,
-                                        indent: kPadding10,
-                                        endIndent: kPadding10,
-                                      ),
-                                    if (isOpenMenu)
-                                      Expanded(
-                                        child: ListView.builder(
-                                          itemCount: state
-                                              .reservationDetailModel!
-                                              .menus
-                                              .length,
-                                          itemBuilder: (context, index) {
-                                            return ReservationDetailDishItem(
-                                              item: state
-                                                  .reservationDetailModel!
-                                                  .menus[index],
-                                            );
-                                          },
-                                        ),
-                                      ),
-                                  ],
-                                ),
-                              ),
-                            ),
-                            SizedBox(
-                              width: kDefaultPadding,
-                            ),
-                            Expanded(child: _buildColumnRight(context, state)),
-                          ],
-                        ),
-                      ],
-                    ),
-                  )
-                : Center(
-                    child: CircularProgressIndicator(),
+  Container _buildMenu(ReservationDetailState state, BuildContext context) {
+    return Container(
+      height: isOpenMenu
+          ? (40 + 28.0 * state.reservationDetailModel!.menus.length)
+          : 40,
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(kCornerSmall),
+        border: Border.all(color: Colors.black),
+      ),
+      child: Column(
+        children: [
+          Container(
+            padding: EdgeInsets.only(top: kPadding10 / 2),
+            margin: EdgeInsets.symmetric(horizontal: kPadding10),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  "Danh sách món ăn:",
+                  style: Theme.of(context).textTheme.bodyLarge,
+                ),
+                Material(
+                  color: Colors.transparent,
+                  child: InkWell(
+                    onTap: () {
+                      setState(() {
+                        isOpenMenu = !isOpenMenu;
+                      });
+                    },
+                    borderRadius: BorderRadius.circular(50),
+                    child: Icon(
+                        isOpenMenu ? Icons.arrow_drop_down : Icons.arrow_right),
                   ),
-          );
-        },
+                ),
+              ],
+            ),
+          ),
+          if (isOpenMenu)
+            Divider(
+              color: Colors.black,
+              indent: kPadding10,
+              endIndent: kPadding10,
+            ),
+          if (isOpenMenu)
+            Expanded(
+              child: ListView.builder(
+                itemCount: state.reservationDetailModel!.menus.length,
+                itemBuilder: (context, index) {
+                  return ReservationDetailDishItem(
+                    item: state.reservationDetailModel!.menus[index],
+                  );
+                },
+              ),
+            ),
+        ],
+      ),
+    );
+  }
+
+  Padding _buildId(ReservationDetailState state, BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: kPadding10),
+      child: Text(
+        "Mã đặt bàn: #${state.reservationDetailModel!.reservationId}",
+        style: Theme.of(context).textTheme.bodyLarge,
       ),
     );
   }
@@ -311,6 +253,55 @@ class _ReservationDetailScreenState extends State<ReservationDetailScreen> {
             ),
           ),
       ],
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return BlocProvider(
+      create: (context) => _reservationDetailBloc,
+      child: BlocBuilder<ReservationDetailBloc, ReservationDetailState>(
+        builder: (context, state) {
+          bool isShowData = state.reservationState == BlocState.loadCompleted;
+          return Scaffold(
+            body: isShowData
+                ? Container(
+                    margin: const EdgeInsets.symmetric(
+                      vertical: kPadding10,
+                      horizontal: kDefaultPadding,
+                    ),
+                    padding: EdgeInsets.all(kPadding10),
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(kCornerMedium),
+                    ),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        _buildTopBar(context),
+                        _buildId(state, context),
+                        Row(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Expanded(
+                              flex: 2,
+                              child: _buildMenu(state, context),
+                            ),
+                            SizedBox(
+                              width: kDefaultPadding,
+                            ),
+                            Expanded(child: _buildColumnRight(context, state)),
+                          ],
+                        ),
+                      ],
+                    ),
+                  )
+                : Center(
+                    child: CircularProgressIndicator(),
+                  ),
+          );
+        },
+      ),
     );
   }
 }

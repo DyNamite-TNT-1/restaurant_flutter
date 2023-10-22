@@ -1,13 +1,17 @@
+import 'package:flutter/material.dart';
+
 enum ReservationStatus {
-  notPayPreFee("Chưa đặt cọc", -2),
-  rejected("Từ chối", -1),
-  pending("Xác nhận đặt bàn", 0),
-  approved("Đã duyệt", 1),
-  finishes("Kết thúc", 2);
+  overSchedule("Không đặt cọc", -3, Color(0XFF8392A5)),
+  notPayPreFee("Chưa đặt cọc", -2, Color(0XFFF1C232)),
+  rejected("Đã hủy", -1, Color(0XFFBE2020)),
+  pending("Xác nhận đặt bàn", 0,Color(0XFF10B759)),
+  approved("Đã duyệt", 1, Color(0XFF5B47FB)),
+  finishes("Kết thúc", 2, Color(0XFF8B008B));
 
   final String name;
   final int value;
-  const ReservationStatus(this.name, this.value);
+  final Color color;
+  const ReservationStatus(this.name, this.value, this.color);
   static List<ReservationStatus> get all {
     return ReservationStatus.values;
   }

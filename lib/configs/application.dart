@@ -1,5 +1,4 @@
-import 'package:restaurant_flutter/api/api.dart';
-import 'package:socket_io_client/socket_io_client.dart' as IO;
+import 'package:restaurant_flutter/models/client/client_reservation_status.dart';
 
 class Application {
   static const bool supportOTP = true;
@@ -15,6 +14,37 @@ class Application {
 
   // static UserInfo userInfo = UserInfo.empty();
 
+  static List<ClientReservationStatusModel> reservationStatusList = [
+    ClientReservationStatusModel(
+      type: "Tất cả",
+      status: 100,
+    ),
+    ClientReservationStatusModel(
+      type: "Đã kết thúc",
+      status: 2,
+    ),
+    ClientReservationStatusModel(
+      type: "Đã duyệt",
+      status: 1,
+    ),
+    ClientReservationStatusModel(
+      type: "Xác nhận đặt bàn",
+      status: 0,
+    ),
+    ClientReservationStatusModel(
+      type: "Đã hủy",
+      status: -1,
+    ),
+    ClientReservationStatusModel(
+      type: "Chưa đặt cọc",
+      status: -2,
+    ),
+    ClientReservationStatusModel(
+      type: "Không đặt cọc",
+      status: -3,
+    ),
+  ];
+
   ///Singleton factory
   static final Application _instance = Application._internal();
 
@@ -23,25 +53,4 @@ class Application {
   }
 
   Application._internal();
-}
-
-class SocketClient {
-  static IO.Socket? socket;
-
-  static void connectSocket() {
-    socket = IO.io(
-      Api.branchGetter(),
-      IO.OptionBuilder().setTransports(['websocket']).setQuery(
-          {'username': "ANHDUC"}).build(),
-    );
-  }
-
-  ///Singleton factory
-  static final SocketClient _instance = SocketClient._internal();
-
-  factory SocketClient() {
-    return _instance;
-  }
-
-  SocketClient._internal();
 }

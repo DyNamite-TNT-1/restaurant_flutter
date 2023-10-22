@@ -7,3 +7,4 @@ export 'preferences.dart';
 export 'language.dart';
 export 'application.dart';
 export 'user_repository.dart';
+export 'socket.dart';
