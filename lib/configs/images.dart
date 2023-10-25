@@ -20,6 +20,7 @@ class AssetImages {
   static const String icForkKnife = "assets/images/ic_fork_knife.svg";
   static const String icDrink = "assets/images/ic_drink.svg";
   static const String icMicro = "assets/images/ic_micro.svg";
+  static const String icSetting = "assets/images/ic_setting.svg";
 
   static const String icSearch = "assets/images/ic_search.svg";
   static const String icChecked = "assets/images/ic_checked.svg";

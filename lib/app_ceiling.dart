@@ -34,8 +34,6 @@ class _AppCeilingState extends State<AppCeiling> {
 
   @override
   Widget build(BuildContext context) {
-    String currentLang = AppLanguage.currentLanguage?.languageCode ??
-        Localizations.localeOf(context).languageCode;
     var authState = context.select((AuthenticationBloc bloc) => bloc.state);
     return Row(
       children: [
@@ -98,13 +96,6 @@ class _AppCeilingState extends State<AppCeiling> {
                         ],
                       ),
                     ),
-              IconButton(
-                onPressed: () {
-                  context.goNamed(RouteConstants.settingLanguage,
-                      extra: {"initLangCode": currentLang});
-                },
-                icon: Icon(Icons.settings),
-              ),
             ],
           ),
         ),

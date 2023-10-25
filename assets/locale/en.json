@@ -28,7 +28,8 @@
   "drink": "Drink",
   "service": "Service",
   "history": "History",
+  "setting": "Setting",
 
-  "Change Language": "Change Language",
+  "change_language": "Change Language",
   "Apply": "Apply"
 }

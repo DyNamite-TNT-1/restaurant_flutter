@@ -18,5 +18,6 @@ class RouteConstants {
   static String reservation = "reservation";
   static String reservationDetail = "reservationDetail";
   //setting
+  static String setting = "setting";
   static String settingLanguage = "settingLanguage";
 }

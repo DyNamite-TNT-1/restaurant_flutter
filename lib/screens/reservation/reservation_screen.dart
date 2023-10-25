@@ -204,7 +204,7 @@ class _ReservationScreenState extends State<ReservationScreen> {
     return Row(
       children: [
         Text(
-          "Loại: ",
+          "Trạng thái: ",
           style: Theme.of(context).textTheme.bodyLarge,
         ),
         AppPopupMenuButton<ClientReservationStatusModel>(
@@ -235,7 +235,7 @@ class _ReservationScreenState extends State<ReservationScreen> {
           width: kDefaultPadding,
         ),
         Text(
-          "Ngày tạo yêu cầu: ",
+          "Ngày diễn ra: ",
           style: Theme.of(context).textTheme.bodyLarge,
         ),
         AppPopupMenuButton<OrderEnum>(

@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:restaurant_flutter/blocs/app_bloc.dart';
 import 'package:restaurant_flutter/blocs/language/language_bloc.dart';
 import 'package:restaurant_flutter/configs/configs.dart';
@@ -7,17 +6,15 @@ import 'package:restaurant_flutter/utils/utils.dart';
 
 import '../../widgets/widgets.dart';
 
-class SettingChangeLanguageScreen extends StatefulWidget {
+class SettingChangeLanguage extends StatefulWidget {
   final String initLangCode;
-  const SettingChangeLanguageScreen({super.key, required this.initLangCode});
+  const SettingChangeLanguage({super.key, required this.initLangCode});
 
   @override
-  State<SettingChangeLanguageScreen> createState() =>
-      _SettingChangeLanguageScreenState();
+  State<SettingChangeLanguage> createState() => _SettingChangeLanguageState();
 }
 
-class _SettingChangeLanguageScreenState
-    extends State<SettingChangeLanguageScreen> {
+class _SettingChangeLanguageState extends State<SettingChangeLanguage> {
   final _supportLanguage = AppLanguage.supportLanguage;
   late String selectLang;
   bool isLoading = false;
@@ -47,41 +44,6 @@ class _SettingChangeLanguageScreenState
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        automaticallyImplyLeading: false,
-        systemOverlayStyle: SystemUiOverlayStyle(
-          statusBarColor: Theme.of(context).colorScheme.background,
-          statusBarIconBrightness: Brightness.dark,
-          statusBarBrightness: Brightness.light,
-        ),
-        title: Row(
-          children: [
-            IconButton(
-                padding: EdgeInsets.zero,
-                constraints: BoxConstraints(),
-                onPressed: () {
-                  Navigator.pop(context);
-                },
-                icon: Icon(Icons.arrow_back_ios)),
-            Expanded(
-              child: Text(
-                Translate.of(context).translate('Change Language'),
-                style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                      fontFamily: AppTheme.currentFont,
-                      color: Color(0xff3D4153),
-                      fontSize: kfontSizeHeadlineSmall,
-                      fontWeight: FontWeight.bold,
-                    ),
-              ),
-            ),
-            Container(
-              padding: const EdgeInsets.all(8.0),
-            ),
-          ],
-        ),
-        elevation: 0,
-      ),
-      backgroundColor: Theme.of(context).colorScheme.surface,
       body: AbsorbPointer(
         absorbing: isLoading,
         child: ListView.builder(

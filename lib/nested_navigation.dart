@@ -182,7 +182,8 @@ class _ScaffoldWithNavigationRailState extends State<ScaffoldWithNavigationRail>
                       backgroundColor: backgroundColor,
                       destinations: <NavigationRailDestination>[
                         NavigationRailDestination(
-                          label: Text(Translate.of(context).translate("dashboard")),
+                          label: Text(
+                              Translate.of(context).translate("dashboard")),
                           icon: Icon(Icons.home),
                         ),
                         NavigationRailDestination(
@@ -208,7 +209,8 @@ class _ScaffoldWithNavigationRailState extends State<ScaffoldWithNavigationRail>
                           ),
                         ),
                         NavigationRailDestination(
-                          label: Text(Translate.of(context).translate("service")),
+                          label:
+                              Text(Translate.of(context).translate("service")),
                           icon: SvgPicture.asset(
                             AssetImages.icMicro,
                             height: 20,
@@ -219,12 +221,25 @@ class _ScaffoldWithNavigationRailState extends State<ScaffoldWithNavigationRail>
                           ),
                         ),
                         NavigationRailDestination(
-                          label: Text(Translate.of(context).translate("history")),
+                          label:
+                              Text(Translate.of(context).translate("history")),
                           icon: SvgPicture.asset(
                             AssetImages.icAvailableCalendar,
                             height: 20,
                             colorFilter: ColorFilter.mode(
                               widget.selectedIndex == 4 ? blueColor : textColor,
+                              BlendMode.srcIn,
+                            ),
+                          ),
+                        ),
+                        NavigationRailDestination(
+                          label:
+                              Text(Translate.of(context).translate("setting")),
+                          icon: SvgPicture.asset(
+                            AssetImages.icSetting,
+                            height: 20,
+                            colorFilter: ColorFilter.mode(
+                              widget.selectedIndex == 5 ? blueColor : textColor,
                               BlendMode.srcIn,
                             ),
                           ),

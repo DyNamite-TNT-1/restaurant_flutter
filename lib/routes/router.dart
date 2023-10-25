@@ -13,7 +13,8 @@ import 'package:restaurant_flutter/screens/profile/profile.dart';
 import 'package:restaurant_flutter/screens/reservation/reservation_detail_screen.dart';
 import 'package:restaurant_flutter/screens/reservation/reservation_screen.dart';
 import 'package:restaurant_flutter/screens/service/service_screen.dart';
-import 'package:restaurant_flutter/screens/setting/setting_change_language_screen.dart';
+import 'package:restaurant_flutter/screens/setting/setting_change_language.dart';
+import 'package:restaurant_flutter/screens/setting/setting_screen.dart';
 import 'package:restaurant_flutter/utils/parse_type_value.dart';
 
 final _rootNavigatorKey = GlobalKey<NavigatorState>();
@@ -27,6 +28,8 @@ final _shellNavigatorServiceKey =
     GlobalKey<NavigatorState>(debugLabel: "shellService");
 final _shellNavigatorReservationKey =
     GlobalKey<NavigatorState>(debugLabel: "shellReservation");
+final _shellNavigatorSettingKey =
+    GlobalKey<NavigatorState>(debugLabel: "shellSetting");
 
 class AppRouter {
   static GoRouter router = GoRouter(
@@ -152,6 +155,35 @@ class AppRouter {
               )
             ],
           ),
+          StatefulShellBranch(
+            navigatorKey: _shellNavigatorSettingKey,
+            routes: [
+              GoRoute(
+                  name: RouteConstants.setting,
+                  path: "/setting",
+                  pageBuilder: (context, state) {
+                    return NoTransitionPage(
+                      child: SettingScreen(),
+                    );
+                  },
+                  routes: [
+                    GoRoute(
+                        name: RouteConstants.settingLanguage,
+                        path: "setting-language",
+                        pageBuilder: (context, state) {
+                          final params = state.extra as Map<String, dynamic>;
+                          final String initLangCode =
+                              ParseTypeData.ensureString(
+                                  params["initLangCode"]);
+                          return MaterialPage(
+                            child: SettingChangeLanguage(
+                                initLangCode: initLangCode),
+                          );
+                        }),
+                  ],
+                  )
+            ],
+          ),
         ],
       ),
       GoRoute(
@@ -185,17 +217,6 @@ class AppRouter {
           );
         },
       ),
-      GoRoute(
-          name: RouteConstants.settingLanguage,
-          path: "/setting-language",
-          pageBuilder: (context, state) {
-            final params = state.extra as Map<String, dynamic>;
-            final String initLangCode =
-                ParseTypeData.ensureString(params["initLangCode"]);
-            return NoTransitionPage(
-              child: SettingChangeLanguageScreen(initLangCode: initLangCode),
-            );
-          }),
     ],
     redirect: (context, state) {
       // var authState = context.watch<AuthenticationBloc>().state;
