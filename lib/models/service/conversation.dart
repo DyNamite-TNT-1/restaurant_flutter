@@ -2,7 +2,7 @@ import 'package:restaurant_flutter/utils/utils.dart';
 
 class ConversationDetailModel {
   final int conversationId;
-  final bool acceptManager;
+  bool acceptManager;
   final String createdAt;
   final String updatedAt;
 

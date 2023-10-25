@@ -13,6 +13,7 @@
   "VALIDATE_DATE_E001": "Do not select date in the past",
   "VALIDATE_TIME_E001": "Do not choose a time in the past",
   "MENU_EMPTY_E001": "Your menu is empty",
+  "MAKE_RESERVATION_SUCCESS": "Make reservation successfully",
   "VALIDATE_EMAIL_E001": "Please input email",
   "VALIDATE_EMAIL_E002": "Email is not in the correct format",
   "VALIDATE_PHONE_E001": "Please input phone number",
@@ -29,6 +30,9 @@
   "service": "Service",
   "history": "History",
   "setting": "Setting",
+  "refresh": "Refresh",
+  "type": "Type",
+  "price": "Price",
 
   "change_language": "Change Language",
   "Apply": "Apply"

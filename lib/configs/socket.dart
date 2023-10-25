@@ -1,4 +1,5 @@
 import 'package:restaurant_flutter/api/api.dart';
+import 'package:restaurant_flutter/utils/utils.dart';
 import 'package:socket_io_client/socket_io_client.dart' as IO;
 
 class SocketClient {
@@ -7,9 +8,12 @@ class SocketClient {
   static void connectSocket() {
     socket = IO.io(
       Api.branchGetter(),
-      IO.OptionBuilder().setTransports(['websocket']).setQuery(
-          {'username': "ANHDUC"}).build(),
+      IO.OptionBuilder().setTransports(['websocket']).build(),
     );
+    socket!.onConnect((_) {
+      UtilLogger.log('🚀 Socket connect');
+    });
+    socket!.onDisconnect((_) => UtilLogger.log('🚀 Socket disconnect'));
   }
 
   ///Singleton factory

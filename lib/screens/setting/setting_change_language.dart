@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:restaurant_flutter/blocs/app_bloc.dart';
 import 'package:restaurant_flutter/blocs/language/language_bloc.dart';
 import 'package:restaurant_flutter/configs/configs.dart';
@@ -37,6 +38,7 @@ class _SettingChangeLanguageState extends State<SettingChangeLanguage> {
         setState(() {
           isLoading = false;
         });
+        context.pop();
       }
     }
   }

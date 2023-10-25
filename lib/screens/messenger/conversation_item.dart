@@ -62,9 +62,12 @@ class _ConversationItemState extends State<ConversationItem> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Text(
-                        widget.item.user!.userName,
-                        style: Theme.of(context).textTheme.bodyLarge,
+                      Flexible(
+                        child: Text(
+                          widget.item.user!.userName,
+                          overflow: TextOverflow.ellipsis,
+                          style: Theme.of(context).textTheme.bodyLarge,
+                        ),
                       ),
                       Text(
                         "6 giờ",

@@ -17,7 +17,7 @@ import 'package:restaurant_flutter/screens/reservation_tab/widget/service_item.d
 import 'package:restaurant_flutter/utils/utils.dart';
 import 'package:restaurant_flutter/widgets/app_popup_menu_button.dart';
 import 'package:restaurant_flutter/widgets/widgets.dart';
-import 'dart:js' as js;
+import 'package:url_launcher/url_launcher.dart';
 import 'widget/dish_item.dart';
 import 'widget/drink_item.dart';
 
@@ -54,6 +54,12 @@ class _ReservationTabState extends State<ReservationTab>
     super.initState();
     tabController = TabController(length: 4, vsync: this);
     _requestListTableType();
+  }
+
+  Future<void> openUrl(Uri url) async {
+    if (await canLaunchUrl(url)) {
+      await launchUrl(url);
+    }
   }
 
   Future<void> _requestListTableType() async {
@@ -115,20 +121,21 @@ class _ReservationTabState extends State<ReservationTab>
       builder: (context) {
         return AppDialogText(
           buttonDoneTitle: preFee > 0 ? "Thanh toán" : "OK",
-          onDone: () {
-            if (preFee > 0) {
-              js.context.callMethod('open', [
-                'http://localhost:3005/vnpay/create_payment_url?amount=$preFee&id_order=$reservationId'
-              ]);
+          onDone: () async {
+            await openUrl(Uri.parse(
+                "http://localhost:3005/vnpay/create_payment_url?amount=$preFee&id_order=$reservationId"));
+            if (mounted) {
+              Navigator.pop(context);
             }
-            Navigator.pop(context);
           },
           onCancel: () {
             Navigator.pop(context);
           },
           child: Column(
             children: [
-              Text("Đặt bàn thành công!"),
+              Text(
+                Translate.of(context).translate("MAKE_RESERVATION_SUCCESS"),
+              ),
               preFee > 0
                   ? Column(
                       children: [

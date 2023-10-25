@@ -9,7 +9,7 @@ import 'package:restaurant_flutter/models/service/model_result_api.dart';
 import 'package:restaurant_flutter/models/service/reservation.dart';
 import 'package:restaurant_flutter/screens/reservation/widget/dish_item.dart';
 import 'package:restaurant_flutter/widgets/widgets.dart';
-import 'dart:js' as js;
+import 'package:url_launcher/url_launcher.dart';
 
 class ReservationDetailScreen extends StatefulWidget {
   const ReservationDetailScreen({super.key, required this.id});
@@ -39,6 +39,12 @@ class _ReservationDetailScreenState extends State<ReservationDetailScreen> {
 
   bool get isServiceClosed {
     return !mounted || _reservationDetailBloc.isClosed;
+  }
+
+  Future<void> openUrl(Uri url) async {
+    if (await canLaunchUrl(url)) {
+      await launchUrl(url);
+    }
   }
 
   Future<void> _requestDetailReservation() async {
@@ -245,10 +251,9 @@ class _ReservationDetailScreenState extends State<ReservationDetailScreen> {
             child: AppButton(
               "Đặt cọc",
               disabled: state.reservationDetailModel!.status != -2,
-              onPressed: () {
-                js.context.callMethod('open', [
-                  'http://localhost:3005/vnpay/create_payment_url?amount=${state.reservationDetailModel!.preFee}&id_order=${state.reservationDetailModel!.reservationId}'
-                ]);
+              onPressed: () async {
+                await openUrl(Uri.parse(
+                    "http://localhost:3005/vnpay/create_payment_url?amount=${state.reservationDetailModel!.preFee}&id_order=${state.reservationDetailModel!.reservationId}"));
               },
             ),
           ),

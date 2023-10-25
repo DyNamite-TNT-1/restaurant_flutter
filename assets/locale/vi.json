@@ -13,6 +13,7 @@
   "VALIDATE_DATE_E001": "Không được chọn ngày trong quá khứ",
   "VALIDATE_TIME_E001": "Không được chọn thời gian trong quá khứ",
   "MENU_EMPTY_E001": "Menu của bạn đang trống",
+  "MAKE_RESERVATION_SUCCESS": "Đặt bàn thành công",
   "VALIDATE_EMAIL_E001": "Vui lòng nhập email",
   "VALIDATE_EMAIL_E002": "Email không đúng định dạng",
   "VALIDATE_PHONE_E001": "Vui lòng nhập số điện thoại",
@@ -29,6 +30,9 @@
   "service": "Dịch vụ",
   "history": "Lịch sử",
   "setting": "Cài đặt",
+  "refresh": "Làm mới",
+  "type": "Loại",
+  "price": "Giá",
 
   "change_language": "Thay đổi ngôn ngữ",
   "Apply": "Áp dụng"

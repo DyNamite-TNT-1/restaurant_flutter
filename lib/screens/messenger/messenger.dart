@@ -32,8 +32,8 @@ class _MessengerScreenState extends State<MessengerScreen> {
 
   @override
   void initState() {
-    print("initState");
     messengerBloc = MessengerBloc(MessengerState());
+    _onRefresh();
     _addSocketListener();
     super.initState();
   }
@@ -43,6 +43,7 @@ class _MessengerScreenState extends State<MessengerScreen> {
   }
 
   _addSocketListener() {
+    UtilLogger.log("add socket listener");
     SocketClient.socket!.on('receiver-message', (data) {
       if (isServiceClosed) {
         Map<String, dynamic> messageData = data as Map<String, dynamic>;
@@ -278,9 +279,8 @@ class _MessengerScreenState extends State<MessengerScreen> {
                                           Visibility(
                                             visible: UserRepository
                                                     .userModel.isManager &&
-                                                state.conversationState !=
-                                                    BlocState.loading &&
-                                                state.conversations.isEmpty,
+                                                state.conversationState ==
+                                                    BlocState.loadFailed,
                                             child: Center(
                                               child: IconButton(
                                                 onPressed: () {
@@ -337,7 +337,13 @@ class _MessengerScreenState extends State<MessengerScreen> {
                                                         const EdgeInsets.all(
                                                             kDefaultPadding /
                                                                 2),
-                                                    child: NoDataFoundView(),
+                                                    child: NoDataFoundView(
+                                                      message: UserRepository
+                                                              .userModel
+                                                              .isClient
+                                                          ? "Hãy tạo tin nhắn đầu tiên đến Firestaurant!"
+                                                          : "Hãy chấp nhận tin nhắn từ khách hàng",
+                                                    ),
                                                   )
                                                 : ListView.builder(
                                                     reverse: true,
@@ -417,9 +423,11 @@ class _MessengerScreenState extends State<MessengerScreen> {
                                       ),
                                     ),
                                     Visibility(
-                                      visible: UserRepository.userModel.isClient && state.messageState !=
-                                              BlocState.loading &&
-                                          state.messages.isEmpty,
+                                      visible:
+                                          UserRepository.userModel.isClient &&
+                                              state.messageState ==
+                                                  BlocState.loadFailed &&
+                                              state.messages.isEmpty,
                                       child: Center(
                                         child: IconButton(
                                           onPressed: () {

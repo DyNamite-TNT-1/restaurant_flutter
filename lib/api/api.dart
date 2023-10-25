@@ -381,6 +381,20 @@ class Api {
     return ResultModel.fromJson(result);
   }
 
+  static Future<ResultModel> requestCreateConversation({
+    required String content,
+    String tagRequest = HTTPManager.DEFAULT_CANCEL_TAG,
+  }) async {
+    var data = {
+      "content": content,
+    };
+    final result = await httpManager.post(
+      url: appendBranch(requestConversationUrl),
+      data: data,
+    );
+    return ResultModel.fromJson(result);
+  }
+
   static Future<ResultModel> requestClientMessage({
     String tagRequest = HTTPManager.DEFAULT_CANCEL_TAG,
   }) async {
