@@ -172,6 +172,11 @@ class _ScaffoldWithNavigationRailState extends State<ScaffoldWithNavigationRail>
                   _runAnimationCheck();
                 },
               ),
+              Container(
+                color: primaryColor,
+                height: 1,
+                width: double.infinity,
+              ),
               Expanded(
                 child: Row(
                   children: [
