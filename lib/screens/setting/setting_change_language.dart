@@ -38,67 +38,125 @@ class _SettingChangeLanguageState extends State<SettingChangeLanguage> {
         setState(() {
           isLoading = false;
         });
-        context.pop();
       }
     }
   }
 
   @override
   Widget build(BuildContext context) {
+    //dont know why old code no localize in this screen when change language, but it can after adding a column(maybe another widget can work).
     return Scaffold(
-      body: AbsorbPointer(
-        absorbing: isLoading,
-        child: ListView.builder(
-          padding: const EdgeInsets.all(kDefaultPadding * 4 / 3),
-          itemCount: _supportLanguage.length + 1, // add  button
-          itemBuilder: (context, index) {
-            if (index == _supportLanguage.length) {
-              return Container(
-                margin: EdgeInsets.only(top: 50),
-                child: AppButton(
-                  Translate.of(context).translate(
-                    'Apply',
+      body: Column(
+        children: [
+          SizedBox(
+            height: kDefaultPadding,
+          ),
+          Stack(
+            children: [
+              SizedBox(
+                width: double.infinity,
+                child: Center(
+                  child: Text(
+                    Translate.of(context).translate('change_language'),
+                    style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                          fontFamily: AppTheme.currentFont,
+                          color: Color(0xff3D4153),
+                          fontSize: kfontSizeHeadlineSmall,
+                          fontWeight: FontWeight.bold,
+                        ),
                   ),
-                  mainAxisSize: MainAxisSize.max,
-                  onPressed: () {
-                    _requestChangeLanguage();
-                  },
-                  type: ButtonType.normal,
-                  loading: isLoading,
-                ),
-              );
-            }
-            final languageCode = UtilLanguage.getGlobalLanguageName(
-                _supportLanguage[index].languageCode);
-            return InkWell(
-              onTap: () {
-                setState(() {
-                  selectLang = _supportLanguage[index].languageCode;
-                });
-              },
-              child: Container(
-                padding: const EdgeInsets.symmetric(vertical: kDefaultPadding),
-                child: Row(
-                  children: [
-                    Icon(
-                      selectLang == _supportLanguage[index].languageCode
-                          ? Icons.check
-                          : Icons.radio_button_unchecked,
-                      size: kSizeIconLarge,
-                    ),
-                    SizedBox(
-                      width: kDefaultPadding,
-                    ),
-                    Text(
-                      Translate.of(context).translate(languageCode),
-                      style: Theme.of(context).textTheme.titleMedium,
-                    ),
-                  ],
                 ),
               ),
-            );
-          },
-        ),
+              Positioned(
+                top: 0,
+                bottom: 0,
+                left: kDefaultPadding * 4 / 3,
+                child: Material(
+                  color: Colors.transparent,
+                  child: InkWell(
+                    borderRadius: BorderRadius.circular(kCornerSmall),
+                    onTap: () {
+                      context.pop();
+                    },
+                    child: Container(
+                      padding: EdgeInsets.symmetric(horizontal: 5),
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(kCornerSmall),
+                        border: Border.all(),
+                      ),
+                      child: Row(
+                        children: const [
+                          Icon(
+                            Icons.arrow_back,
+                            size: 20,
+                          ),
+                          // Text("Làm mới"),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),
+          Expanded(
+            child: AbsorbPointer(
+              absorbing: isLoading,
+              child: ListView.builder(
+                padding: const EdgeInsets.all(kDefaultPadding * 4 / 3),
+                itemCount: _supportLanguage.length + 1, // add  button
+                itemBuilder: (context, index) {
+                  if (index == _supportLanguage.length) {
+                    return Container(
+                      margin: EdgeInsets.only(top: 50),
+                      child: AppButton(
+                        Translate.of(context).translate(
+                          'Apply',
+                        ),
+                        mainAxisSize: MainAxisSize.max,
+                        onPressed: () {
+                          _requestChangeLanguage();
+                        },
+                        type: ButtonType.normal,
+                        loading: isLoading,
+                      ),
+                    );
+                  }
+                  final languageCode = UtilLanguage.getGlobalLanguageName(
+                      _supportLanguage[index].languageCode);
+                  return InkWell(
+                    onTap: () {
+                      setState(() {
+                        selectLang = _supportLanguage[index].languageCode;
+                      });
+                    },
+                    child: Container(
+                      padding:
+                          const EdgeInsets.symmetric(vertical: kDefaultPadding),
+                      child: Row(
+                        children: [
+                          Icon(
+                            selectLang == _supportLanguage[index].languageCode
+                                ? Icons.check
+                                : Icons.radio_button_unchecked,
+                            size: kSizeIconLarge,
+                          ),
+                          SizedBox(
+                            width: kDefaultPadding,
+                          ),
+                          Text(
+                            Translate.of(context).translate(languageCode),
+                            style: Theme.of(context).textTheme.titleMedium,
+                          ),
+                        ],
+                      ),
+                    ),
+                  );
+                },
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }
