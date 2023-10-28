@@ -34,6 +34,7 @@
   "type": "Type",
   "price": "Price",
 
+  "Loading common settings": "Loading common settings...",
   "change_language": "Change Language",
   "Apply": "Apply"
 }

@@ -55,6 +55,7 @@ dependencies:
   timeago: ^3.5.0
   socket_io_client: ^2.0.3+1
   url_launcher: ^6.0.20
+  flutter_spinkit: ^5.2.0
 
 dev_dependencies:
   flutter_test:

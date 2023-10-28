@@ -1,4 +1,7 @@
 class RouteConstants {
+  //splash
+  static String splash = "splash";
+  //authentication
   static String login = "login";
   static String signUp = "signUp";
   static String verifyOTP = "verifyOTP";

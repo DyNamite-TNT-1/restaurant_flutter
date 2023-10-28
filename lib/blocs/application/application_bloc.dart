@@ -81,7 +81,7 @@ class ApplicationBloc extends Bloc<ApplicationEvent, ApplicationState> {
     // final hasReview =
     //     UserPreferences.hasNewIntroUpgradeVersion(Application.versionIntro);
 
-    // await Future.delayed(Duration(milliseconds: 300));
+    await Future.delayed(Duration(milliseconds: 1000));
 
     emit(ApplicationSetupCompleted());
 

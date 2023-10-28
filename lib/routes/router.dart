@@ -9,6 +9,7 @@ import 'package:restaurant_flutter/nested_navigation.dart';
 import 'package:restaurant_flutter/screens/dish/dish_screen.dart';
 import 'package:restaurant_flutter/screens/drink/detail_drink.dart';
 import 'package:restaurant_flutter/screens/drink/drink_screen.dart';
+import 'package:restaurant_flutter/screens/loading/splash_screen.dart';
 import 'package:restaurant_flutter/screens/profile/profile.dart';
 import 'package:restaurant_flutter/screens/reservation/reservation_detail_screen.dart';
 import 'package:restaurant_flutter/screens/reservation/reservation_screen.dart';
@@ -33,10 +34,19 @@ final _shellNavigatorSettingKey =
 
 class AppRouter {
   static GoRouter router = GoRouter(
-    initialLocation: "/dashboard",
+    initialLocation: "/",
     navigatorKey: _rootNavigatorKey,
     debugLogDiagnostics: true,
     routes: [
+      GoRoute(
+        name: RouteConstants.splash,
+        path: "/",
+        pageBuilder: (context, state) {
+          return NoTransitionPage(
+            child: SplashScreen(),
+          );
+        },
+      ),
       StatefulShellRoute.indexedStack(
         builder: (context, state, navigationShell) {
           return ScaffoldWithNestedNavigation(navigationShell: navigationShell);
@@ -140,7 +150,7 @@ class AppRouter {
                 routes: [
                   GoRoute(
                     name: RouteConstants.reservationDetail,
-                    path: "reservation/:id",
+                    path: "detail/:id",
                     pageBuilder: (context, state) {
                       int id =
                           ParseTypeData.ensureInt(state.pathParameters["id"]);
@@ -159,29 +169,29 @@ class AppRouter {
             navigatorKey: _shellNavigatorSettingKey,
             routes: [
               GoRoute(
-                  name: RouteConstants.setting,
-                  path: "/setting",
-                  pageBuilder: (context, state) {
-                    return NoTransitionPage(
-                      child: SettingScreen(),
-                    );
-                  },
-                  routes: [
-                    GoRoute(
-                        name: RouteConstants.settingLanguage,
-                        path: "setting-language",
-                        pageBuilder: (context, state) {
-                          final params = state.extra as Map<String, dynamic>;
-                          final String initLangCode =
-                              ParseTypeData.ensureString(
-                                  params["initLangCode"]);
-                          return MaterialPage(
-                            child: SettingChangeLanguage(
-                                initLangCode: initLangCode),
-                          );
-                        }),
-                  ],
-                  )
+                name: RouteConstants.setting,
+                path: "/setting",
+                pageBuilder: (context, state) {
+                  return NoTransitionPage(
+                    child: SettingScreen(),
+                  );
+                },
+                routes: [
+                  GoRoute(
+                    name: RouteConstants.settingLanguage,
+                    path: "setting-language",
+                    pageBuilder: (context, state) {
+                      final params = state.extra as Map<String, dynamic>;
+                      final String initLangCode =
+                          ParseTypeData.ensureString(params["initLangCode"]);
+                      return MaterialPage(
+                        child:
+                            SettingChangeLanguage(initLangCode: initLangCode),
+                      );
+                    },
+                  ),
+                ],
+              ),
             ],
           ),
         ],
