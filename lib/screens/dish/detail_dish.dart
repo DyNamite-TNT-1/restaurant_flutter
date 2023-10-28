@@ -45,8 +45,11 @@ class _DishDetailScreenState extends State<DishDetailScreen> {
                         height: 400,
                         width: 400,
                         fit: BoxFit.cover,
-                        placeholder: (context, url) =>
-                            Center(child: CircularProgressIndicator()),
+                        placeholder: (context, url) => Center(
+                          child: CircularProgressIndicator(
+                            color: primaryColor,
+                          ),
+                        ),
                         errorWidget: (context, url, error) => Icon(Icons.error),
                       ),
                     ),

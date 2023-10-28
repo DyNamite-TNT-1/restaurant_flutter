@@ -12,6 +12,7 @@ class DishDetailModel {
   final String dishType;
   final String unit;
   int quantity;
+  final bool isDrink;
 
   DishDetailModel({
     this.dishId = 0,
@@ -25,6 +26,7 @@ class DishDetailModel {
     this.dishType = "",
     this.unit = "",
     this.quantity = 1, //count of this dish in menu, not get from server
+    this.isDrink = false,
   });
 
   factory DishDetailModel.fromJson(Map<String, dynamic> json) {
@@ -39,6 +41,7 @@ class DishDetailModel {
       dishTypeId: ParseTypeData.ensureInt(json["dishTypeId"]),
       dishType: ParseTypeData.ensureString(json["dishType"]),
       unit: ParseTypeData.ensureString(json["unit"]),
+      isDrink: ParseTypeData.ensureBool(json["isDrink"]),
     );
   }
 

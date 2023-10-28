@@ -9,7 +9,7 @@ import 'package:restaurant_flutter/enum/enum.dart';
 import 'package:restaurant_flutter/models/service/model_result_api.dart';
 import 'package:restaurant_flutter/models/service/reservation.dart';
 import 'package:restaurant_flutter/models/client/client_reservation_status.dart';
-import 'package:restaurant_flutter/screens/reservation/widget/reservation_item.dart';
+import 'package:restaurant_flutter/screens/reservation/widget/reservation_row_item.dart';
 import 'package:restaurant_flutter/widgets/app_popup_menu_button.dart';
 import 'package:restaurant_flutter/widgets/widgets.dart';
 
@@ -302,7 +302,7 @@ class _ReservationScreenState extends State<ReservationScreen> {
                                         itemCount: _reservationBloc
                                             .state.reservations.length,
                                         itemBuilder: (context, index) {
-                                          return ReservationItem(
+                                          return ReservationRowItem(
                                             item: _reservationBloc
                                                 .state.reservations[index],
                                           );
@@ -333,7 +333,9 @@ class _ReservationScreenState extends State<ReservationScreen> {
                                   child: Center(
                                     child: Padding(
                                       padding: const EdgeInsets.only(top: 130),
-                                      child: CircularProgressIndicator(),
+                                      child: CircularProgressIndicator(
+                                         color: primaryColor,
+                                      ),
                                     ),
                                   ),
                                 ),

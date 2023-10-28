@@ -1,13 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import 'package:intl/intl.dart';
 import 'package:restaurant_flutter/api/api.dart';
 import 'package:restaurant_flutter/blocs/reservation_detail/reservation_detail_bloc.dart';
 import 'package:restaurant_flutter/configs/configs.dart';
 import 'package:restaurant_flutter/enum/enum.dart';
 import 'package:restaurant_flutter/models/service/model_result_api.dart';
 import 'package:restaurant_flutter/models/service/reservation.dart';
-import 'package:restaurant_flutter/screens/reservation/widget/dish_item.dart';
+import 'package:restaurant_flutter/screens/reservation/widget/menu_row_item.dart';
+import 'package:restaurant_flutter/screens/reservation/widget/service_row_item.dart';
+import 'package:restaurant_flutter/utils/utils.dart';
 import 'package:restaurant_flutter/widgets/widgets.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -24,7 +27,9 @@ class _ReservationDetailScreenState extends State<ReservationDetailScreen> {
   final ReservationDetailBloc _reservationDetailBloc =
       ReservationDetailBloc(ReservationDetailState());
   String tagRequestReservation = "";
-  bool isOpenMenu = true;
+  bool isOpenDishList = true;
+  bool isOpenDrinkList = true;
+  bool isOpenServiceList = true;
   @override
   void initState() {
     super.initState();
@@ -73,71 +78,231 @@ class _ReservationDetailScreenState extends State<ReservationDetailScreen> {
     }
   }
 
-  Container _buildMenu(ReservationDetailState state, BuildContext context) {
+  Container _buildDishList(ReservationDetailState state, BuildContext context) {
+    double heightOfDishList = isOpenDishList
+        ? (40 + 28.0 * state.reservationDetailModel!.dishes.length)
+        : 40;
+    double heightOfDrinkList = isOpenDrinkList
+        ? (40 + 28.0 * state.reservationDetailModel!.drinks.length)
+        : 40;
+    double heightOfServiceList = isOpenServiceList
+        ? (40 + 28.0 * state.reservationDetailModel!.services.length)
+        : 40;
     return Container(
-      height: isOpenMenu
-          ? (40 + 28.0 * state.reservationDetailModel!.menus.length)
-          : 40,
+      height: 30 + heightOfDishList + heightOfDrinkList + heightOfServiceList,
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(kCornerSmall),
         border: Border.all(color: Colors.black),
+        color: primaryColor.withOpacity(0.3),
       ),
       child: Column(
         children: [
-          Container(
-            padding: EdgeInsets.only(top: kPadding10 / 2),
-            margin: EdgeInsets.symmetric(horizontal: kPadding10),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          _buildTopList(context),
+          SizedBox(
+            height: heightOfDishList,
+            child: Column(
               children: [
-                Text(
-                  "Danh sách món ăn:",
-                  style: Theme.of(context).textTheme.bodyLarge,
-                ),
-                Material(
-                  color: Colors.transparent,
-                  child: InkWell(
-                    onTap: () {
-                      setState(() {
-                        isOpenMenu = !isOpenMenu;
-                      });
-                    },
-                    borderRadius: BorderRadius.circular(50),
-                    child: Icon(
-                        isOpenMenu ? Icons.arrow_drop_down : Icons.arrow_right),
+                _buildTopEachList(context,
+                    title: "Danh sách món ăn",
+                    count: state.reservationDetailModel!.dishes.length,
+                    openList: isOpenDishList, onClickOpen: () {
+                  setState(() {
+                    isOpenDishList = !isOpenDishList;
+                  });
+                }),
+                if (isOpenDishList &&
+                    state.reservationDetailModel!.dishes.isNotEmpty)
+                  Divider(
+                    color: Colors.black,
+                    indent: kPadding10,
+                    endIndent: kPadding10,
                   ),
-                ),
+                if (isOpenDishList &&
+                    state.reservationDetailModel!.dishes.isNotEmpty)
+                  Expanded(
+                    child: ListView.builder(
+                      itemCount: state.reservationDetailModel!.dishes.length,
+                      itemBuilder: (context, index) {
+                        return MenuRowItem(
+                          item: state.reservationDetailModel!.dishes[index],
+                        );
+                      },
+                    ),
+                  ),
               ],
             ),
           ),
-          if (isOpenMenu)
-            Divider(
-              color: Colors.black,
-              indent: kPadding10,
-              endIndent: kPadding10,
+          SizedBox(
+            height: heightOfDrinkList,
+            child: Column(
+              children: [
+                _buildTopEachList(context,
+                    title: "Danh sách đồ uống",
+                    count: state.reservationDetailModel!.drinks.length,
+                    openList: isOpenDrinkList, onClickOpen: () {
+                  setState(() {
+                    isOpenDrinkList = !isOpenDrinkList;
+                  });
+                }),
+                if (isOpenDrinkList &&
+                    state.reservationDetailModel!.drinks.isNotEmpty)
+                  Divider(
+                    color: Colors.black,
+                    indent: kPadding10,
+                    endIndent: kPadding10,
+                  ),
+                if (isOpenDrinkList &&
+                    state.reservationDetailModel!.drinks.isNotEmpty)
+                  Expanded(
+                    child: ListView.builder(
+                      itemCount: state.reservationDetailModel!.drinks.length,
+                      itemBuilder: (context, index) {
+                        return MenuRowItem(
+                          item: state.reservationDetailModel!.drinks[index],
+                        );
+                      },
+                    ),
+                  ),
+              ],
             ),
-          if (isOpenMenu)
-            Expanded(
-              child: ListView.builder(
-                itemCount: state.reservationDetailModel!.menus.length,
-                itemBuilder: (context, index) {
-                  return ReservationDetailDishItem(
-                    item: state.reservationDetailModel!.menus[index],
-                  );
-                },
-              ),
+          ),
+          SizedBox(
+            height: heightOfServiceList,
+            child: Column(
+              children: [
+                _buildTopEachList(context,
+                    title: "Danh sách dịch vụ",
+                    count: state.reservationDetailModel!.services.length,
+                    openList: isOpenServiceList, onClickOpen: () {
+                  setState(() {
+                    isOpenServiceList = !isOpenServiceList;
+                  });
+                }),
+                if (isOpenServiceList &&
+                    state.reservationDetailModel!.services.isNotEmpty)
+                  Divider(
+                    color: Colors.black,
+                    indent: kPadding10,
+                    endIndent: kPadding10,
+                  ),
+                if (isOpenServiceList &&
+                    state.reservationDetailModel!.services.isNotEmpty)
+                  Expanded(
+                    child: ListView.builder(
+                      itemCount: state.reservationDetailModel!.services.length,
+                      itemBuilder: (context, index) {
+                        return ServiceRowItem(
+                          item: state.reservationDetailModel!.services[index],
+                        );
+                      },
+                    ),
+                  ),
+              ],
             ),
+          ),
         ],
       ),
     );
   }
 
-  Padding _buildId(ReservationDetailState state, BuildContext context) {
+  Container _buildTopList(
+    BuildContext context,
+  ) {
+    return Container(
+      padding: EdgeInsets.only(top: kPadding10 / 2),
+      margin: EdgeInsets.symmetric(horizontal: kPadding10),
+      child: Row(
+        children: [
+          Expanded(
+            flex: 3,
+            child: SizedBox(),
+          ),
+          Expanded(
+            flex: 1,
+            child: Align(
+              alignment: Alignment.centerRight,
+              child: Text(
+                "Số lượng",
+                style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                      fontSize: 14,
+                      fontWeight: FontWeight.w600,
+                    ),
+              ),
+            ),
+          ),
+          Container(
+            alignment: Alignment.centerRight,
+            width: 100,
+            child: Text(
+              "Giá(VNĐ)",
+              style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                    fontSize: 14,
+                    fontWeight: FontWeight.w600,
+                  ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Container _buildTopEachList(BuildContext context,
+      {required String title,
+      required bool openList,
+      required int count,
+      required Function onClickOpen}) {
+    return Container(
+      padding: EdgeInsets.only(top: kPadding10 / 2),
+      margin: EdgeInsets.symmetric(horizontal: kPadding10),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Text(
+            title,
+            style: Theme.of(context).textTheme.bodyLarge,
+          ),
+          Container(
+            alignment: Alignment.centerRight,
+            width: 100,
+            child: Material(
+              color: Colors.transparent,
+              child: InkWell(
+                onTap: () {
+                  onClickOpen();
+                },
+                borderRadius: BorderRadius.circular(50),
+                child:
+                    Icon(openList ? Icons.arrow_drop_down : Icons.arrow_right),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildHeaderInfoReservation(
+      ReservationDetailState state, BuildContext context) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: kPadding10),
-      child: Text(
-        "Mã đặt bàn: #${state.reservationDetailModel!.reservationId}",
-        style: Theme.of(context).textTheme.bodyLarge,
+      child: IntrinsicWidth(
+        child: Column(
+          children: [
+            Text(
+              "Mã đặt bàn: #${state.reservationDetailModel!.reservationId}",
+              style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                    fontSize: 24,
+                  ),
+            ),
+            Container(
+              height: 3,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(kCornerSmall),
+                color: primaryColor,
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -197,30 +362,74 @@ class _ReservationDetailScreenState extends State<ReservationDetailScreen> {
     );
   }
 
+  Widget _buildRowInfo(BuildContext context,
+      {required String leftTag, required String rightValue}) {
+    return Row(
+      children: [
+        Expanded(
+          child: Text(
+            leftTag,
+            style: Theme.of(context).textTheme.bodyLarge,
+          ),
+        ),
+        Expanded(
+          child: Text(
+            rightValue,
+            style: Theme.of(context).textTheme.bodyLarge,
+          ),
+        ),
+      ],
+    );
+  }
+
   Widget _buildColumnRight(BuildContext context, ReservationDetailState state) {
     return Column(
       children: [
-        Row(
-          children: [
-            Expanded(
-              child: Text(
-                "Phí trả trước",
-                style: Theme.of(context).textTheme.bodyLarge,
-              ),
-            ),
-            Expanded(
-              child: Text(
-                state.reservationDetailModel!.preFeeStr,
-                style: Theme.of(context).textTheme.bodyLarge,
-              ),
-            ),
-          ],
+        _buildRowInfo(
+          context,
+          leftTag: "Người đặt:",
+          rightValue: state.reservationDetailModel!.userModel!.userName,
+        ),
+        SizedBox(
+          height: kPadding10,
+        ),
+        _buildRowInfo(
+          context,
+          leftTag: "Số khách:",
+          rightValue: state.reservationDetailModel!.countGuest.toString(),
+        ),
+        SizedBox(
+          height: kPadding10,
+        ),
+        _buildRowInfo(
+          context,
+          leftTag: "Thời gian diễn ra:",
+          rightValue: DateFormat("dd/MM/yyyy HH:mm")
+              .format(state.reservationDetailModel!.schedule.toDateTime()),
+        ),
+        SizedBox(
+          height: kPadding10,
+        ),
+        _buildRowInfo(
+          context,
+          leftTag: "Ngày tạo yêu cầu:",
+          rightValue: DateFormat("dd/MM/yyyy HH:mm")
+              .format(state.reservationDetailModel!.createAt.toDateTime()),
+        ),
+        SizedBox(
+          height: kPadding10,
+        ),
+        _buildRowInfo(context,
+            leftTag: "Phí trả trước:",
+            rightValue: "${state.reservationDetailModel!.preFeeStr} VNĐ"),
+        SizedBox(
+          height: kPadding10,
         ),
         Row(
           children: [
             Expanded(
               child: Text(
-                "Trạng thái",
+                "Trạng thái:",
                 style: Theme.of(context).textTheme.bodyLarge,
               ),
             ),
@@ -267,43 +476,67 @@ class _ReservationDetailScreenState extends State<ReservationDetailScreen> {
       create: (context) => _reservationDetailBloc,
       child: BlocBuilder<ReservationDetailBloc, ReservationDetailState>(
         builder: (context, state) {
-          bool isShowData = state.reservationState == BlocState.loadCompleted;
           return Scaffold(
-            body: isShowData
-                ? Container(
-                    margin: const EdgeInsets.symmetric(
-                      vertical: kPadding10,
-                      horizontal: kDefaultPadding,
+            body: Container(
+              margin: const EdgeInsets.symmetric(
+                vertical: kPadding10,
+                horizontal: kDefaultPadding,
+              ),
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(kCornerMedium),
+              ),
+              child: Stack(
+                children: [
+                  if (state.reservationDetailModel != null)
+                    Container(
+                      padding: EdgeInsets.all(kPadding10),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          _buildTopBar(context),
+                          _buildHeaderInfoReservation(state, context),
+                          
+                          Row(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Expanded(
+                                flex: 2,
+                                child: Column(
+                                  children: [
+                                    _buildDishList(state, context),
+                                  ],
+                                ),
+                              ),
+                              SizedBox(
+                                width: kDefaultPadding,
+                              ),
+                              Expanded(
+                                  child: _buildColumnRight(context, state)),
+                            ],
+                          ),
+                        ],
+                      ),
                     ),
-                    padding: EdgeInsets.all(kPadding10),
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(kCornerMedium),
-                    ),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        _buildTopBar(context),
-                        _buildId(state, context),
-                        Row(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Expanded(
-                              flex: 2,
-                              child: _buildMenu(state, context),
-                            ),
-                            SizedBox(
-                              width: kDefaultPadding,
-                            ),
-                            Expanded(child: _buildColumnRight(context, state)),
-                          ],
+                  Visibility(
+                    visible: state.reservationState == BlocState.loading,
+                    child: Container(
+                      decoration: BoxDecoration(
+                        color: Colors.grey.withOpacity(0.2),
+                        borderRadius: BorderRadius.circular(kCornerMedium),
+                      ),
+                      height: double.infinity,
+                      width: double.infinity,
+                      child: Center(
+                        child: CircularProgressIndicator(
+                          color: primaryColor,
                         ),
-                      ],
+                      ),
                     ),
-                  )
-                : Center(
-                    child: CircularProgressIndicator(),
                   ),
+                ],
+              ),
+            ),
           );
         },
       ),

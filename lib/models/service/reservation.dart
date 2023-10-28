@@ -47,7 +47,24 @@ class ReservationDetailModel {
 
   Color get statusColor {
     return ReservationStatus.all
-        .firstWhere((element) => element.value == status).color;
+        .firstWhere((element) => element.value == status)
+        .color;
+  }
+
+  List<DishDetailModel> get dishes {
+    if (menus.isEmpty) {
+      return [];
+    } else {
+      return menus.where((element) => !element.isDrink).toList();
+    }
+  }
+
+   List<DishDetailModel> get drinks {
+    if (menus.isEmpty) {
+      return [];
+    } else {
+      return menus.where((element) => element.isDrink).toList();
+    }
   }
 
   factory ReservationDetailModel.fromJson(Map<String, dynamic> json) {

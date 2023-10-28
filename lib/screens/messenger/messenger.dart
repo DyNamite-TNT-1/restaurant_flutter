@@ -273,7 +273,9 @@ class _MessengerScreenState extends State<MessengerScreen> {
                                                 BlocState.loading,
                                             child: Center(
                                               child:
-                                                  CircularProgressIndicator(),
+                                                  CircularProgressIndicator(
+                                                     color: primaryColor,
+                                                  ),
                                             ),
                                           ),
                                           Visibility(
@@ -419,7 +421,9 @@ class _MessengerScreenState extends State<MessengerScreen> {
                                       visible: state.messageState ==
                                           BlocState.loading,
                                       child: Center(
-                                        child: CircularProgressIndicator(),
+                                        child: CircularProgressIndicator(
+                                           color: primaryColor,
+                                        ),
                                       ),
                                     ),
                                     Visibility(

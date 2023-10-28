@@ -33,7 +33,8 @@ class _DrinkItemState extends State<DrinkItem> {
         child: InkWell(
           onTap: () {
             context.read<UiBloc>().add(
-                  OnUpdateState(params: const {"drinkState": BlocState.loading}),
+                  OnUpdateState(
+                      params: const {"drinkState": BlocState.loading}),
                 );
             context.read<UiBloc>().add(
                   OnAddDrink(params: {
@@ -58,8 +59,11 @@ class _DrinkItemState extends State<DrinkItem> {
                   height: 200,
                   width: double.infinity,
                   fit: BoxFit.fill,
-                  placeholder: (context, url) =>
-                      Center(child: CircularProgressIndicator()),
+                  placeholder: (context, url) => Center(
+                    child: CircularProgressIndicator(
+                      color: primaryColor,
+                    ),
+                  ),
                   errorWidget: (context, url, error) => Icon(Icons.error),
                 ),
               ),

@@ -59,8 +59,11 @@ class _ServiceItemState extends State<ServiceItem> {
                   height: 200,
                   width: double.infinity,
                   fit: BoxFit.fill,
-                  placeholder: (context, url) =>
-                      Center(child: CircularProgressIndicator()),
+                  placeholder: (context, url) => Center(
+                    child: CircularProgressIndicator(
+                      color: primaryColor,
+                    ),
+                  ),
                   errorWidget: (context, url, error) => Icon(Icons.error),
                 ),
               ),
@@ -75,14 +78,6 @@ class _ServiceItemState extends State<ServiceItem> {
               SizedBox(
                 height: kDefaultPadding,
               ),
-              // Padding(
-              //   padding: const EdgeInsets.symmetric(horizontal: kPadding15),
-              //   child: Text(
-              //     widget.dish.description,
-              //     textAlign: TextAlign.center,
-              //     style: Theme.of(context).textTheme.bodyMedium,
-              //   ),
-              // ),
               SizedBox(
                 height: kDefaultPadding,
               ),

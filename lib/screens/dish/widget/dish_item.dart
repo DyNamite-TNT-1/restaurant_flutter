@@ -58,8 +58,11 @@ class _DishItemState extends State<DishItem> {
                   height: 200,
                   width: double.infinity,
                   fit: BoxFit.fill,
-                  placeholder: (context, url) =>
-                      Center(child: CircularProgressIndicator()),
+                  placeholder: (context, url) => Center(
+                    child: CircularProgressIndicator(
+                      color: primaryColor,
+                    ),
+                  ),
                   errorWidget: (context, url, error) => Icon(Icons.error),
                 ),
               ),

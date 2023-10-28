@@ -6,15 +6,15 @@ import 'package:restaurant_flutter/models/service/reservation.dart';
 import 'package:restaurant_flutter/routes/route_constants.dart';
 import 'package:restaurant_flutter/utils/extension.dart';
 
-class ReservationItem extends StatefulWidget {
-  const ReservationItem({super.key, required this.item});
+class ReservationRowItem extends StatefulWidget {
+  const ReservationRowItem({super.key, required this.item});
   final ReservationDetailModel item;
 
   @override
-  State<ReservationItem> createState() => _ReservationItemState();
+  State<ReservationRowItem> createState() => _ReservationRowItemState();
 }
 
-class _ReservationItemState extends State<ReservationItem> {
+class _ReservationRowItemState extends State<ReservationRowItem> {
   late String createAtDate;
   late String createAtHour;
   late String scheduleDate;

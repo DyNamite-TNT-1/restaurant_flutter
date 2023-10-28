@@ -605,7 +605,9 @@ class _DishScreenState extends State<DishScreen> {
                       width: double.infinity,
                       color: Colors.grey.withOpacity(0.2),
                       child: Center(
-                        child: CircularProgressIndicator(),
+                        child: CircularProgressIndicator(
+                           color: primaryColor,
+                        ),
                       ),
                     ),
                   ),
