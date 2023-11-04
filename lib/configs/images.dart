@@ -27,6 +27,8 @@ class AssetImages {
   static const String icClear = "assets/images/ic_clear.svg";
   static const String noAvatarUser = "assets/images/no_avatar_user.svg";
 
+  static const String icLanguage = "assets/images/ic_language.svg";
+
   ///Singleton factory
   static final AssetImages _instance = AssetImages._internal();
 

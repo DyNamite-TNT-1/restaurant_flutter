@@ -369,8 +369,13 @@ class _ReservationDetailScreenState extends State<ReservationDetailScreen> {
         Expanded(
           child: Text(
             leftTag,
-            style: Theme.of(context).textTheme.bodyLarge,
+            style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                  fontWeight: FontWeight.normal,
+                ),
           ),
+        ),
+        SizedBox(
+          width: kDefaultPadding,
         ),
         Expanded(
           child: Text(
@@ -433,10 +438,13 @@ class _ReservationDetailScreenState extends State<ReservationDetailScreen> {
                 style: Theme.of(context).textTheme.bodyLarge,
               ),
             ),
+            SizedBox(
+              width: kDefaultPadding,
+            ),
             Expanded(
               child: Container(
-                padding:
-                    EdgeInsets.symmetric(horizontal: kPadding10, vertical: 5),
+                padding: EdgeInsets.symmetric(
+                    horizontal: kPadding10, vertical: kPadding10),
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(kCornerSmall),
                   color: state.reservationDetailModel!.statusColor,
@@ -490,13 +498,12 @@ class _ReservationDetailScreenState extends State<ReservationDetailScreen> {
                 children: [
                   if (state.reservationDetailModel != null)
                     Container(
-                      padding: EdgeInsets.all(kPadding10),
+                      padding: EdgeInsets.all(kDefaultPadding),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           _buildTopBar(context),
                           _buildHeaderInfoReservation(state, context),
-                          
                           Row(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
