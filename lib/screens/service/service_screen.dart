@@ -97,7 +97,7 @@ class _ServiceScreenState extends State<ServiceScreen> {
     return Row(
       children: [
         Text(
-          "Giá: ",
+          "${Translate.of(context).translate("price")}: ",
           style: Theme.of(context).textTheme.bodyLarge,
         ),
         AppPopupMenuButton<OrderEnum>(
@@ -113,13 +113,14 @@ class _ServiceScreenState extends State<ServiceScreen> {
           filterItemBuilder: (context, e) {
             return DropdownMenuItem<OrderEnum>(
               value: e,
-              child: Text(e.name),
+              child: Text(
+                  Translate.of(context).translate(e.name)),
             );
           },
           items: OrderEnum.allOrderEnum(),
           value: _selectedPriceOrder,
           child: Text(
-            _selectedPriceOrder.name,
+            Translate.of(context).translate(_selectedPriceOrder.name),
             style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                   fontSize: 14,
                   color: Colors.white,
@@ -361,9 +362,9 @@ class _ServiceScreenState extends State<ServiceScreen> {
                       border: Border.all(),
                     ),
                     child: Row(
-                      children: const [
+                      children: [
                         Icon(Icons.refresh),
-                        Text("Làm mới"),
+                        Text(Translate.of(context).translate("refresh")),
                       ],
                     ),
                   ),

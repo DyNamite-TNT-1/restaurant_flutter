@@ -36,15 +36,15 @@ class _TPopupMenuButtonState<T> extends State<AppPopupMenuButton<T>> {
   @override
   void initState() {
     super.initState();
+  }
+
+  @override
+  Widget build(BuildContext context) {
     popUpItemBuilder = (widget.items).map<DropdownMenuItem<T>>(
       (filter) {
         return widget.filterItemBuilder(context, filter);
       },
     ).toList();
-  }
-
-  @override
-  Widget build(BuildContext context) {
     return SizedBox(
       height: widget.height,
       child: DropdownButtonHideUnderline(

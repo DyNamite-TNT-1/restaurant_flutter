@@ -179,7 +179,7 @@ class _ReservationTabState extends State<ReservationTab>
       context: context,
       builder: (context) {
         return AppDialogText(
-          buttonDoneTitle: "Đăng nhập",
+          buttonDoneTitle: Translate.of(context).translate("sign_in").toUpperCase(),
           onDone: () {
             Navigator.pop(context);
             _openLoginDialog();

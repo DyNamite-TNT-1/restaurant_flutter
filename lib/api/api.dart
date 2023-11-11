@@ -19,8 +19,8 @@ class Api {
   }
 
   static String localHost() {
-    return "restaurantbe-production.up.railway.app";
-    // return "localhost:3005";
+    // return "restaurantbe-production.up.railway.app";
+    return "localhost:3005";
   }
 
   static String branchGetter() {

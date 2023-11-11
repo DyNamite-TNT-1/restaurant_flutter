@@ -214,7 +214,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          "Tạo tài khoản",
+          Translate.of(context).translate("create_account"),
           style: Theme.of(context).textTheme.titleLarge?.copyWith(
                 color: Colors.white,
                 fontSize: 24,
@@ -224,7 +224,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
             Text(
-              "Đã có tài khoản?",
+              Translate.of(context).translate("do_have_account"),
               style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                     color: Colors.grey,
                   ),
@@ -239,7 +239,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   vertical: kPadding10 / 2,
                 ),
                 child: Text(
-                  " Đăng nhập",
+                  " ${Translate.of(context).translate("sign_in")}",
                   style: Theme.of(context)
                       .textTheme
                       .bodyMedium
@@ -257,7 +257,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
     return Padding(
       padding: EdgeInsets.only(top: 10, bottom: 5),
       child: Text(
-        text,
+        Translate.of(context).translate(text),
         style: Theme.of(context).textTheme.titleSmall?.copyWith(
               color: Colors.grey,
             ),
@@ -308,61 +308,55 @@ class _SignUpScreenState extends State<SignUpScreen> {
                 children: [
                   buildTitle(context),
                   if (showErrorText) _buildError(context),
-                  buildTitleTextField(context, "Họ và tên"),
+                  buildTitleTextField(context, "first_last_name"),
                   AppInput(
                     name: "name",
                     keyboardType: TextInputType.name,
                     icon: Icons.person_outline,
                     controller: userNameController,
                     focusNode: userNameNode,
-                    // placeHolder: "Nhập tên",
                   ),
-                  buildTitleTextField(context, "Email"),
+                  buildTitleTextField(context, "email"),
                   AppInput(
                     name: "email",
                     keyboardType: TextInputType.name,
                     icon: Icons.alternate_email,
                     controller: emailController,
                     focusNode: emailNode,
-                    // placeHolder: "Email",
                   ),
-                  buildTitleTextField(context, "Số điện thoại"),
+                  buildTitleTextField(context, "phone"),
                   AppInput(
                     name: "phone",
                     keyboardType: TextInputType.number,
                     icon: Icons.phone,
                     controller: phoneController,
                     focusNode: phoneNode,
-                    // placeHolder: "Nhập số điện thoại",
                   ),
-                  buildTitleTextField(context, "Mật khẩu"),
+                  buildTitleTextField(context, "password"),
                   AppInput(
                     name: "password",
                     keyboardType: TextInputType.name,
                     icon: Icons.lock,
                     controller: passwordController,
                     focusNode: passwordNode,
-                    // placeHolder: "Nhập mật khẩu",
                     isPassword: true,
                   ),
-                  buildTitleTextField(context, "Xác nhận mật khẩu"),
+                  buildTitleTextField(context, "confirm_password"),
                   AppInput(
                     name: "confirmPassword",
                     keyboardType: TextInputType.name,
                     icon: Icons.lock_reset,
                     controller: confirmPasswordController,
                     focusNode: confirmPasswordNode,
-                    // placeHolder: "Nhập mật khẩu",
                     isPassword: true,
                   ),
-                  buildTitleTextField(context, "Địa chỉ"),
+                  buildTitleTextField(context, "address"),
                   AppInput(
                     name: "address",
                     keyboardType: TextInputType.name,
                     icon: Icons.location_on,
                     controller: addressController,
                     focusNode: addressNode,
-                    // placeHolder: "Nhập địa chỉ",
                   ),
                   Row(
                     children: [
@@ -370,7 +364,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            buildTitleTextField(context, "Ngày sinh"),
+                            buildTitleTextField(context, "birthday"),
                             InkWell(
                               borderRadius:
                                   BorderRadius.circular(kCornerNormal),
@@ -423,7 +417,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            buildTitleTextField(context, "Giới tính"),
+                            buildTitleTextField(context, "gender"),
                             AppPopupMenuButton<GenderEnum>(
                               height: 45,
                               menuDropBgColor: Colors.transparent,
@@ -440,7 +434,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                               filterItemBuilder: (context, label) {
                                 return DropdownMenuItem<GenderEnum>(
                                   value: label,
-                                  child: Text(label.name),
+                                  child: Text(Translate.of(context).translate(label.name)),
                                 );
                               },
                               child: Container(
@@ -449,13 +443,12 @@ class _SignUpScreenState extends State<SignUpScreen> {
                                   vertical: 5,
                                 ),
                                 child: Text(
-                                  _selectedGender.name,
+                                  Translate.of(context).translate(_selectedGender.name),
                                   style: Theme.of(context)
                                       .textTheme
                                       .bodyMedium
                                       ?.copyWith(
                                         fontSize: 14,
-                                        // color: Colors.white,
                                       ),
                                 ),
                               ),
@@ -468,7 +461,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   Container(
                     margin: EdgeInsets.only(top: kPadding10),
                     child: AppButton(
-                      "Đăng ký",
+                      Translate.of(context).translate("sign_up").toUpperCase(),
                       loading: isSigning,
                       mainAxisSize: MainAxisSize.max,
                       onPressed: () {

@@ -71,7 +71,7 @@ class _LoginScreenState extends State<LoginScreen> {
   }
 
   Widget buildTitle(BuildContext context) {
-    return Text("Đăng nhập",
+    return Text(Translate.of(context).translate("sign_in"),
         style: Theme.of(context).textTheme.titleLarge,
         textAlign: TextAlign.center);
   }
@@ -211,7 +211,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 height: kDefaultPadding * 2,
               ),
               AppButton(
-                "Đăng nhập",
+                Translate.of(context).translate("sign_in").toUpperCase(),
                 loading: authState is Authenticating,
                 mainAxisSize: MainAxisSize.max,
                 onPressed: () {

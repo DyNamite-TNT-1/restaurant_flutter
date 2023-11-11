@@ -134,7 +134,7 @@ class _DrinkScreenState extends State<DrinkScreen> {
     return Row(
       children: [
         Text(
-          "Loại: ",
+          "${Translate.of(context).translate("type")}: ",
           style: Theme.of(context).textTheme.bodyLarge,
         ),
         if (drinkBloc.state.drinkTypes.isNotEmpty &&
@@ -192,7 +192,7 @@ class _DrinkScreenState extends State<DrinkScreen> {
           width: kDefaultPadding,
         ),
         Text(
-          "Giá: ",
+          "${Translate.of(context).translate("price")}: ",
           style: Theme.of(context).textTheme.bodyLarge,
         ),
         AppPopupMenuButton<OrderEnum>(
@@ -201,7 +201,7 @@ class _DrinkScreenState extends State<DrinkScreen> {
           child: Row(
             children: [
               Text(
-                _selectedPriceOrder.name,
+                Translate.of(context).translate(_selectedPriceOrder.name),
                 style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                       fontSize: 14,
                       color: Colors.white,
@@ -221,7 +221,7 @@ class _DrinkScreenState extends State<DrinkScreen> {
           filterItemBuilder: (context, e) {
             return DropdownMenuItem<OrderEnum>(
               value: e,
-              child: Text(e.name),
+              child: Text(Translate.of(context).translate(e.name)),
             );
           },
         ),
@@ -317,7 +317,7 @@ class _DrinkScreenState extends State<DrinkScreen> {
                           Padding(
                             padding: const EdgeInsets.only(top: 10, bottom: 5),
                             child: Text(
-                              "Giá(VNĐ)",
+                              "${Translate.of(context).translate("price")}(VNĐ)",
                               style: Theme.of(context)
                                   .textTheme
                                   .bodyMedium
@@ -456,83 +456,6 @@ class _DrinkScreenState extends State<DrinkScreen> {
     );
   }
 
-  // SliverPersistentHeader _makeHeaderFilter(BuildContext context) {
-  //   var authState = context.select((AuthenticationBloc bloc) => bloc.state);
-  //   return SliverPersistentHeader(
-  //     pinned: true,
-  //     delegate: PinSliverAppBarDelegate(
-  //       minHeight: 50.0,
-  //       maxHeight: 50.0,
-  //       child: Container(
-  //         padding: EdgeInsets.symmetric(
-  //           horizontal: kPadding15,
-  //           vertical: kPadding10,
-  //         ),
-  //         color: backgroundColor,
-  //         child: Row(
-  //           mainAxisAlignment: MainAxisAlignment.spaceBetween,
-  //           children: [
-  //             _buildTopFilter(context),
-  //             Row(
-  //               children: [
-  //                 if (authState is AuthenticationSuccess &&
-  //                     UserRepository.userModel.isManager)
-  //                   Material(
-  //                     color: Colors.transparent,
-  //                     child: InkWell(
-  //                       borderRadius: BorderRadius.circular(kCornerSmall),
-  //                       onTap: () {
-  //                         _openDialogAddNewDish();
-  //                       },
-  //                       child: Container(
-  //                         padding: EdgeInsets.symmetric(horizontal: 5),
-  //                         decoration: BoxDecoration(
-  //                           borderRadius: BorderRadius.circular(kCornerSmall),
-  //                           border: Border.all(),
-  //                         ),
-  //                         child: Row(
-  //                           children: const [
-  //                             Icon(Icons.add),
-  //                             Text("Thêm đồ uống"),
-  //                           ],
-  //                         ),
-  //                       ),
-  //                     ),
-  //                   ),
-  //                 SizedBox(
-  //                   width: 5,
-  //                 ),
-  //                 Material(
-  //                   color: Colors.transparent,
-  //                   child: InkWell(
-  //                     borderRadius: BorderRadius.circular(kCornerSmall),
-  //                     onTap: () {
-  //                       _onRefresh();
-  //                     },
-  //                     child: Container(
-  //                       padding: EdgeInsets.symmetric(horizontal: 5),
-  //                       decoration: BoxDecoration(
-  //                         borderRadius: BorderRadius.circular(kCornerSmall),
-  //                         border: Border.all(),
-  //                       ),
-  //                       child: Row(
-  //                         children: const [
-  //                           Icon(Icons.refresh),
-  //                           Text("Làm mới"),
-  //                         ],
-  //                       ),
-  //                     ),
-  //                   ),
-  //                 ),
-  //               ],
-  //             ),
-  //           ],
-  //         ),
-  //       ),
-  //     ),
-  //   );
-  // }
-
   Widget _makeHeaderFilter(BuildContext context) {
     var authState = context.select((AuthenticationBloc bloc) => bloc.state);
     return Container(
@@ -589,9 +512,9 @@ class _DrinkScreenState extends State<DrinkScreen> {
                       border: Border.all(),
                     ),
                     child: Row(
-                      children: const [
+                      children: [
                         Icon(Icons.refresh),
-                        Text("Làm mới"),
+                        Text(Translate.of(context).translate("refresh")),
                       ],
                     ),
                   ),

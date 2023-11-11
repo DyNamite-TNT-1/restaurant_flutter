@@ -245,7 +245,7 @@ class _ReservationDetailScreenState extends State<ReservationDetailScreen> {
             alignment: Alignment.centerRight,
             width: 100,
             child: Text(
-              "Giá(VNĐ)",
+              "${Translate.of(context).translate("price")}(VNĐ)",
               style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                     fontSize: 14,
                     fontWeight: FontWeight.w600,
@@ -341,7 +341,6 @@ class _ReservationDetailScreenState extends State<ReservationDetailScreen> {
                     Icons.arrow_back,
                     size: 20,
                   ),
-                  // Text("Làm mới"),
                 ],
               ),
             ),
@@ -361,9 +360,9 @@ class _ReservationDetailScreenState extends State<ReservationDetailScreen> {
                 border: Border.all(),
               ),
               child: Row(
-                children: const [
+                children: [
                   Icon(Icons.refresh),
-                  Text("Làm mới"),
+                  Text(Translate.of(context).translate("refresh")),
                 ],
               ),
             ),

@@ -90,7 +90,6 @@ class _SettingChangeLanguageState extends State<SettingChangeLanguage> {
                             Icons.arrow_back,
                             size: 20,
                           ),
-                          // Text("Làm mới"),
                         ],
                       ),
                     ),

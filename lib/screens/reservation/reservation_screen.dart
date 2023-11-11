@@ -10,6 +10,7 @@ import 'package:restaurant_flutter/models/service/model_result_api.dart';
 import 'package:restaurant_flutter/models/service/reservation.dart';
 import 'package:restaurant_flutter/models/client/client_reservation_status.dart';
 import 'package:restaurant_flutter/screens/reservation/widget/reservation_row_item.dart';
+import 'package:restaurant_flutter/utils/utils.dart';
 import 'package:restaurant_flutter/widgets/app_popup_menu_button.dart';
 import 'package:restaurant_flutter/widgets/widgets.dart';
 
@@ -117,9 +118,9 @@ class _ReservationScreenState extends State<ReservationScreen> {
                       border: Border.all(),
                     ),
                     child: Row(
-                      children: const [
+                      children: [
                         Icon(Icons.refresh),
-                        Text("Làm mới"),
+                        Text(Translate.of(context).translate("refresh")),
                       ],
                     ),
                   ),
@@ -249,13 +250,13 @@ class _ReservationScreenState extends State<ReservationScreen> {
           filterItemBuilder: (context, e) {
             return DropdownMenuItem<OrderEnum>(
               value: e,
-              child: Text(e.name),
+              child: Text(Translate.of(context).translate(e.name)),
             );
           },
           items: OrderEnum.allOrderEnum(),
           value: _selectedDateOccurOrder,
           child: Text(
-            _selectedDateOccurOrder.name,
+            Translate.of(context).translate(_selectedDateOccurOrder.name),
             style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                   fontSize: 14,
                   color: Colors.white,

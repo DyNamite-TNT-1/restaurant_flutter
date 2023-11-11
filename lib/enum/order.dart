@@ -1,6 +1,6 @@
 enum OrderEnum {
-  desc("Giảm dần", "desc"),
-  asc("Tăng dần", "asc");
+  desc("desc", "desc"),
+  asc("asc", "asc");
 
   final String name;
   final String value;

@@ -136,7 +136,7 @@ class _DishScreenState extends State<DishScreen> {
     return Row(
       children: [
         Text(
-          "Loại: ",
+          "${Translate.of(context).translate("type")}: ",
           style: Theme.of(context).textTheme.bodyLarge,
         ),
         if (dishBloc.state.dishTypes.isNotEmpty &&
@@ -172,7 +172,7 @@ class _DishScreenState extends State<DishScreen> {
           width: kDefaultPadding,
         ),
         Text(
-          "Giá: ",
+          "${Translate.of(context).translate("price")}: ",
           style: Theme.of(context).textTheme.bodyLarge,
         ),
         AppPopupMenuButton<OrderEnum>(
@@ -189,13 +189,13 @@ class _DishScreenState extends State<DishScreen> {
           filterItemBuilder: (context, e) {
             return DropdownMenuItem<OrderEnum>(
               value: e,
-              child: Text(e.name),
+              child: Text(Translate.of(context).translate(e.name)),
             );
           },
           items: OrderEnum.allOrderEnum(),
           value: _selectedPriceOrder,
           child: Text(
-            _selectedPriceOrder.name,
+            Translate.of(context).translate(_selectedPriceOrder.name),
             style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                   fontSize: 14,
                   color: Colors.white,
@@ -507,9 +507,9 @@ class _DishScreenState extends State<DishScreen> {
                       border: Border.all(),
                     ),
                     child: Row(
-                      children: const [
+                      children: [
                         Icon(Icons.refresh),
-                        Text("Làm mới"),
+                        Text(Translate.of(context).translate("refresh")),
                       ],
                     ),
                   ),
