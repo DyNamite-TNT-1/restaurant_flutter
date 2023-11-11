@@ -4,6 +4,7 @@ import 'package:restaurant_flutter/blocs/app_bloc.dart';
 import 'package:restaurant_flutter/blocs/bloc.dart';
 import 'package:restaurant_flutter/blocs/ui/ui_bloc.dart';
 import 'package:restaurant_flutter/routes/route_constants.dart';
+import 'package:restaurant_flutter/utils/translate.dart';
 import 'package:restaurant_flutter/widgets/widgets.dart';
 
 class Profile extends StatefulWidget {
@@ -22,7 +23,7 @@ class _ProfileState extends State<Profile> {
       builder: (BuildContext ct) {
         return AppDialogText(
           child: Text(
-            'Bạn muốn đăng xuất?',
+            Translate.of(context).translate("want_log_out"),
             maxLines: 10,
             overflow: TextOverflow.ellipsis,
             style: Theme.of(ct).textTheme.bodyMedium,

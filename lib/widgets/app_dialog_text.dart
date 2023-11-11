@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:restaurant_flutter/configs/configs.dart';
+import 'package:restaurant_flutter/utils/translate.dart';
 
 class AppDialogText extends StatelessWidget {
   final Function? onDone;
@@ -25,7 +26,7 @@ class AppDialogText extends StatelessWidget {
 
   Widget buildTitle(BuildContext context) {
     if (title == null) {
-      return Text("Thông báo",
+      return Text(Translate.of(context).translate("notification"),
           style: Theme.of(context).textTheme.titleMedium,
           textAlign: TextAlign.center);
     } else {

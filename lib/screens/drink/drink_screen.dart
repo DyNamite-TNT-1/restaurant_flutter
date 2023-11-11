@@ -277,9 +277,9 @@ class _DrinkScreenState extends State<DrinkScreen> {
       builder: (BuildContext ct) {
         return StatefulBuilder(builder: (context, newState) {
           return AppDialogInput(
-            title: "Thêm đồ uống mới",
-            buttonDoneTitle: "Thêm",
-            buttonCancelTitle: "Thoát",
+            title: Translate.of(context).translate("add_new_drink"),
+            buttonDoneTitle: Translate.of(context).translate("add"),
+            buttonCancelTitle: Translate.of(context).translate("cancel"),
             onDone: () {
               _addNewDrink(selectedFilter2);
             },
@@ -295,7 +295,7 @@ class _DrinkScreenState extends State<DrinkScreen> {
                     top: 10,
                   ),
                   child: Text(
-                    "Tên đồ uống",
+                    Translate.of(context).translate("add_new_drink"),
                     style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                           fontSize: 16,
                         ),
@@ -305,7 +305,8 @@ class _DrinkScreenState extends State<DrinkScreen> {
                   name: "name",
                   keyboardType: TextInputType.name,
                   controller: _nameController,
-                  placeHolder: "Điền tên",
+                  placeHolder:
+                      Translate.of(context).translate("enter_drink_name"),
                   focusNode: _nameFocusNode,
                 ),
                 Row(
@@ -317,7 +318,7 @@ class _DrinkScreenState extends State<DrinkScreen> {
                           Padding(
                             padding: const EdgeInsets.only(top: 10, bottom: 5),
                             child: Text(
-                              "${Translate.of(context).translate("price")}(VNĐ)",
+                              "${Translate.of(context).translate("drink_price")}(VNĐ)",
                               style: Theme.of(context)
                                   .textTheme
                                   .bodyMedium
@@ -330,7 +331,8 @@ class _DrinkScreenState extends State<DrinkScreen> {
                             name: "price",
                             keyboardType: TextInputType.number,
                             controller: _priceController,
-                            placeHolder: "Nhập giá(VNĐ)",
+                            placeHolder:
+                                "${Translate.of(context).translate("enter_price")}(VNĐ)",
                             focusNode: _priceFocusNode,
                           ),
                         ],
@@ -346,7 +348,7 @@ class _DrinkScreenState extends State<DrinkScreen> {
                           Padding(
                             padding: const EdgeInsets.only(top: 10, bottom: 5),
                             child: Text(
-                              "Đơn vị tính",
+                              Translate.of(context).translate("unit"),
                               style: Theme.of(context)
                                   .textTheme
                                   .bodyMedium
@@ -359,7 +361,8 @@ class _DrinkScreenState extends State<DrinkScreen> {
                             name: "price",
                             keyboardType: TextInputType.name,
                             controller: _unitController,
-                            placeHolder: "Ex: lon, chai...",
+                            placeHolder:
+                                Translate.of(context).translate("hint_unit"),
                             focusNode: _unitFocusNode,
                           ),
                         ],
@@ -375,7 +378,7 @@ class _DrinkScreenState extends State<DrinkScreen> {
                           Padding(
                             padding: const EdgeInsets.only(top: 10, bottom: 5),
                             child: Text(
-                              "Loại đồ uống",
+                              Translate.of(context).translate("drink_type"),
                               style: Theme.of(context)
                                   .textTheme
                                   .bodyMedium
@@ -418,7 +421,7 @@ class _DrinkScreenState extends State<DrinkScreen> {
                 Padding(
                   padding: const EdgeInsets.only(top: 10, bottom: 5),
                   child: Text(
-                    "Mô tả",
+                    Translate.of(context).translate("description"),
                     style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                           fontSize: 16,
                         ),
@@ -428,14 +431,15 @@ class _DrinkScreenState extends State<DrinkScreen> {
                   name: "description",
                   keyboardType: TextInputType.name,
                   controller: _descriptionController,
-                  placeHolder: "Thêm mô tả(tùy chọn)",
+                  placeHolder: Translate.of(context)
+                      .translate("enter_description_optional"),
                   focusNode: _descriptionFocusNode,
                   maxLines: 2,
                 ),
                 Padding(
                   padding: const EdgeInsets.only(top: 10, bottom: 5),
                   child: Text(
-                    "Link ảnh",
+                    Translate.of(context).translate("image_link"),
                     style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                           fontSize: 16,
                         ),
@@ -445,7 +449,8 @@ class _DrinkScreenState extends State<DrinkScreen> {
                   name: "image",
                   keyboardType: TextInputType.name,
                   controller: _imageController,
-                  placeHolder: "Url ảnh(tùy chọn)",
+                  placeHolder: Translate.of(context)
+                      .translate("hint_image_link_optional"),
                   focusNode: _imageFocusNode,
                 ),
               ],
@@ -487,9 +492,9 @@ class _DrinkScreenState extends State<DrinkScreen> {
                         border: Border.all(),
                       ),
                       child: Row(
-                        children: const [
+                        children: [
                           Icon(Icons.add),
-                          Text("Thêm đồ uống"),
+                          Text(Translate.of(context).translate("add_drink")),
                         ],
                       ),
                     ),

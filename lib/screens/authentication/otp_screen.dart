@@ -90,7 +90,7 @@ class _OtpScreenState extends State<OtpScreen> {
         !isVerified
             ? RichText(
                 text: TextSpan(
-                  text: "Mã OTP đã được gửi tới ",
+                  text: Translate.of(context).translate("OTP_sent_to"),
                   style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                         color: Colors.white70,
                       ),
@@ -102,13 +102,15 @@ class _OtpScreenState extends State<OtpScreen> {
                           ),
                     ),
                     TextSpan(
-                      text: ". Vui lòng kiểm tra hòm thư!",
+                      text:
+                          Translate.of(context).translate("please_check_mail"),
                     ),
                   ],
                 ),
               )
             : Text(
-                "Xác thực thành công, vui lòng trở lại trang chủ!",
+                Translate.of(context)
+                    .translate("verification_success_back_home"),
                 style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                       color: Colors.white,
                     ),
@@ -153,7 +155,9 @@ class _OtpScreenState extends State<OtpScreen> {
                     ),
                     !isVerified
                         ? _buildOTP(context)
-                        : AppButton("Quay về trang chủ", onPressed: () {
+                        : AppButton(
+                            Translate.of(context).translate("back_home"),
+                            onPressed: () {
                             context.goNamed(RouteConstants.dashboard);
                           }),
                   ],
@@ -195,12 +199,6 @@ class _OtpScreenState extends State<OtpScreen> {
             ),
             controller: _otpController,
             enabled: true,
-            // dialogConfig: DialogConfig(
-            //   dialogTitle: "Pass code",
-            //   dialogContent: "Pass code desc",
-            //   affirmativeText: "Paste",
-            //   negativeText: "Cancel",
-            // ),
             onCompleted: (v) {
               // _verifyOTP(context);
             },
@@ -210,8 +208,7 @@ class _OtpScreenState extends State<OtpScreen> {
           margin: EdgeInsets.only(top: kDefaultPadding * 2),
           width: 200,
           child: AppButton(
-            "Xác thực",
-            // loading: isSigning,
+            Translate.of(context).translate("verify"),
             mainAxisSize: MainAxisSize.max,
             onPressed: () {
               _verifyOTP(context);

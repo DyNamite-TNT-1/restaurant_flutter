@@ -117,6 +117,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
     ResultModel result = await Api.requestSignUp(
       email: emailController.text,
       password: passwordController.text,
+      confirmPassword: confirmPasswordController.text,
       phone: phoneController.text,
       address: addressController.text,
       gender: _selectedGender,

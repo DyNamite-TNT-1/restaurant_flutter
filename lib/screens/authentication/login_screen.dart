@@ -174,7 +174,8 @@ class _LoginScreenState extends State<LoginScreen> {
                 icon: Icons.person_outline,
                 controller: loginController,
                 focusNode: loginFocus,
-                placeHolder: "Nhập email hoặc số điện thoại",
+                placeHolder:
+                    Translate.of(context).translate("enter_email_phone"),
               ),
               SizedBox(
                 height: kDefaultPadding,
@@ -185,7 +186,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 icon: Icons.lock,
                 controller: passwordController,
                 focusNode: passwordFocus,
-                placeHolder: "Nhập mật khẩu",
+                placeHolder: Translate.of(context).translate("enter_password"),
                 isPassword: true,
                 textInputAction: TextInputAction.done,
                 onFieldSubmitted: (_) {
@@ -201,7 +202,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   InkWell(
                     onTap: () {},
                     child: Text(
-                      "Quên mật khẩu?",
+                      "${Translate.of(context).translate("enter_password")}?",
                       style: Theme.of(context).textTheme.bodyMedium,
                     ),
                   ),
@@ -225,7 +226,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Text(
-                    "Bạn chưa có tài khoản?",
+                    Translate.of(context).translate("do_not_have_account"),
                     style: Theme.of(context).textTheme.bodyMedium,
                   ),
                   InkWell(
@@ -241,7 +242,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         vertical: kPadding10 / 2,
                       ),
                       child: Text(
-                        " Đăng ký",
+                        " ${Translate.of(context).translate("sign_up")}",
                         style: Theme.of(context)
                             .textTheme
                             .bodyMedium

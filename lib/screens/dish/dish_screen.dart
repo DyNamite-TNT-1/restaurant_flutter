@@ -263,9 +263,9 @@ class _DishScreenState extends State<DishScreen> {
       builder: (BuildContext ct) {
         return StatefulBuilder(builder: (context, newState) {
           return AppDialogInput(
-            title: "Thêm món mới",
-            buttonDoneTitle: "Thêm",
-            buttonCancelTitle: "Thoát",
+            title: Translate.of(context).translate("add_new_dish"),
+            buttonDoneTitle: Translate.of(context).translate("add"),
+            buttonCancelTitle: Translate.of(context).translate("cancel"),
             onDone: () async {
               isShow = await _addNewDish(selectedFilter2);
               newState(() {});
@@ -279,7 +279,7 @@ class _DishScreenState extends State<DishScreen> {
                 Padding(
                   padding: const EdgeInsets.only(bottom: 5),
                   child: Text(
-                    "Tên món",
+                    Translate.of(context).translate("dish_name"),
                     style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                           fontSize: 16,
                         ),
@@ -289,7 +289,8 @@ class _DishScreenState extends State<DishScreen> {
                   name: "name",
                   keyboardType: TextInputType.name,
                   controller: _nameController,
-                  placeHolder: "Điền tên món",
+                  placeHolder:
+                      Translate.of(context).translate("enter_dish_name"),
                   focusNode: _nameFocusNode,
                 ),
                 Row(
@@ -301,7 +302,7 @@ class _DishScreenState extends State<DishScreen> {
                           Padding(
                             padding: const EdgeInsets.only(top: 10, bottom: 5),
                             child: Text(
-                              "Giá món(VNĐ)",
+                              "${Translate.of(context).translate("dish_price")}(VNĐ)",
                               style: Theme.of(context)
                                   .textTheme
                                   .bodyMedium
@@ -314,7 +315,8 @@ class _DishScreenState extends State<DishScreen> {
                             name: "price",
                             keyboardType: TextInputType.number,
                             controller: _priceController,
-                            placeHolder: "Nhập giá món(VNĐ)",
+                            placeHolder:
+                                "${Translate.of(context).translate("enter_price")}(VNĐ)",
                             focusNode: _priceFocusNode,
                           ),
                         ],
@@ -330,7 +332,7 @@ class _DishScreenState extends State<DishScreen> {
                           Padding(
                             padding: const EdgeInsets.only(top: 10, bottom: 5),
                             child: Text(
-                              "Đơn vị tính",
+                              Translate.of(context).translate("unit"),
                               style: Theme.of(context)
                                   .textTheme
                                   .bodyMedium
@@ -343,7 +345,8 @@ class _DishScreenState extends State<DishScreen> {
                             name: "price",
                             keyboardType: TextInputType.name,
                             controller: _unitController,
-                            placeHolder: "Ex: phần, dĩa, ly...",
+                            placeHolder:
+                                Translate.of(context).translate("hint_unit"),
                             focusNode: _unitFocusNode,
                           ),
                         ],
@@ -359,7 +362,7 @@ class _DishScreenState extends State<DishScreen> {
                           Padding(
                             padding: const EdgeInsets.only(top: 10, bottom: 5),
                             child: Text(
-                              "Loại món",
+                              Translate.of(context).translate("dish_type"),
                               style: Theme.of(context)
                                   .textTheme
                                   .bodyMedium
@@ -402,7 +405,7 @@ class _DishScreenState extends State<DishScreen> {
                 Padding(
                   padding: const EdgeInsets.only(top: 10, bottom: 5),
                   child: Text(
-                    "Mô tả",
+                    Translate.of(context).translate("description"),
                     style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                           fontSize: 16,
                         ),
@@ -412,14 +415,15 @@ class _DishScreenState extends State<DishScreen> {
                   name: "description",
                   keyboardType: TextInputType.name,
                   controller: _descriptionController,
-                  placeHolder: "Thêm mô tả(tùy chọn)",
+                  placeHolder: Translate.of(context)
+                      .translate("enter_description_optional"),
                   focusNode: _descriptionFocusNode,
                   maxLines: 2,
                 ),
                 Padding(
                   padding: const EdgeInsets.only(top: 10, bottom: 5),
                   child: Text(
-                    "Link ảnh",
+                    Translate.of(context).translate("image_link"),
                     style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                           fontSize: 16,
                         ),
@@ -429,7 +433,8 @@ class _DishScreenState extends State<DishScreen> {
                   name: "image",
                   keyboardType: TextInputType.name,
                   controller: _imageController,
-                  placeHolder: "Url ảnh(tùy chọn)",
+                  placeHolder: Translate.of(context)
+                      .translate("hint_image_link_optional"),
                   focusNode: _imageFocusNode,
                 ),
                 if (isShow)
@@ -482,9 +487,9 @@ class _DishScreenState extends State<DishScreen> {
                         border: Border.all(),
                       ),
                       child: Row(
-                        children: const [
+                        children: [
                           Icon(Icons.add),
-                          Text("Thêm món"),
+                          Text(Translate.of(context).translate("add_dish")),
                         ],
                       ),
                     ),

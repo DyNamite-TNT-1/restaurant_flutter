@@ -649,7 +649,7 @@ class _ReservationTabState extends State<ReservationTab>
                           },
                         )
                       : NoDataFoundView(
-                          message: "Bạn chưa thêm món ăn",
+                          message: "no_add_dish",
                         ),
                 ),
                 Container(
