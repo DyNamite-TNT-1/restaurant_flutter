@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:restaurant_flutter/configs/configs.dart';
+import 'package:restaurant_flutter/utils/translate.dart';
 
 class NoDataFoundView extends StatelessWidget {
-  const NoDataFoundView({super.key, this.message = "Không có dữ liệu"});
+  const NoDataFoundView({super.key, this.message = "no_data_found"});
   final String message;
 
   @override
@@ -19,7 +20,7 @@ class NoDataFoundView extends StatelessWidget {
               width: 200,
             ),
             Text(
-              message,
+              Translate.of(context).translate(message),
               style: Theme.of(context).textTheme.bodyLarge,
             ),
           ],

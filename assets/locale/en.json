@@ -37,5 +37,6 @@
   "Loading common settings": "Loading common settings...",
   "change_language": "Change Language",
   "change_language_description": "Change the display language on the website",
-  "Apply": "Apply"
+  "Apply": "Apply",
+  "no_data_found": "No data found"
 }

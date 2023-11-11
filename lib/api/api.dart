@@ -19,7 +19,8 @@ class Api {
   }
 
   static String localHost() {
-    return "localhost:3005";
+    return "restaurantbe-production.up.railway.app";
+    // return "localhost:3005";
   }
 
   static String branchGetter() {
@@ -56,6 +57,7 @@ class Api {
   static String requestCreateReservationUrl = "/reservation/create";
   static String requestAllReservationUrl = "/reservation/get/all";
   static String requestDetailReservationUrl = "/reservation/get/detail";
+  static String requestCancelReservationUrl = "/reservation/cancel";
 
   //table
   static String requestTableUrl = "/table/get";
@@ -292,6 +294,20 @@ class Api {
     return ResultModel.fromJson(result);
   }
 
+  static Future<ResultModel> requestCancelReservation({
+    required int reservationId,
+    String tagRequest = HTTPManager.DEFAULT_CANCEL_TAG,
+  }) async {
+    final result = await httpManager.patch(
+      data: {
+        "reservation_id": reservationId,
+      },
+      url: appendBranch(requestCancelReservationUrl),
+      cancelTag: tagRequest,
+    );
+    return ResultModel.fromJson(result);
+  }
+
   //service
   static Future<ResultModel> requestListService({
     int limit = kLimit,
@@ -398,7 +414,7 @@ class Api {
   static Future<ResultModel> requestClientMessage({
     String tagRequest = HTTPManager.DEFAULT_CANCEL_TAG,
   }) async {
-     final result = await httpManager.get(
+    final result = await httpManager.get(
       url: appendBranch(requestClientMessageUrl),
     );
     return ResultModel.fromJson(result);

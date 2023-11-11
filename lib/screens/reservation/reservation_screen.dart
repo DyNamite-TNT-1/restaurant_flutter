@@ -326,16 +326,11 @@ class _ReservationScreenState extends State<ReservationScreen> {
                               Visibility(
                                 visible:
                                     state.reservationState == BlocState.loading,
-                                child: Container(
-                                  height: double.infinity,
-                                  width: double.infinity,
-                                  color: Colors.grey.withOpacity(0.2),
-                                  child: Center(
-                                    child: Padding(
-                                      padding: const EdgeInsets.only(top: 130),
-                                      child: CircularProgressIndicator(
-                                         color: primaryColor,
-                                      ),
+                                child: Center(
+                                  child: Padding(
+                                    padding: const EdgeInsets.only(top: 50),
+                                    child: CircularProgressIndicator(
+                                      color: primaryColor,
                                     ),
                                   ),
                                 ),

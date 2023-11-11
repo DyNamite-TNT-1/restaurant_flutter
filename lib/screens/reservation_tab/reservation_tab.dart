@@ -98,7 +98,7 @@ class _ReservationTabState extends State<ReservationTab>
       // AppBloc.uiBloc.add(OnReservationSuccess(params: const {}));
     } else if (mounted) {
       Fluttertoast.showToast(
-        msg: result.message,
+        msg: Translate.of(context).translate(result.message),
         toastLength: Toast.LENGTH_SHORT,
         gravity: ToastGravity.CENTER,
         timeInSecForIosWeb: 1,
@@ -122,8 +122,10 @@ class _ReservationTabState extends State<ReservationTab>
         return AppDialogText(
           buttonDoneTitle: preFee > 0 ? "Thanh toán" : "OK",
           onDone: () async {
-            await openUrl(Uri.parse(
-                "http://localhost:3005/vnpay/create_payment_url?amount=$preFee&id_order=$reservationId"));
+            if (preFee > 0) {
+              await openUrl(Uri.parse(
+                  "http://localhost:3005/vnpay/create_payment_url?amount=$preFee&id_order=$reservationId"));
+            }
             if (mounted) {
               Navigator.pop(context);
             }

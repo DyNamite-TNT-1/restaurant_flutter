@@ -7,6 +7,7 @@ import 'package:restaurant_flutter/api/api.dart';
 import 'package:restaurant_flutter/configs/configs.dart';
 import 'package:restaurant_flutter/models/service/model_result_api.dart';
 import 'package:restaurant_flutter/routes/route_constants.dart';
+import 'package:restaurant_flutter/utils/utils.dart';
 import 'package:restaurant_flutter/widgets/widgets.dart';
 
 class OtpScreen extends StatefulWidget {
@@ -49,26 +50,9 @@ class _OtpScreenState extends State<OtpScreen> {
     });
     ResultModel result = await Api.verifyOTPSignUp(
         login: widget.email, otp: _otpController.text);
-    if (result.isSuccess) {
-      if (result.isSuccess) {
-        Fluttertoast.showToast(
-          msg: result.message,
-          toastLength: Toast.LENGTH_SHORT,
-          gravity: ToastGravity.CENTER,
-          timeInSecForIosWeb: 1,
-          backgroundColor: primaryColor,
-          textColor: Colors.white,
-          fontSize: 16.0,
-          webShowClose: true,
-          webBgColor: successColorToast,
-        );
-        setState(() {
-          isVerified = true;
-        });
-      }
-    } else {
+    if (mounted) {
       Fluttertoast.showToast(
-        msg: result.message,
+        msg: Translate.of(context).translate(result.message),
         toastLength: Toast.LENGTH_SHORT,
         gravity: ToastGravity.CENTER,
         timeInSecForIosWeb: 1,
@@ -76,9 +60,15 @@ class _OtpScreenState extends State<OtpScreen> {
         textColor: Colors.white,
         fontSize: 16.0,
         webShowClose: true,
-        webBgColor: dangerColorToast,
+        webBgColor: result.isSuccess ? successColorToast : dangerColorToast,
       );
     }
+    if (result.isSuccess) {
+      setState(() {
+        isVerified = true;
+      });
+    }
+
     setState(() {
       isVerifyingOTP = false;
     });

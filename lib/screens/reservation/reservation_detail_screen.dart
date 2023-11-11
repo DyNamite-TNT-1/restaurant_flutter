@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 import 'package:restaurant_flutter/api/api.dart';
@@ -27,6 +28,7 @@ class _ReservationDetailScreenState extends State<ReservationDetailScreen> {
   final ReservationDetailBloc _reservationDetailBloc =
       ReservationDetailBloc(ReservationDetailState());
   String tagRequestReservation = "";
+  String tagCancelReservation = "";
   bool isOpenDishList = true;
   bool isOpenDrinkList = true;
   bool isOpenServiceList = true;
@@ -40,6 +42,7 @@ class _ReservationDetailScreenState extends State<ReservationDetailScreen> {
   void dispose() {
     super.dispose();
     Api.cancelRequest(tag: tagRequestReservation);
+    Api.cancelRequest(tag: tagCancelReservation);
   }
 
   bool get isServiceClosed {
@@ -59,6 +62,7 @@ class _ReservationDetailScreenState extends State<ReservationDetailScreen> {
           params: const {"reservationState": BlocState.loading},
         ),
       );
+      Api.cancelRequest(tag: tagRequestReservation);
       tagRequestReservation =
           Api.buildIncreaseTagRequestWithID("reservationDetail");
       ResultModel result = await Api.requestDetailReservation(
@@ -74,11 +78,18 @@ class _ReservationDetailScreenState extends State<ReservationDetailScreen> {
             },
           ),
         );
+      } else {
+        _reservationDetailBloc.add(
+          OnUpdateState(
+            params: const {"reservationState": BlocState.loadFailed},
+          ),
+        );
       }
     }
   }
 
-  Container _buildDishList(ReservationDetailState state, BuildContext context) {
+  Container _buildDishServiceList(
+      ReservationDetailState state, BuildContext context) {
     double heightOfDishList = isOpenDishList
         ? (40 + 28.0 * state.reservationDetailModel!.dishes.length)
         : 40;
@@ -284,7 +295,7 @@ class _ReservationDetailScreenState extends State<ReservationDetailScreen> {
   Widget _buildHeaderInfoReservation(
       ReservationDetailState state, BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: kPadding10),
+      padding: const EdgeInsets.only(bottom: kPadding10),
       child: IntrinsicWidth(
         child: Column(
           children: [
@@ -462,20 +473,66 @@ class _ReservationDetailScreenState extends State<ReservationDetailScreen> {
             ),
           ],
         ),
-        if (UserRepository.userModel.isClient)
-          Tooltip(
-            message: "Thanh toán phí trả trước",
-            child: AppButton(
-              "Đặt cọc",
-              disabled: state.reservationDetailModel!.status != -2,
-              onPressed: () async {
-                await openUrl(Uri.parse(
-                    "http://localhost:3005/vnpay/create_payment_url?amount=${state.reservationDetailModel!.preFee}&id_order=${state.reservationDetailModel!.reservationId}"));
-              },
-            ),
-          ),
+        SizedBox(
+          height: kPadding10,
+        ),
+        _buildActionButton(state),
       ],
     );
+  }
+
+  Widget _buildActionButton(ReservationDetailState state) {
+    bool isClient = UserRepository.userModel.isClient;
+
+    // đặt cọc
+    if (isClient) {
+      if (state.reservationDetailModel!.status == -2) {
+        return Tooltip(
+          message: "Thanh toán phí trả trước",
+          child: AppButton(
+            "Đặt cọc",
+            onPressed: () async {
+              await openUrl(Uri.parse(
+                  "http://localhost:3005/vnpay/create_payment_url?amount=${state.reservationDetailModel!.preFee}&id_order=${state.reservationDetailModel!.reservationId}"));
+            },
+          ),
+        );
+      } else if (state.reservationDetailModel!.status == 0 ||
+          state.reservationDetailModel!.status == 1) {
+        return Tooltip(
+          message: "Hủy bàn",
+          child: AppButton(
+            "Hủy bàn",
+            onPressed: _cancelReservation,
+          ),
+        );
+      }
+    }
+
+    // hủy bàn
+    return SizedBox.shrink();
+  }
+
+  Future<void> _cancelReservation() async {
+    Api.cancelRequest(tag: tagCancelReservation);
+    tagCancelReservation =
+        Api.buildIncreaseTagRequestWithID("cancel_reservation");
+    ResultModel result = await Api.requestCancelReservation(
+      reservationId: widget.id,
+    );
+    if (mounted) {
+      Fluttertoast.showToast(
+        msg: Translate.of(context).translate(result.message),
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.CENTER,
+        timeInSecForIosWeb: 2,
+        webBgColor: result.isSuccess ? successColorToast : dangerColorToast,
+        webShowClose: true,
+      );
+    }
+    if (result.isSuccess) {
+      _requestDetailReservation();
+    }
   }
 
   @override
@@ -494,51 +551,82 @@ class _ReservationDetailScreenState extends State<ReservationDetailScreen> {
                 color: Colors.white,
                 borderRadius: BorderRadius.circular(kCornerMedium),
               ),
-              child: Stack(
+              child: Column(
                 children: [
-                  if (state.reservationDetailModel != null)
-                    Container(
-                      padding: EdgeInsets.all(kDefaultPadding),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          _buildTopBar(context),
-                          _buildHeaderInfoReservation(state, context),
-                          Row(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Expanded(
-                                flex: 2,
-                                child: Column(
+                  Padding(
+                    padding: const EdgeInsets.only(
+                      top: kDefaultPadding,
+                      right: kDefaultPadding,
+                      left: kDefaultPadding,
+                    ),
+                    child: _buildTopBar(context),
+                  ),
+                  Expanded(
+                    child: Stack(
+                      children: [
+                        if (state.reservationDetailModel != null)
+                          Container(
+                            padding: EdgeInsets.all(kDefaultPadding),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                _buildHeaderInfoReservation(state, context),
+                                Row(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
-                                    _buildDishList(state, context),
+                                    Expanded(
+                                      flex: 2,
+                                      child: Column(
+                                        children: [
+                                          _buildDishServiceList(state, context),
+                                        ],
+                                      ),
+                                    ),
+                                    SizedBox(
+                                      width: kDefaultPadding,
+                                    ),
+                                    Expanded(
+                                        child:
+                                            _buildColumnRight(context, state)),
                                   ],
                                 ),
-                              ),
-                              SizedBox(
-                                width: kDefaultPadding,
-                              ),
-                              Expanded(
-                                  child: _buildColumnRight(context, state)),
-                            ],
+                              ],
+                            ),
                           ),
-                        ],
-                      ),
-                    ),
-                  Visibility(
-                    visible: state.reservationState == BlocState.loading,
-                    child: Container(
-                      decoration: BoxDecoration(
-                        color: Colors.grey.withOpacity(0.2),
-                        borderRadius: BorderRadius.circular(kCornerMedium),
-                      ),
-                      height: double.infinity,
-                      width: double.infinity,
-                      child: Center(
-                        child: CircularProgressIndicator(
-                          color: primaryColor,
+                        Visibility(
+                          visible: state.reservationState == BlocState.loading,
+                          child: Container(
+                            decoration: BoxDecoration(
+                              color: Colors.grey.withOpacity(0.2),
+                              borderRadius:
+                                  BorderRadius.circular(kCornerMedium),
+                            ),
+                            height: double.infinity,
+                            width: double.infinity,
+                            child: Center(
+                              child: CircularProgressIndicator(
+                                color: primaryColor,
+                              ),
+                            ),
+                          ),
                         ),
-                      ),
+                        Visibility(
+                          visible:
+                              state.reservationState == BlocState.loadFailed,
+                          child: Container(
+                            decoration: BoxDecoration(
+                              // color: Colors.grey.withOpacity(0.2),
+                              borderRadius:
+                                  BorderRadius.circular(kCornerMedium),
+                            ),
+                            height: double.infinity,
+                            width: double.infinity,
+                            child: Center(
+                              child: NoDataFoundView(),
+                            ),
+                          ),
+                        ),
+                      ],
                     ),
                   ),
                 ],

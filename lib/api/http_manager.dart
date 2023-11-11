@@ -427,7 +427,8 @@ class HTTPManager {
       case DioExceptionType.badResponse:
         data = error.response?.data ?? <String, dynamic>{};
         if (data is Map) {
-          var serverMsg = ParseTypeData.ensureString(data["msg"]);
+          var serverMsg =
+              ParseTypeData.ensureString(data["msg"] ?? data["message"]);
           message = serverMsg.isEmpty ? message : serverMsg;
         }
         if (error.response?.statusCode == 401) {

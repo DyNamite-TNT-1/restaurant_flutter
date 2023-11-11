@@ -12,6 +12,7 @@ import 'package:restaurant_flutter/models/client/client_service.dart';
 import 'package:restaurant_flutter/models/service/model_result_api.dart';
 import 'package:restaurant_flutter/screens/service/widget/service_item.dart';
 import 'package:restaurant_flutter/utils/extension.dart';
+import 'package:restaurant_flutter/utils/utils.dart';
 import 'package:restaurant_flutter/widgets/app_popup_menu_button.dart';
 import 'package:restaurant_flutter/widgets/widgets.dart';
 
@@ -149,18 +150,18 @@ class _ServiceScreenState extends State<ServiceScreen> {
       unit: _unitController.text.capitalize(),
       price: _priceController.text,
     );
-    if (result.isSuccess) {
-      if (context.mounted) {
-        Fluttertoast.showToast(
-          msg: result.message,
-          toastLength: Toast.LENGTH_SHORT,
-          gravity: ToastGravity.CENTER,
-          timeInSecForIosWeb: 3,
-          textColor: Colors.white,
-          fontSize: 16.0,
-          webShowClose: true,
-          webBgColor: successColorToast,
-        );
+    if (context.mounted) {
+      Fluttertoast.showToast(
+        msg: Translate.of(context).translate(result.message),
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.CENTER,
+        timeInSecForIosWeb: 3,
+        textColor: Colors.white,
+        fontSize: 16.0,
+        webShowClose: true,
+        webBgColor: result.isSuccess ? successColorToast : dangerColorToast,
+      );
+      if (result.isSuccess) {
         context.pop();
         _onRefresh();
         _nameController.text = "";
@@ -168,18 +169,8 @@ class _ServiceScreenState extends State<ServiceScreen> {
         _imageController.text = "";
         _unitController.text = "";
       }
-    } else {
-      Fluttertoast.showToast(
-        msg: result.message,
-        toastLength: Toast.LENGTH_SHORT,
-        gravity: ToastGravity.CENTER,
-        timeInSecForIosWeb: 3,
-        textColor: Colors.white,
-        fontSize: 16.0,
-        webShowClose: true,
-        webBgColor: dangerColorToast,
-      );
     }
+
     return false;
   }
 
@@ -446,7 +437,7 @@ class _ServiceScreenState extends State<ServiceScreen> {
                       color: Colors.grey.withOpacity(0.2),
                       child: Center(
                         child: CircularProgressIndicator(
-                           color: primaryColor,
+                          color: primaryColor,
                         ),
                       ),
                     ),

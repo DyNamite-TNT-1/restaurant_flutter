@@ -123,9 +123,9 @@ class _SignUpScreenState extends State<SignUpScreen> {
       birthDay: DateFormat("yyyy/MM/dd").format(birthDay),
       userName: userNameController.text,
     );
-    if (result.isSuccess) {
+    if (result.isSuccess && mounted) {
       Fluttertoast.showToast(
-        msg: result.message,
+        msg: Translate.of(context).translate(result.message),
         toastLength: Toast.LENGTH_SHORT,
         gravity: ToastGravity.CENTER,
         timeInSecForIosWeb: 3,
@@ -135,13 +135,13 @@ class _SignUpScreenState extends State<SignUpScreen> {
         webBgColor: successColorToast,
         webShowClose: true,
       );
-      if (context.mounted) {
+      if (mounted) {
         context.goNamed(RouteConstants.verifyOTP,
             extra: {"email": emailController.text});
       }
     } else {
       Fluttertoast.showToast(
-        msg: result.message,
+        msg: Translate.of(context).translate(result.message),
         toastLength: Toast.LENGTH_SHORT,
         gravity: ToastGravity.CENTER,
         timeInSecForIosWeb: 1,

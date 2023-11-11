@@ -37,5 +37,6 @@
   "Loading common settings": "Đang tải các cài đặt chung...",
   "change_language": "Thay đổi ngôn ngữ",
   "change_language_description": "Thay đổi ngôn ngữ hiển thị trên website",
-  "Apply": "Áp dụng"
+  "Apply": "Áp dụng",
+  "no_data_found": "Không có dữ liệu"
 }

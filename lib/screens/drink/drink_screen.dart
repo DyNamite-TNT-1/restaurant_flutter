@@ -12,7 +12,7 @@ import 'package:restaurant_flutter/enum/order.dart';
 import 'package:restaurant_flutter/models/client/client_dish.dart';
 import 'package:restaurant_flutter/models/service/dish_type.dart';
 import 'package:restaurant_flutter/models/service/model_result_api.dart';
-import 'package:restaurant_flutter/utils/extension.dart';
+import 'package:restaurant_flutter/utils/utils.dart';
 import 'package:restaurant_flutter/widgets/app_popup_menu_button.dart';
 import 'package:restaurant_flutter/widgets/widgets.dart';
 
@@ -246,18 +246,18 @@ class _DrinkScreenState extends State<DrinkScreen> {
       price: _priceController.text,
       dishTypeId: dishType.dishTypeId,
     );
-    if (result.isSuccess) {
-      if (context.mounted) {
-        Fluttertoast.showToast(
-          msg: result.message,
-          toastLength: Toast.LENGTH_SHORT,
-          gravity: ToastGravity.CENTER,
-          timeInSecForIosWeb: 1,
-          textColor: Colors.white,
-          fontSize: 16.0,
-          webShowClose: true,
-          webBgColor: successColorToast,
-        );
+    if (context.mounted) {
+      Fluttertoast.showToast(
+        msg: Translate.of(context).translate(result.message),
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.CENTER,
+        timeInSecForIosWeb: 1,
+        textColor: Colors.white,
+        fontSize: 16.0,
+        webShowClose: true,
+        webBgColor: result.isSuccess ? successColorToast : dangerColorToast,
+      );
+      if (result.isSuccess) {
         context.pop();
         _onRefresh();
         _nameController.text = "";
@@ -266,17 +266,6 @@ class _DrinkScreenState extends State<DrinkScreen> {
         _imageController.text = "";
         _unitController.text = "";
       }
-    } else {
-      Fluttertoast.showToast(
-        msg: result.message,
-        toastLength: Toast.LENGTH_SHORT,
-        gravity: ToastGravity.CENTER,
-        timeInSecForIosWeb: 1,
-        textColor: Colors.white,
-        fontSize: 16.0,
-        webShowClose: true,
-        webBgColor: dangerColorToast,
-      );
     }
   }
 
@@ -687,7 +676,7 @@ class _DrinkScreenState extends State<DrinkScreen> {
                       color: Colors.grey.withOpacity(0.2),
                       child: Center(
                         child: CircularProgressIndicator(
-                           color: primaryColor,
+                          color: primaryColor,
                         ),
                       ),
                     ),
