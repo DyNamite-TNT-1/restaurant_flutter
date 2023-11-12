@@ -123,6 +123,7 @@ class _SettingScreenState extends State<SettingScreen> {
               ),
               children: [
                 _buildChangeLanguage(context),
+                Text("version: 1.0.1"),
               ],
             ),
           )

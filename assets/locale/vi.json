@@ -21,6 +21,8 @@
   "VALIDATE_USERNAME_E001": "Vui lòng nhập họ và tên",
   "VALIDATE_ADDRESS_E001": "Vui lòng nhập địa chỉ",
   "cannot_connect_server": "Không thể kết nối tới máy chủ",
+  "VALIDATE_INPUT_EMPTY": "Trường nhập không được trống",
+  "VALIDATE_FORMAT_E001:" :"Sai định dạng",
 
   "booking": "Đặt bàn",
   "sign_in": "Đăng nhập",

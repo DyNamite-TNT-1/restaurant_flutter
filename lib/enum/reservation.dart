@@ -5,7 +5,7 @@ enum ReservationStatus {
   notPayPreFee("Chưa đặt cọc", -2, Color(0XFFF1C232)),
   rejected("Đã hủy", -1, Color(0XFFBE2020)),
   pending("Xác nhận đặt bàn", 0,Color(0XFF10B759)),
-  approved("Đã duyệt", 1, Color(0XFF5B47FB)),
+  pendingChanged("Xác nhận đổi bàn", 1, Color(0XFF5B47FB)),
   finishes("Kết thúc", 2, Color(0XFF8B008B));
 
   final String name;

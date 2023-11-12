@@ -21,6 +21,8 @@
   "VALIDATE_USERNAME_E001": "Please enter name",
   "VALIDATE_ADDRESS_E001": "Please enter address",
   "cannot_connect_server": "Cannot connect to server",
+  "VALIDATE_INPUT_EMPTY": "Input is empty",
+  "VALIDATE_FORMAT_E001:": "Wrong format",
 
   "booking": "Booking",
   "sign_in": "Sign In",

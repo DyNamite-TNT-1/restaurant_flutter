@@ -34,6 +34,7 @@ class _ReservationDetailScreenState extends State<ReservationDetailScreen> {
       ReservationDetailBloc(ReservationDetailState());
   String tagRequestReservation = "";
   String tagCancelReservation = "";
+  String tagChangeSchedule = "";
   bool isOpenDishList = true;
   bool isOpenDrinkList = true;
   bool isOpenServiceList = true;
@@ -49,6 +50,7 @@ class _ReservationDetailScreenState extends State<ReservationDetailScreen> {
     super.dispose();
     Api.cancelRequest(tag: tagRequestReservation);
     Api.cancelRequest(tag: tagCancelReservation);
+    Api.cancelRequest(tag: tagChangeSchedule);
   }
 
   bool get isServiceClosed {
@@ -94,89 +96,95 @@ class _ReservationDetailScreenState extends State<ReservationDetailScreen> {
     }
   }
 
+  Future<bool> _changeSchedule(String schedule) async {
+    Api.cancelRequest(tag: tagChangeSchedule);
+    ResultModel result = await Api.requestChangeScheduleReservation(
+      reservationId: widget.id,
+      schedule: DateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'").format(
+        DateFormat("yyyy/MM/dd hh:mm")
+            .parse(schedule)
+            .subtract(Duration(hours: 7)),
+      ),
+    );
+    if (mounted) {
+      Fluttertoast.showToast(
+        msg: result.message,
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.CENTER,
+        timeInSecForIosWeb: 1,
+        backgroundColor: primaryColor,
+        textColor: Colors.white,
+        fontSize: 16.0,
+        webBgColor: result.isSuccess ? successColorToast : dangerColorToast,
+      );
+    }
+    if (result.isSuccess) {
+      _requestDetailReservation();
+      return true;
+    }
+    return false;
+  }
+
   _openEditDialog() {
     TextEditingController scheduleController = TextEditingController();
     FocusNode scheduleNode = FocusNode();
     ReservationDetailState state = _reservationDetailBloc.state;
-    scheduleController.text = DateFormat("dd/MM/yyyy HH:mm").format(state
-        .reservationDetailModel!.schedule
-        .toDateTime()
-        .add(Duration(hours: 7)));
-    bool isErrValidate = false;
+    scheduleController.text = DateFormat("yyyy/MM/dd HH:mm")
+        .format(state.reservationDetailModel!.schedule.toDateTime());
     showDialog(
       context: context,
       barrierDismissible: false,
       builder: (BuildContext ct) {
-        return StatefulBuilder(builder: (context, newState) {
-          return AppDialogInput(
-            title: Translate.of(context).translate("change_schedule"),
-            buttonDoneTitle: Translate.of(context).translate("apply"),
-            buttonCancelTitle: Translate.of(context).translate("cancel"),
-            onDone: () async {},
-            onCancel: () {
-              context.pop();
+        return AppDialogInput(
+          title: Translate.of(context).translate("change_schedule"),
+          buttonDoneTitle: Translate.of(context).translate("apply"),
+          buttonCancelTitle: Translate.of(context).translate("cancel"),
+          onDone: () async {
+            String errorText = "";
+            if (scheduleController.text.trim().isEmpty) {
+              errorText =
+                  Translate.of(context).translate("VALIDATE_INPUT_EMPTY");
+            }
+            if (errorText.isNotEmpty) {
+              Fluttertoast.showToast(
+                msg: errorText,
+                toastLength: Toast.LENGTH_SHORT,
+                gravity: ToastGravity.CENTER,
+                timeInSecForIosWeb: 1,
+                backgroundColor: primaryColor,
+                textColor: Colors.white,
+                fontSize: 16.0,
+                webBgColor: dangerColorToast,
+              );
+            } else {
+              bool canPop = await _changeSchedule(scheduleController.text);
+              if (canPop && mounted) {
+                context.pop();
+              }
+            }
+          },
+          onCancel: () {
+            context.pop();
+          },
+          child: StatefulBuilder(
+            builder: (context, setState) {
+              return Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  AppInput2(
+                    name: "schedule",
+                    keyboardType: TextInputType.name,
+                    controller: scheduleController,
+                    placeHolder:
+                        Translate.of(context).translate("yyyy/MM/dd HH:mm"),
+                    focusNode: scheduleNode,
+                  ),
+                ],
+              );
             },
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: [
-                AppInput2(
-                  name: "schedule",
-                  keyboardType: TextInputType.name,
-                  controller: scheduleController,
-                  placeHolder:
-                      Translate.of(context).translate("dd/MM/yyyy HH:mm"),
-                  focusNode: scheduleNode,
-                  onChanged: (p0) {
-                    // newState(() {
-                    //   if (p0.isEmpty) {
-                    //     isErrValidate = true;
-                    //   } else {
-                    //     isErrValidate = false;
-                    //   }
-                    // });
-                    print(isErrValidate);
-                  },
-                ),
-                if (isErrValidate) _buildError(context, "Lỗi trống")
-              ],
-            ),
-          );
-        });
-      },
-    );
-  }
-
-  Widget _buildError(BuildContext context, String errorText) {
-    return Container(
-      margin: EdgeInsets.symmetric(
-        vertical: kPadding10 / 2,
-      ),
-      padding: EdgeInsets.symmetric(
-        horizontal: kPadding10,
-      ),
-      decoration: BoxDecoration(
-        color: Color(0XFFFF4444).withOpacity(0.8),
-        borderRadius: BorderRadius.circular(kCornerNormal),
-        border: Border.all(
-          color: Color(0XFFFF4444),
-        ),
-      ),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          Expanded(
-            child: Center(
-              child: Text(
-                errorText,
-                maxLines: 2,
-                style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                      color: Colors.white,
-                    ),
-              ),
-            ),
           ),
-        ],
-      ),
+        );
+      },
     );
   }
 
@@ -552,6 +560,18 @@ class _ReservationDetailScreenState extends State<ReservationDetailScreen> {
         SizedBox(
           height: kPadding10,
         ),
+        if (state.reservationDetailModel!.status == -1)
+          Column(
+            children: [
+              _buildRowInfo(context,
+                  leftTag: "Phí hoàn trả:",
+                  rightValue:
+                      "${state.reservationDetailModel!.refundFeeStr} VNĐ"),
+              SizedBox(
+                height: kPadding10,
+              ),
+            ],
+          ),
         Row(
           children: [
             Expanded(

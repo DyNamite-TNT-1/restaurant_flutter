@@ -42,8 +42,7 @@ class _MessengerScreenState extends State<MessengerScreen> {
     return !mounted || messengerBloc.isClosed;
   }
 
-  _addSocketListener() {
-    UtilLogger.log("add socket listener");
+  void _addSocketListener() {
     SocketClient.socket!.on('receiver-message', (data) {
       if (!isServiceClosed) {
         Map<String, dynamic> messageData = data as Map<String, dynamic>;

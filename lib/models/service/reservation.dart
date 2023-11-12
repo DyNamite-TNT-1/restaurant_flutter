@@ -16,6 +16,8 @@ class ReservationDetailModel {
   final String schedule;
   final int preFee;
   final String preFeeStr;
+  final int refundFee;
+  final String refundFeeStr;
   final String deadline;
   final UserModel? userModel;
   final List<DishDetailModel> menus;
@@ -26,6 +28,8 @@ class ReservationDetailModel {
     this.reservationId = 0,
     this.preFee = 0,
     this.preFeeStr = "",
+    this.refundFee = 0,
+    this.refundFeeStr = "",
     this.deadline = "",
     this.countGuest = 0,
     this.note = "",
@@ -59,7 +63,7 @@ class ReservationDetailModel {
     }
   }
 
-   List<DishDetailModel> get drinks {
+  List<DishDetailModel> get drinks {
     if (menus.isEmpty) {
       return [];
     } else {
@@ -72,6 +76,8 @@ class ReservationDetailModel {
       reservationId: ParseTypeData.ensureInt(json["reservationId"]),
       preFee: ParseTypeData.ensureInt(json["preFee"]),
       preFeeStr: ParseTypeData.ensureString(json["preFeeStr"]),
+      refundFee: ParseTypeData.ensureInt(json["refundFee"]),
+      refundFeeStr: ParseTypeData.ensureString(json["refundFeeStr"]),
       deadline: ParseTypeData.ensureString(json["deadline"]),
       countGuest: ParseTypeData.ensureInt(json["countGuest"]),
       note: ParseTypeData.ensureString(json["note"]),

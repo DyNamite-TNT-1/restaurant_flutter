@@ -13,14 +13,14 @@ class Api {
   static const String http = "http://";
 
   static String getProtocol() {
-    const bool useSsl = false;
+    const bool useSsl = true;
     String protocol = (useSsl ? Api.https : Api.http);
     return protocol;
   }
 
   static String localHost() {
-    // return "restaurantbe-production.up.railway.app";
-    return "localhost:3005";
+    return "restaurantbe-production.up.railway.app";
+    // return "localhost:3005";
   }
 
   static String branchGetter() {
@@ -58,6 +58,8 @@ class Api {
   static String requestAllReservationUrl = "/reservation/get/all";
   static String requestDetailReservationUrl = "/reservation/get/detail";
   static String requestCancelReservationUrl = "/reservation/cancel";
+  static String requestChangeScheduleReservationUrl =
+      "/reservation/change-schedule";
 
   //table
   static String requestTableUrl = "/table/get";
@@ -305,6 +307,21 @@ class Api {
         "reservation_id": reservationId,
       },
       url: appendBranch(requestCancelReservationUrl),
+      cancelTag: tagRequest,
+    );
+    return ResultModel.fromJson(result);
+  }
+
+  static Future<ResultModel> requestChangeScheduleReservation({
+    required int reservationId,
+    required String schedule,
+    String tagRequest = HTTPManager.DEFAULT_CANCEL_TAG,
+  }) async {
+    final result = await httpManager.patch(
+      data: {
+        "newSchedule": schedule,
+      },
+      url: appendBranch("$requestChangeScheduleReservationUrl/$reservationId"),
       cancelTag: tagRequest,
     );
     return ResultModel.fromJson(result);
