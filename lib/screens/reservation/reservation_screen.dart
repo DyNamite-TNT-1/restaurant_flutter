@@ -306,6 +306,9 @@ class _ReservationScreenState extends State<ReservationScreen> {
                                           return ReservationRowItem(
                                             item: _reservationBloc
                                                 .state.reservations[index],
+                                            backToParent: () {
+                                              _onRefresh();
+                                            },
                                           );
                                         },
                                       ),
@@ -360,7 +363,8 @@ class _ReservationScreenState extends State<ReservationScreen> {
                       ],
                     )
                   : NoDataFoundView(
-                      message: "Vui lòng đăng nhập!",
+                      message:
+                          Translate.of(context).translate("please_sign_in"),
                     ),
             );
           },

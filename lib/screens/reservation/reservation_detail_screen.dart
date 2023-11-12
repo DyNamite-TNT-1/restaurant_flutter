@@ -16,8 +16,13 @@ import 'package:restaurant_flutter/widgets/widgets.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class ReservationDetailScreen extends StatefulWidget {
-  const ReservationDetailScreen({super.key, required this.id});
+  const ReservationDetailScreen({
+    super.key,
+    required this.id,
+    this.backToParent,
+  });
   final int id;
+  final Function? backToParent;
 
   @override
   State<ReservationDetailScreen> createState() =>
@@ -32,6 +37,7 @@ class _ReservationDetailScreenState extends State<ReservationDetailScreen> {
   bool isOpenDishList = true;
   bool isOpenDrinkList = true;
   bool isOpenServiceList = true;
+
   @override
   void initState() {
     super.initState();
@@ -86,6 +92,92 @@ class _ReservationDetailScreenState extends State<ReservationDetailScreen> {
         );
       }
     }
+  }
+
+  _openEditDialog() {
+    TextEditingController scheduleController = TextEditingController();
+    FocusNode scheduleNode = FocusNode();
+    ReservationDetailState state = _reservationDetailBloc.state;
+    scheduleController.text = DateFormat("dd/MM/yyyy HH:mm").format(state
+        .reservationDetailModel!.schedule
+        .toDateTime()
+        .add(Duration(hours: 7)));
+    bool isErrValidate = false;
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext ct) {
+        return StatefulBuilder(builder: (context, newState) {
+          return AppDialogInput(
+            title: Translate.of(context).translate("change_schedule"),
+            buttonDoneTitle: Translate.of(context).translate("apply"),
+            buttonCancelTitle: Translate.of(context).translate("cancel"),
+            onDone: () async {},
+            onCancel: () {
+              context.pop();
+            },
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                AppInput2(
+                  name: "schedule",
+                  keyboardType: TextInputType.name,
+                  controller: scheduleController,
+                  placeHolder:
+                      Translate.of(context).translate("dd/MM/yyyy HH:mm"),
+                  focusNode: scheduleNode,
+                  onChanged: (p0) {
+                    // newState(() {
+                    //   if (p0.isEmpty) {
+                    //     isErrValidate = true;
+                    //   } else {
+                    //     isErrValidate = false;
+                    //   }
+                    // });
+                    print(isErrValidate);
+                  },
+                ),
+                if (isErrValidate) _buildError(context, "Lỗi trống")
+              ],
+            ),
+          );
+        });
+      },
+    );
+  }
+
+  Widget _buildError(BuildContext context, String errorText) {
+    return Container(
+      margin: EdgeInsets.symmetric(
+        vertical: kPadding10 / 2,
+      ),
+      padding: EdgeInsets.symmetric(
+        horizontal: kPadding10,
+      ),
+      decoration: BoxDecoration(
+        color: Color(0XFFFF4444).withOpacity(0.8),
+        borderRadius: BorderRadius.circular(kCornerNormal),
+        border: Border.all(
+          color: Color(0XFFFF4444),
+        ),
+      ),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          Expanded(
+            child: Center(
+              child: Text(
+                errorText,
+                maxLines: 2,
+                style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                      color: Colors.white,
+                    ),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
   }
 
   Container _buildDishServiceList(
@@ -296,24 +388,41 @@ class _ReservationDetailScreenState extends State<ReservationDetailScreen> {
       ReservationDetailState state, BuildContext context) {
     return Padding(
       padding: const EdgeInsets.only(bottom: kPadding10),
-      child: IntrinsicWidth(
-        child: Column(
-          children: [
-            Text(
-              "Mã đặt bàn: #${state.reservationDetailModel!.reservationId}",
-              style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                    fontSize: 24,
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          IntrinsicWidth(
+            child: Column(
+              children: [
+                Text(
+                  "Mã đặt bàn: #${state.reservationDetailModel!.reservationId}",
+                  style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                        fontSize: 24,
+                      ),
+                ),
+                Container(
+                  height: 3,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(kCornerSmall),
+                    color: primaryColor,
                   ),
+                ),
+              ],
             ),
-            Container(
-              height: 3,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(kCornerSmall),
-                color: primaryColor,
+          ),
+          Material(
+            color: Colors.transparent,
+            child: IconButton(
+              onPressed: () {
+                _openEditDialog();
+              },
+              icon: Icon(
+                Icons.edit,
+                size: 20,
               ),
             ),
-          ],
-        ),
+          )
+        ],
       ),
     );
   }
@@ -328,6 +437,9 @@ class _ReservationDetailScreenState extends State<ReservationDetailScreen> {
             borderRadius: BorderRadius.circular(kCornerSmall),
             onTap: () {
               context.pop();
+              if (widget.backToParent != null) {
+                widget.backToParent!();
+              }
             },
             child: Container(
               padding: EdgeInsets.symmetric(horizontal: 5),
@@ -492,7 +604,7 @@ class _ReservationDetailScreenState extends State<ReservationDetailScreen> {
             "Đặt cọc",
             onPressed: () async {
               await openUrl(Uri.parse(
-                  "http://localhost:3005/vnpay/create_payment_url?amount=${state.reservationDetailModel!.preFee}&id_order=${state.reservationDetailModel!.reservationId}"));
+                  "http://${Api.localHost()}/vnpay/create_payment_url?amount=${state.reservationDetailModel!.preFee}&id_order=${state.reservationDetailModel!.reservationId}"));
             },
           ),
         );

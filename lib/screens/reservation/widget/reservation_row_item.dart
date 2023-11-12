@@ -7,8 +7,14 @@ import 'package:restaurant_flutter/routes/route_constants.dart';
 import 'package:restaurant_flutter/utils/extension.dart';
 
 class ReservationRowItem extends StatefulWidget {
-  const ReservationRowItem({super.key, required this.item});
+  const ReservationRowItem({
+    super.key,
+    required this.item,
+    required this.backToParent,
+  });
+
   final ReservationDetailModel item;
+  final Function backToParent;
 
   @override
   State<ReservationRowItem> createState() => _ReservationRowItemState();
@@ -150,6 +156,9 @@ class _ReservationRowItemState extends State<ReservationRowItem> {
                   context.goNamed(RouteConstants.reservationDetail,
                       pathParameters: {
                         "id": "${widget.item.reservationId}",
+                      },
+                      extra: {
+                        "backToParent": widget.backToParent,
                       });
                 },
                 child: Icon(Icons.more_vert),

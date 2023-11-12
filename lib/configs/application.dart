@@ -7,7 +7,7 @@ class Application {
   static const bool useMarkdownForHTMLSmallContent = true;
   static const dateFormat = 'yyyy/DD/mm';
   static bool localTimeZone = false;
-  static bool debug = true;
+  static bool debug = false;
   static String versionIntro =
       '1.0.2'; // Change this version if application have new function and would like to introduce
   static bool useShimmerLoading = true;

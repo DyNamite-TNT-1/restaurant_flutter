@@ -127,7 +127,7 @@ class _ReservationTabState extends State<ReservationTab>
           onDone: () async {
             if (preFee > 0) {
               await openUrl(Uri.parse(
-                  "http://localhost:3005/vnpay/create_payment_url?amount=$preFee&id_order=$reservationId"));
+                  "http://${Api.localHost()}/vnpay/create_payment_url?amount=$preFee&id_order=$reservationId"));
             }
             if (mounted) {
               Navigator.pop(context);

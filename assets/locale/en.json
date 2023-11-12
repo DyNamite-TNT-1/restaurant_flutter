@@ -62,6 +62,7 @@
   "description": "Description",
   "image_link": "Link image",
   "add": "Add",
+  "apply": "Apply",
   "cancel": "Cancel",
   "enter_dish_name": "Enter dish name",
   "enter_price": "Enter price",

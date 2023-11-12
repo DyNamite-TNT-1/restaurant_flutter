@@ -154,11 +154,22 @@ class AppRouter {
                     pageBuilder: (context, state) {
                       int id =
                           ParseTypeData.ensureInt(state.pathParameters["id"]);
+                      Function? backToParent;
+                      final params = state.extra as Map<String, dynamic>;
+                      backToParent = params["backToParent"];
+
                       return MaterialPage(
                         child: ReservationDetailScreen(
                           id: id,
+                          backToParent: backToParent,
                         ),
                       );
+                    },
+                    redirect: (context, state) {
+                      if (state.extra == null) {
+                        return "/reservation";
+                      }
+                      return null;
                     },
                   ),
                 ],

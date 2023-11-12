@@ -12,6 +12,7 @@ class AppInput2 extends StatefulWidget {
   final String placeHolder;
   final FocusNode focusNode;
   final int maxLines;
+  final String? Function(String?)? validator;
   @override
   State<AppInput2> createState() => _AppInput2State();
 
@@ -25,6 +26,7 @@ class AppInput2 extends StatefulWidget {
     required this.placeHolder,
     required this.focusNode,
     this.maxLines = 1,
+    this.validator,
     Key? key,
   }) : super(key: key);
 }
@@ -107,31 +109,7 @@ class _AppInput2State extends State<AppInput2> {
                 )
               : null,
         ),
-        validator: (String? value) {
-          // if (value!.isEmpty) {
-          //   return "${widget.placeHolder} không được rỗng";
-          // }
-          // switch (widget.name) {
-          //   case "password":
-          //   case "repeat_password":
-          //     if (value.length < 6 || value.length > 16) {
-          //       return "Mật khẩu tối thiểu 6 ký tự, tối đa 16";
-          //     }
-          //     break;
-          //   case "phone":
-          //     if (value.length != 10) {
-          //       return "Số điện thoại phải có 10 chữ số";
-          //     }
-          //     if (!RegExp(
-          //             r"^(0?)(3[2-9]|5[6|8|9]|7[0|6-9]|8[0-6|8|9]|9[0-4|6-9])[0-9]{7}$")
-          //         .hasMatch(value)) {
-          //       return "Số điện thoại không phù hợp";
-          //     }
-          //     break;
-          //   default:
-          // }
-          return null;
-        },
+        // validator: widget.validator,
       ),
     );
   }
