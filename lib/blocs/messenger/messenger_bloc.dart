@@ -307,7 +307,6 @@ class MessengerBloc extends Bloc<MessengerEvent, MessengerState> {
       MessageDetailModel message = event.params.containsKey("message")
           ? event.params["message"]
           : MessageDetailModel();
-      print("received msg from socket ${message.content}");
       emit(state.copyWith(
         messageState: BlocState.loadCompleted,
         messages: [...state.messages, message],

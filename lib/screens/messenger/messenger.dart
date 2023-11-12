@@ -34,7 +34,7 @@ class _MessengerScreenState extends State<MessengerScreen> {
   void initState() {
     messengerBloc = MessengerBloc(MessengerState());
     _onRefresh();
-    _addSocketListener();
+    // _addSocketListener();
     super.initState();
   }
 
@@ -45,7 +45,7 @@ class _MessengerScreenState extends State<MessengerScreen> {
   _addSocketListener() {
     UtilLogger.log("add socket listener");
     SocketClient.socket!.on('receiver-message', (data) {
-      if (isServiceClosed) {
+      if (!isServiceClosed) {
         Map<String, dynamic> messageData = data as Map<String, dynamic>;
         messengerBloc.add(OnReceiveMessageFromSocket(
             params: {"message": MessageDetailModel.fromJson(messageData)}));
@@ -169,6 +169,7 @@ class _MessengerScreenState extends State<MessengerScreen> {
       },
       listener: (context, state) {
         _onRefresh();
+        _addSocketListener();
       },
       child: BlocProvider(
         create: (context) => messengerBloc,
@@ -286,6 +287,7 @@ class _MessengerScreenState extends State<MessengerScreen> {
                                               child: IconButton(
                                                 onPressed: () {
                                                   _onRefresh();
+                                                  // _addSocketListener();
                                                 },
                                                 icon: Icon(
                                                   Icons.refresh,
