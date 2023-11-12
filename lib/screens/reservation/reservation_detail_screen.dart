@@ -108,7 +108,7 @@ class _ReservationDetailScreenState extends State<ReservationDetailScreen> {
     );
     if (mounted) {
       Fluttertoast.showToast(
-        msg: result.message,
+        msg: Translate.of(context).translate(result.message),
         toastLength: Toast.LENGTH_SHORT,
         gravity: ToastGravity.CENTER,
         timeInSecForIosWeb: 1,
@@ -129,8 +129,10 @@ class _ReservationDetailScreenState extends State<ReservationDetailScreen> {
     TextEditingController scheduleController = TextEditingController();
     FocusNode scheduleNode = FocusNode();
     ReservationDetailState state = _reservationDetailBloc.state;
-    scheduleController.text = DateFormat("yyyy/MM/dd HH:mm")
-        .format(state.reservationDetailModel!.schedule.toDateTime());
+    scheduleController.text = DateFormat("yyyy/MM/dd HH:mm").format(state
+        .reservationDetailModel!.schedule
+        .toDateTime()
+        .add(Duration(hours: 7)));
     showDialog(
       context: context,
       barrierDismissible: false,
@@ -539,8 +541,10 @@ class _ReservationDetailScreenState extends State<ReservationDetailScreen> {
         _buildRowInfo(
           context,
           leftTag: "Thời gian diễn ra:",
-          rightValue: DateFormat("dd/MM/yyyy HH:mm")
-              .format(state.reservationDetailModel!.schedule.toDateTime()),
+          rightValue: DateFormat("dd/MM/yyyy HH:mm").format(state
+              .reservationDetailModel!.schedule
+              .toDateTime()
+              .add(Duration(hours: 7))),
         ),
         SizedBox(
           height: kPadding10,
@@ -548,8 +552,10 @@ class _ReservationDetailScreenState extends State<ReservationDetailScreen> {
         _buildRowInfo(
           context,
           leftTag: "Ngày tạo yêu cầu:",
-          rightValue: DateFormat("dd/MM/yyyy HH:mm")
-              .format(state.reservationDetailModel!.createAt.toDateTime()),
+          rightValue: DateFormat("dd/MM/yyyy HH:mm").format(state
+              .reservationDetailModel!.createAt
+              .toDateTime()
+              .add(Duration(hours: 7))),
         ),
         SizedBox(
           height: kPadding10,

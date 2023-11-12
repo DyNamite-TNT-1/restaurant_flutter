@@ -95,5 +95,14 @@
   "Apply": "Apply",
   "no_data_found": "No data found",
   "no_add_dish": "You have not added dishes yet",
-  "confirm_reservation": "Reservation confirmation"
+  "confirm_reservation": "Reservation confirmation",
+
+  "You are not a reservation agent": "You are not a reservation agent",
+  "You can not change schedule because schedule close (24 hours)": "You can not change schedule because schedule close (24 hours)",
+  "You can not change new schedule because schedule close (12 hours)": "You can not change new schedule because schedule close (12 hours)",
+  "You can not change schedule": "You can not change schedule",
+  "Change Schedule successfully !": "Change Schedule successfully!",
+  "User is not make this reservation": "User is not make this reservation",
+  "Reservation is cancelled before": "Reservation is cancelled before",
+  "Cancel reservation successfully": "Cancel reservation successfully"
 }

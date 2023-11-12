@@ -22,7 +22,7 @@
   "VALIDATE_ADDRESS_E001": "Vui lòng nhập địa chỉ",
   "cannot_connect_server": "Không thể kết nối tới máy chủ",
   "VALIDATE_INPUT_EMPTY": "Trường nhập không được trống",
-  "VALIDATE_FORMAT_E001:" :"Sai định dạng",
+  "VALIDATE_FORMAT_E001:": "Sai định dạng",
 
   "booking": "Đặt bàn",
   "sign_in": "Đăng nhập",
@@ -96,5 +96,14 @@
   "no_data_found": "Không có dữ liệu",
   "no_add_dish": "Bạn chưa thêm món ăn",
   "confirm_reservation_ask": "Xác nhận đặt bàn?",
-  "confirm_reservation": "Xác nhận đặt bàn"
+  "confirm_reservation": "Xác nhận đặt bàn",
+
+  "You are not a reservation agent": "Bạn không tạo yêu cầu đặt chỗ này",
+  "You can not change schedule because schedule close (24 hours)": "Bạn không thể thay đổi vì thời gian diễn ra cách hiện tại chưa tới 24h",
+  "You can not change new schedule because schedule close (12 hours)": "Bạn không thể thay đổi vì thời gian diễn ra mới cách hiện tại chưa tới 12h",
+  "You can not change schedule": "Bạn không thể thay đổi thời gian diễn ra",
+  "Change Schedule successfully !": "Thay đổi thành công!",
+  "User is not make this reservation": "Bạn không tạo yêu cầu đặt chỗ này",
+  "Reservation is cancelled before": "Yêu cầu đã bị hủy trước đây",
+  "Cancel reservation successfully": "Hủy bàn thành công!"
 }

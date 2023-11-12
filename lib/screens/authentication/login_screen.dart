@@ -29,6 +29,9 @@ class _LoginScreenState extends State<LoginScreen> {
   @override
   void initState() {
     super.initState();
+    if (loginFocus.canRequestFocus) {
+      loginFocus.requestFocus();
+    }
   }
 
   @override
@@ -193,21 +196,21 @@ class _LoginScreenState extends State<LoginScreen> {
                   _requestLogin(context);
                 },
               ),
-              SizedBox(
-                height: kDefaultPadding,
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: [
-                  InkWell(
-                    onTap: () {},
-                    child: Text(
-                      "${Translate.of(context).translate("enter_password")}?",
-                      style: Theme.of(context).textTheme.bodyMedium,
-                    ),
-                  ),
-                ],
-              ),
+              // SizedBox(
+              //   height: kDefaultPadding,
+              // ),
+              // Row(
+              //   mainAxisAlignment: MainAxisAlignment.start,
+              //   children: [
+              //     InkWell(
+              //       onTap: () {},
+              //       child: Text(
+              //         "${Translate.of(context).translate("enter_password")}?",
+              //         style: Theme.of(context).textTheme.bodyMedium,
+              //       ),
+              //     ),
+              //   ],
+              // ),
               SizedBox(
                 height: kDefaultPadding * 2,
               ),
