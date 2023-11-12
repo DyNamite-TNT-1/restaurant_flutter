@@ -278,7 +278,7 @@ class _LoginScreenState extends State<LoginScreen> {
         } else if (state is AuthenticationSuccess) {
           Navigator.pop(context);
           Fluttertoast.showToast(
-            msg: Translate.of(context).translate(state.messageSuccess),
+            msg: Translate.of(context).translate("LOGIN_SUCCESS"),
             toastLength: Toast.LENGTH_SHORT,
             gravity: ToastGravity.CENTER,
             timeInSecForIosWeb: 1,

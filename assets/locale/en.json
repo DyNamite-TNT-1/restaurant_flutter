@@ -25,7 +25,7 @@
   "booking": "Booking",
   "sign_in": "Sign In",
   "please_sign_in": "Please sign in!",
-  "please_sign_in_to_use_message": "Vui lòng đăng nhập để sử dụng tính năng nhắn tin!",
+  "please_sign_in_to_use_message": "Please log in to use the Message feature!",
   "enter_email_phone": "Enter email or phone",
   "enter_password": "Enter password",
   "forgot_password": "Forgot password",
@@ -91,5 +91,6 @@
   "Vietnamese": "Tiếng Việt",
   "Apply": "Apply",
   "no_data_found": "No data found",
-  "no_add_dish": "You have not added dishes yet"
+  "no_add_dish": "You have not added dishes yet",
+  "confirm_reservation": "Reservation confirmation"
 }

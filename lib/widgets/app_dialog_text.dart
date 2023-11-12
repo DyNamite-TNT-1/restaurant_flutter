@@ -103,7 +103,8 @@ class AppDialogText extends StatelessWidget {
                         ),
                         child: Center(
                           child: Text(
-                            (buttonCancelTitle ?? 'Cancel'),
+                            (buttonCancelTitle ??
+                                Translate.of(context).translate("cancel")),
                             style: Theme.of(context)
                                 .textTheme
                                 .bodyLarge

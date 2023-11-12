@@ -91,5 +91,7 @@
   "Vietnamese": "Tiếng Việt",
   "Apply": "Áp dụng",
   "no_data_found": "Không có dữ liệu",
-  "no_add_dish": "Bạn chưa thêm món ăn"
+  "no_add_dish": "Bạn chưa thêm món ăn",
+  "confirm_reservation_ask": "Xác nhận đặt bàn?",
+  "confirm_reservation": "Xác nhận đặt bàn"
 }

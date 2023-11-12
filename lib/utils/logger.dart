@@ -1,10 +1,10 @@
 import 'dart:convert';
 
+import 'package:restaurant_flutter/configs/configs.dart';
+
 class UtilLogger {
   static log([String tag = "", dynamic msg]) {
-    if (
-        // Application.debug
-        true) {
+    if (Application.debug) {
       // developer.log('${msg ?? ''}', name: tag);
       if (msg is Map || msg is List) {
         final prettyString = JsonEncoder.withIndent('  ').convert(msg);

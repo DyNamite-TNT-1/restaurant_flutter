@@ -272,10 +272,9 @@ class _MessengerScreenState extends State<MessengerScreen> {
                                             visible: state.conversationState ==
                                                 BlocState.loading,
                                             child: Center(
-                                              child:
-                                                  CircularProgressIndicator(
-                                                     color: primaryColor,
-                                                  ),
+                                              child: CircularProgressIndicator(
+                                                color: primaryColor,
+                                              ),
                                             ),
                                           ),
                                           Visibility(
@@ -422,7 +421,7 @@ class _MessengerScreenState extends State<MessengerScreen> {
                                           BlocState.loading,
                                       child: Center(
                                         child: CircularProgressIndicator(
-                                           color: primaryColor,
+                                          color: primaryColor,
                                         ),
                                       ),
                                     ),
@@ -453,8 +452,7 @@ class _MessengerScreenState extends State<MessengerScreen> {
                       )
                     : Center(
                         child: NoDataFoundView(
-                          message:
-                              "Vui lòng đăng nhập để sử dụng tính năng nhắn tin!",
+                          message: "please_sign_in_to_use_message",
                         ),
                       ),
               );

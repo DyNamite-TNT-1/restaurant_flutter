@@ -65,6 +65,9 @@ class _ReservationTabState extends State<ReservationTab>
   Future<void> _requestListTableType() async {
     ResultModel result = await Api.requestTableType();
     if (result.isSuccess) {
+      if (tableTypes.isNotEmpty) {
+        tableTypes.clear();
+      }
       tableTypes = TableTypeDetailModel.parseListItem(result.data);
       if (AppBloc.uiBloc.state.selectedTableType == null &&
           tableTypes.isNotEmpty) {
@@ -179,7 +182,8 @@ class _ReservationTabState extends State<ReservationTab>
       context: context,
       builder: (context) {
         return AppDialogText(
-          buttonDoneTitle: Translate.of(context).translate("sign_in").toUpperCase(),
+          buttonDoneTitle:
+              Translate.of(context).translate("sign_in").toUpperCase(),
           onDone: () {
             Navigator.pop(context);
             _openLoginDialog();
@@ -187,7 +191,7 @@ class _ReservationTabState extends State<ReservationTab>
           onCancel: () {
             Navigator.pop(context);
           },
-          child: Text("Vui lòng đăng nhập!"),
+          child: Text(Translate.of(context).translate("please_sign_in")),
         );
       },
     );
@@ -713,7 +717,7 @@ class _ReservationTabState extends State<ReservationTab>
           ),
           Divider(),
           AppButton(
-            "Xác nhận đặt bàn",
+            Translate.of(context).translate("confirm_reservation"),
             onPressed: () {
               if (!AppBloc.uiBloc.state.canMakeReservation()) {
                 Fluttertoast.showToast(

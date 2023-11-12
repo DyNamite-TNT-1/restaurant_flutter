@@ -26,7 +26,7 @@ class _ProfileState extends State<Profile> {
             Translate.of(context).translate("want_log_out"),
             maxLines: 10,
             overflow: TextOverflow.ellipsis,
-            style: Theme.of(ct).textTheme.bodyMedium,
+            style: Theme.of(ct).textTheme.bodyLarge,
           ),
           onDone: () {
             Navigator.of(context).pop();
@@ -55,7 +55,7 @@ class _ProfileState extends State<Profile> {
         children: [
           Center(
             child: AppButton(
-              "Đăng xuất",
+              Translate.of(context).translate("log_out"),
               onPressed: () {
                 _openLogoutDialog();
               },
