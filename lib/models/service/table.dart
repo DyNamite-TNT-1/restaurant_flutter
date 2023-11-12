@@ -1,3 +1,5 @@
+// ignore_for_file: unnecessary_overrides
+
 import 'package:restaurant_flutter/utils/utils.dart';
 
 class TableDetailModel {
@@ -68,4 +70,14 @@ class TableTypeDetailModel {
     }
     return list;
   }
+
+  // https://stackoverflow.com/questions/59474307/error-either-zero-or-2-or-more-dropdownmenuitems-were-detected-with-the-same
+  @override
+  bool operator ==(dynamic other) =>
+      other != null &&
+      other is TableTypeDetailModel &&
+      tableTypeId == other.tableTypeId;
+
+  @override
+  int get hashCode => super.hashCode;
 }
