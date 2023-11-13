@@ -48,10 +48,20 @@ Visit website [Firestaurant](https://dynamite-tnt-1.github.io/)
 ![image](https://github.com/DyNamite-TNT-1/restaurant_flutter/assets/104590526/3fdf06f2-ca6c-4d7d-831b-7dca9f68704b)
 
 ### Reservation Tab
-* This tab helps you prepare a table reservation request by entering information such as the number of guests, date and time of the event, seating location, and a list of dishes, drinks, services, and notes you want to send to the restaurant.
-* Click on "Reservation Confirmation" to make a reservation.
+* Click on "Booking" Button on the right top corner.
 
-![image](https://github.com/DyNamite-TNT-1/restaurant_flutter/assets/104590526/44763cc1-44f9-46a2-8aef-a2d37467c2b4)
+![image](https://github.com/DyNamite-TNT-1/restaurant_flutter/assets/104590526/47ec7279-e23c-439f-bf16-01d5e9e3f2d5)
+ 
+* This tab helps you prepare a table reservation request by entering information such as the number of guests, date and time of the event, seating location, and a list of dishes, drinks, services, and notes you want to send to the restaurant.
+* Click on add/subtract button to increase/descrease quantity. Or change order of item by drag and drop button shaped like an equal sign.
+
+![image](https://github.com/DyNamite-TNT-1/restaurant_flutter/assets/104590526/d060670e-97aa-4629-9092-d6ed43629187)
+
+![image](https://github.com/DyNamite-TNT-1/restaurant_flutter/assets/104590526/e4a83d25-991f-4294-b18a-3399099edec3)
+
+* Click on "Ghi chú" Tab to add your note.
+
+* Click on "Reservation Confirmation" to make a reservation(need Sign In).
 
 ### View dishes, drinks, services
 * Simalar to Setting Tab, you click on Dish, Drink, Service tab to view list of each.
@@ -71,6 +81,16 @@ Visit website [Firestaurant](https://dynamite-tnt-1.github.io/)
 ![image](https://github.com/DyNamite-TNT-1/restaurant_flutter/assets/104590526/2a5025d4-06cc-4142-9653-15e16bd6b2ad)
 
 * To add what you want to Reservation Tab, just click on a specific item.
+### View history
+This function need to Sign In.
+* Click History Tab to see all your reservation history. Have filter bar and pagination on this screen.
+
+![image](https://github.com/DyNamite-TNT-1/restaurant_flutter/assets/104590526/2362a908-2d9a-457a-a0a0-b41b3f60773f)
+
+* Click on "three dot" button to view detail of specific reservation.
+
+![image](https://github.com/DyNamite-TNT-1/restaurant_flutter/assets/104590526/afef7469-fce6-4e2e-ad3d-509d8e3d5cf7)
+
 ## How to run this code?
 ### Editor
 Firstly, need an IDE/Editor where build and compile code. Highly recommend to using [VSCode](https://docs.flutter.dev/get-started/editor). Because it's very popular, easy to use and have many extension that make coding more funny and easier.
