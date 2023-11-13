@@ -1,4 +1,8 @@
 # restaurant_flutter
+## Deploy :  
+  * FE : https://dynamite-tnt-1.github.io/
+  * BE : https://restaurantbe-production.up.railway.app/
+  * DATABASE MYSQL : Deploy to clever service
 ## Overview
 `Firestaurant is a website that helps users book tables online quickly, conveniently and without wasting much time and helps managers automate all processes for recording requests to book tables/change tables from clients.`
 
