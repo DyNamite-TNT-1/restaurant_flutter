@@ -4,9 +4,9 @@
 </p>
 <h1 align="center">A reservation Website</h1>
 
----
-
 `Firestaurant is a website that helps users book tables online quickly, conveniently and without wasting much time and helps managers automate all processes for recording requests to book tables/change tables from clients.`
+
+---
 
 This is a Frontend source code to help develop a restaurant reservation website - an academic project of the subject "Object-oriented programming techniques" - taught by lecturer Huynh Trung Tru.
 
