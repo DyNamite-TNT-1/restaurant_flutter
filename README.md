@@ -1,9 +1,11 @@
-# restaurant_flutter
-## Deploy  
-  * FE: https://dynamite-tnt-1.github.io/
-  * BE: https://restaurantbe-production.up.railway.app/
-  * DATABASE MYSQL: Deploy to clever service
-## Overview
+# Firestaurant
+<p align="center" style="background-color:#282C34">
+  <img src="./assets/images/logo_website.png" width="300px">
+</p>
+<h1 align="center">A reservation Website</h1>
+
+---
+
 `Firestaurant is a website that helps users book tables online quickly, conveniently and without wasting much time and helps managers automate all processes for recording requests to book tables/change tables from clients.`
 
 This is a Frontend source code to help develop a restaurant reservation website - an academic project of the subject "Object-oriented programming techniques" - taught by lecturer Huynh Trung Tru.
@@ -11,6 +13,10 @@ This is a Frontend source code to help develop a restaurant reservation website 
 Made by:
   * Le Mau Anh Duc - N19DCCN038
   * Tran Thu Dat - N19DCCN036
+## Deploy  
+  * FE: https://dynamite-tnt-1.github.io/
+  * BE: https://restaurantbe-production.up.railway.app/
+  * DATABASE MYSQL: Deploy to clever service
 ## Related Source
   * [Backend](https://github.com/DyNamite-TNT-1/nodejs_be_restaurant)
   * [Document](https://github.com/DyNamite-TNT-1/doc-restaurant-project)
@@ -32,7 +38,7 @@ Made by:
   * Messenger-lite: Our website `allows clients to message the manager and vice versa`. This helps the restaurant easily connect and better understand clients' requests as well as make clients express their opinions more clearly to the restaurant.
   * Multi-language: Our website currently supports 2 languages: ENGLISH and VIETNAMESE. Because backend technology is still limited, the data in the database cannot support multiple languages, so some data is only displayed in Vietnamese.
 ## How to use website?
-Visit website [Firestaurant](https://dynamite-tnt-1.github.io/)
+Visit [Firestaurant](https://dynamite-tnt-1.github.io/)
 
 ### Change Language
 * In case the current languages don't work for you, you can change them in Setting Tab.
@@ -48,11 +54,11 @@ Visit website [Firestaurant](https://dynamite-tnt-1.github.io/)
 ![image](https://github.com/DyNamite-TNT-1/restaurant_flutter/assets/104590526/3fdf06f2-ca6c-4d7d-831b-7dca9f68704b)
 
 ### Reservation Tab
+This tab helps you prepare a table reservation request by entering information such as the number of guests, date and time of the event, seating location, and a list of dishes, drinks, services, and notes you want to send to the restaurant.
 * Click on "Booking" Button on the right top corner.
 
 ![image](https://github.com/DyNamite-TNT-1/restaurant_flutter/assets/104590526/47ec7279-e23c-439f-bf16-01d5e9e3f2d5)
  
-* This tab helps you prepare a table reservation request by entering information such as the number of guests, date and time of the event, seating location, and a list of dishes, drinks, services, and notes you want to send to the restaurant.
 * Click on add/subtract button to increase/descrease quantity. Or change order of item by drag and drop button shaped like an equal sign.
 
 ![image](https://github.com/DyNamite-TNT-1/restaurant_flutter/assets/104590526/d060670e-97aa-4629-9092-d6ed43629187)
