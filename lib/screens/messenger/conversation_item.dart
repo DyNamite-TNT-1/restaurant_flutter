@@ -34,7 +34,9 @@ class _ConversationItemState extends State<ConversationItem> {
                   : LinearGradient(
                       begin: Alignment.topCenter,
                       colors: <Color>[
-                        ...gradients[Random().nextInt(gradients.length)]
+                        ...gradients[(widget.item.user!.userId /
+                                gradients.length)
+                            .round()]
                       ],
                       tileMode: TileMode.mirror,
                     ),
@@ -77,15 +79,15 @@ class _ConversationItemState extends State<ConversationItem> {
                       ),
                     ],
                   ),
-                  SizedBox(
-                    height: kPadding10 / 2,
-                  ),
-                  Text(
-                    "Bạn: Sao em lại khóc?!!",
-                    style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                          color: subTextColor,
-                        ),
-                  ),
+                  // SizedBox(
+                  //   height: kPadding10 / 2,
+                  // ),
+                  // Text(
+                  //   "Bạn: Sao em lại khóc?!!",
+                  //   style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                  //         color: subTextColor,
+                  //       ),
+                  // ),
                 ],
               ),
             ),

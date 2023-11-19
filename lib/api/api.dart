@@ -13,14 +13,14 @@ class Api {
   static const String http = "http://";
 
   static String getProtocol() {
-    const bool useSsl = true;
+    const bool useSsl = false;
     String protocol = (useSsl ? Api.https : Api.http);
     return protocol;
   }
 
   static String localHost() {
-    return "restaurantbe-production.up.railway.app";
-    // return "localhost:3005";
+    // return "restaurantbe-production.up.railway.app";
+    return "localhost:3005";
   }
 
   static String branchGetter() {

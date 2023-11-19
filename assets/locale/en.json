@@ -96,6 +96,8 @@
   "no_data_found": "No data found",
   "no_add_dish": "You have not added dishes yet",
   "confirm_reservation": "Reservation confirmation",
+  "version": "Version",
+  "version_description": "Current version is up to date",
 
   "You are not a reservation agent": "You are not a reservation agent",
   "You can not change schedule because schedule close (24 hours)": "You can not change schedule because schedule close (24 hours)",

@@ -64,7 +64,7 @@ class _MessageItemState extends State<MessageItem> {
                     : LinearGradient(
                         begin: Alignment.topLeft,
                         colors: <Color>[
-                          ...gradients[Random().nextInt(gradients.length)],
+                          ...gradients[(widget.message.userId /gradients.length).round()],
                         ],
                         tileMode: TileMode.mirror,
                       ),

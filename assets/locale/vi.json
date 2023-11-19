@@ -97,6 +97,8 @@
   "no_add_dish": "Bạn chưa thêm món ăn",
   "confirm_reservation_ask": "Xác nhận đặt bàn?",
   "confirm_reservation": "Xác nhận đặt bàn",
+  "version": "Phiên bản",
+  "version_description": "Phiên bản hiện tại đã được cập nhật",
 
   "You are not a reservation agent": "Bạn không tạo yêu cầu đặt chỗ này",
   "You can not change schedule because schedule close (24 hours)": "Bạn không thể thay đổi vì thời gian diễn ra cách hiện tại chưa tới 24h",

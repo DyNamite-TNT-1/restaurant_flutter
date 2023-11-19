@@ -7,7 +7,7 @@ class MessengerState extends Equatable {
   final List<MessageDetailModel>
       messages; // message list of selectedConversation
   final BlocState messageState;
-  final BlocState acceptMessageSate;
+  final BlocState acceptMessageState;
   final BlocState sendMessageState;
   final String msg;
 
@@ -17,7 +17,7 @@ class MessengerState extends Equatable {
     this.conversationState = BlocState.init,
     this.messages = const [],
     this.messageState = BlocState.init,
-    this.acceptMessageSate = BlocState.init,
+    this.acceptMessageState = BlocState.init,
     this.sendMessageState = BlocState.init,
     this.msg = "",
   });
@@ -28,7 +28,7 @@ class MessengerState extends Equatable {
     BlocState? conversationState,
     List<MessageDetailModel>? messages,
     BlocState? messageState,
-    BlocState? acceptMessageSate,
+    BlocState? acceptMessageState,
     BlocState? sendMessageState,
     String? msg,
   }) {
@@ -38,7 +38,7 @@ class MessengerState extends Equatable {
       conversationState: conversationState ?? this.conversationState,
       messages: messages ?? this.messages,
       messageState: messageState ?? this.messageState,
-      acceptMessageSate: acceptMessageSate ?? this.acceptMessageSate,
+      acceptMessageState: acceptMessageState ?? this.acceptMessageState,
       sendMessageState: sendMessageState ?? this.sendMessageState,
       msg: msg ?? this.msg,
     );
@@ -49,7 +49,7 @@ class MessengerState extends Equatable {
         conversations,
         conversationState,
         messageState,
-        acceptMessageSate,
+        acceptMessageState,
         sendMessageState,
         msg,
       ];

@@ -87,6 +87,9 @@ class _MessengerScreenState extends State<MessengerScreen> {
             AssetImages.logoAppNoBg,
             fit: BoxFit.fill,
           );
+    if (state.selectedConversation == null) {
+      return Container();
+    }
     return Container(
       padding: EdgeInsets.all(kPadding10),
       child: Row(
@@ -104,7 +107,10 @@ class _MessengerScreenState extends State<MessengerScreen> {
                       : LinearGradient(
                           begin: Alignment.topLeft,
                           colors: <Color>[
-                            ...gradients[Random().nextInt(gradients.length)],
+                            ...gradients[
+                                (state.selectedConversation!.user!.userId /
+                                        gradients.length)
+                                    .round()],
                           ],
                           tileMode: TileMode.mirror,
                         ),
@@ -135,7 +141,9 @@ class _MessengerScreenState extends State<MessengerScreen> {
                   color: Colors.transparent,
                   child: InkWell(
                     onTap: () {
-                      messengerBloc.add(OnAcceptConversation(params: const {}));
+                      messengerBloc.add(OnAcceptConversation(params: {
+                        "conversationNeedAccept": state.selectedConversation,
+                      }));
                     },
                     borderRadius: BorderRadius.circular(50),
                     child: Padding(
@@ -174,15 +182,15 @@ class _MessengerScreenState extends State<MessengerScreen> {
         create: (context) => messengerBloc,
         child: BlocListener<MessengerBloc, MessengerState>(
           listenWhen: (previous, current) {
-            if (previous.acceptMessageSate == BlocState.loading &&
-                (current.acceptMessageSate == BlocState.loadFailed ||
-                    current.acceptMessageSate == BlocState.loadCompleted)) {
+            if (previous.acceptMessageState == BlocState.loading &&
+                (current.acceptMessageState == BlocState.loadFailed ||
+                    current.acceptMessageState == BlocState.loadCompleted)) {
               return true;
             }
             return false;
           },
           listener: (context, state) {
-            if (state.acceptMessageSate == BlocState.loadCompleted) {
+            if (state.acceptMessageState == BlocState.loadCompleted) {
               Fluttertoast.showToast(
                 msg: Translate.of(context).translate(state.msg),
                 toastLength: Toast.LENGTH_SHORT,
@@ -193,7 +201,7 @@ class _MessengerScreenState extends State<MessengerScreen> {
                 fontSize: 16.0,
                 webBgColor: successColorToast,
               );
-            } else if (state.acceptMessageSate == BlocState.loadFailed) {
+            } else if (state.acceptMessageState == BlocState.loadFailed) {
               Fluttertoast.showToast(
                 msg: Translate.of(context).translate(state.msg),
                 toastLength: Toast.LENGTH_SHORT,
@@ -257,8 +265,9 @@ class _MessengerScreenState extends State<MessengerScreen> {
                                                         messengerBloc.add(
                                                             OnSelectConversation(
                                                                 params: {
-                                                              "selectedConversation":
-                                                                  conversation,
+                                                              "id": conversation
+                                                                  .conversation!
+                                                                  .conversationId,
                                                             }));
                                                       },
                                                       child: ConversationItem(
@@ -330,6 +339,9 @@ class _MessengerScreenState extends State<MessengerScreen> {
                                           Divider(
                                             height: 0,
                                             color: Colors.grey,
+                                          ),
+                                          SizedBox(
+                                            height: 5,
                                           ),
                                           Expanded(
                                             child: state.messageState ==
